@@ -3,7 +3,7 @@
 /**
  * AudioRecorder — in-browser microphone recorder using Web Audio API / MediaRecorder.
  * Recording logic lives here as a local pattern (not extracted to a separate hook)
- * per CLAUDE.md guidance: only used by this component.
+ * since it is only used by this component.
  */
 
 import { useEffect, useRef, useState } from "react";
