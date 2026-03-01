@@ -158,15 +158,15 @@ export function AudioRecorder({ onRecordingComplete, disabled = false }: AudioRe
                 ? "bg-red-500 animate-pulse"
                 : recStatus === "stopped"
                 ? "bg-green-500"
-                : "bg-slate-200"
+                : "bg-gray-200"
             }`}
           />
-          <span className="font-mono text-4xl font-bold tracking-widest text-slate-800 tabular-nums">
+          <span className="font-mono text-4xl font-bold tracking-widest text-gray-800 tabular-nums">
             {formatDuration(elapsed)}
           </span>
         </div>
 
-        <p className="text-sm text-slate-500" aria-hidden="true">
+        <p className="text-sm text-gray-500" aria-hidden="true">
           {recStatus === "idle"      && "Press Start to begin recording"}
           {recStatus === "requesting" && "Requesting microphone access…"}
           {recStatus === "recording"  && "Recording in progress — press Stop when done"}

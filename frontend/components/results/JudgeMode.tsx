@@ -46,7 +46,7 @@ export interface JudgeModeProps {
 // ---------------------------------------------------------------------------
 
 const SOURCE_BADGE_COLORS: Record<EventSource, string> = {
-  rules: "bg-sky-900/60 text-sky-300 border-sky-700",
+  rules: "bg-blue-900/60 text-blue-300 border-blue-700",
   ml: "bg-purple-900/60 text-purple-300 border-purple-700",
   phonetic: "bg-amber-900/60 text-amber-300 border-amber-700",
   hybrid: "bg-emerald-900/60 text-emerald-300 border-emerald-700",
@@ -63,7 +63,7 @@ const EVENT_TYPE_LABELS: Record<EventType, string> = {
 
 const LATENCY_COLORS: Record<string, string> = {
   preprocessing: "#64748b",
-  whisper: "#0ea5e9",
+  whisper: "#2563eb",
   vad: "#8b5cf6",
   rules: "#f59e0b",
   scoring: "#10b981",
@@ -149,7 +149,7 @@ function StageBox({
         {label}
       </span>
       {ms !== null ? (
-        <span className="font-mono text-[10px] text-sky-400">
+        <span className="font-mono text-[10px] text-blue-400">
           {ms.toFixed(0)}ms
         </span>
       ) : (
@@ -234,7 +234,7 @@ function LatencyTooltip({
   return (
     <div className="rounded border border-slate-600 bg-slate-800 px-3 py-2 text-xs shadow-lg">
       <p className="font-semibold text-slate-200">{d.name}</p>
-      <p className="font-mono text-sky-400">
+      <p className="font-mono text-blue-400">
         {d.ms.toFixed(0)} ms ({d.pct})
       </p>
     </div>
@@ -309,15 +309,15 @@ export function JudgeMode({ result }: JudgeModeProps) {
       {/* Toggle button */}
       <button
         onClick={() => setOpen(!open)}
-        className="flex w-full items-center justify-between px-5 py-4 text-sm font-semibold text-slate-300 hover:bg-slate-800/60 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-sky-500 focus-visible:outline-offset-[-2px]"
+        className="flex w-full items-center justify-between px-5 py-4 text-sm font-semibold text-slate-300 hover:bg-slate-800/60 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-500 focus-visible:outline-offset-[-2px]"
         aria-expanded={open}
         aria-label="Toggle Judge Mode panel"
       >
         <span className="flex items-center gap-2">
           {open ? (
-            <EyeOff className="h-4 w-4 text-sky-400" aria-hidden="true" />
+            <EyeOff className="h-4 w-4 text-blue-400" aria-hidden="true" />
           ) : (
-            <Eye className="h-4 w-4 text-sky-400" aria-hidden="true" />
+            <Eye className="h-4 w-4 text-blue-400" aria-hidden="true" />
           )}
           Judge Mode
         </span>
@@ -335,7 +335,7 @@ export function JudgeMode({ result }: JudgeModeProps) {
                 className={`inline-flex items-center rounded-md border px-3 py-1 text-sm font-bold tracking-wide ${
                   isHybrid
                     ? "border-emerald-600 bg-emerald-900/50 text-emerald-300"
-                    : "border-sky-600 bg-sky-900/50 text-sky-300"
+                    : "border-blue-600 bg-blue-900/50 text-blue-300"
                 }`}
               >
                 {mode}
@@ -425,7 +425,7 @@ export function JudgeMode({ result }: JudgeModeProps) {
               <p className="text-xs font-bold uppercase tracking-widest text-slate-400">
                 Latency Breakdown
               </p>
-              <p className="font-mono text-sm font-bold text-sky-400">
+              <p className="font-mono text-sm font-bold text-blue-400">
                 {latency.total_ms.toFixed(0)} ms total
               </p>
             </div>
@@ -542,7 +542,7 @@ export function JudgeMode({ result }: JudgeModeProps) {
                         {(ev.start_ms / 1000).toFixed(1)}–
                         {(ev.end_ms / 1000).toFixed(1)}s
                       </span>
-                      <span className="font-mono text-sky-400/70 w-10 text-right">
+                      <span className="font-mono text-blue-400/70 w-10 text-right">
                         {(ev.confidence * 100).toFixed(0)}%
                       </span>
                     </div>

@@ -71,7 +71,7 @@ export function DisfluencyBreakdown({ events }: DisfluencyBreakdownProps) {
             <XAxis
               type="number"
               domain={[0, maxCount + 1]}
-              tick={{ fontSize: 11, fill: "#94a3b8" }}
+              tick={{ fontSize: 11, fill: "#9ca3af" }}
               tickLine={false}
               axisLine={false}
               allowDecimals={false}
@@ -80,19 +80,19 @@ export function DisfluencyBreakdown({ events }: DisfluencyBreakdownProps) {
               type="category"
               dataKey="name"
               width={90}
-              tick={{ fontSize: 12, fill: "#475569" }}
+              tick={{ fontSize: 12, fill: "#4b5563" }}
               tickLine={false}
               axisLine={false}
             />
             <Tooltip
-              cursor={{ fill: "#f1f5f9" }}
+              cursor={{ fill: "#f3f4f6" }}
               content={({ active, payload }) => {
                 if (!active || !payload?.length) return null;
                 const item = payload[0].payload as { name: string; count: number };
                 return (
-                  <div className="rounded-lg border border-slate-200 bg-white px-3 py-2 shadow-sm text-xs">
-                    <p className="font-semibold text-slate-700">{item.name}</p>
-                    <p className="text-slate-500">
+                  <div className="rounded-lg border border-gray-200 bg-white px-3 py-2 shadow-sm text-xs">
+                    <p className="font-semibold text-gray-700">{item.name}</p>
+                    <p className="text-gray-500">
                       {item.count} event{item.count !== 1 ? "s" : ""}
                     </p>
                   </div>
@@ -106,7 +106,7 @@ export function DisfluencyBreakdown({ events }: DisfluencyBreakdownProps) {
               <LabelList
                 dataKey="count"
                 position="right"
-                style={{ fontSize: 12, fontWeight: 600, fill: "#475569" }}
+                style={{ fontSize: 12, fontWeight: 600, fill: "#4b5563" }}
               />
             </Bar>
           </BarChart>

@@ -59,10 +59,10 @@ function CssTimeline({ events, duration }: { events: DisfluencyEvent[]; duration
       <div
         role="img"
         aria-label={`Timeline showing ${events.length} disfluency events over ${Math.round(duration / 1000)} seconds`}
-        className="relative h-12 rounded-lg bg-slate-100 overflow-hidden"
+        className="relative h-12 rounded-lg bg-gray-100 overflow-hidden"
       >
         {/* Speech activity background bar */}
-        <div className="absolute inset-x-0 top-3 h-6 bg-slate-200 rounded" />
+        <div className="absolute inset-x-0 top-3 h-6 bg-gray-200 rounded" />
 
         {events.map((ev, i) => {
           const left  = duration > 0 ? (ev.start_ms / duration) * 100 : 0;
@@ -80,7 +80,7 @@ function CssTimeline({ events, duration }: { events: DisfluencyEvent[]; duration
         })}
       </div>
 
-      <div className="flex justify-between text-xs text-slate-400" aria-hidden="true">
+      <div className="flex justify-between text-xs text-gray-400" aria-hidden="true">
         <span>0 s</span>
         <span>{Math.round(duration / 1000)} s</span>
       </div>
@@ -136,9 +136,9 @@ function WavesurferTimeline({
 
         const ws = WaveSurfer.create({
           container: containerRef.current,
-          waveColor:     "#cbd5e1",  // slate-300
-          progressColor: "#0ea5e9",  // sky-500
-          cursorColor:   "#0284c7",  // sky-600
+          waveColor:     "#d1d5db",  // slate-300
+          progressColor: "#2563eb",  // sky-500
+          cursorColor:   "#1d4ed8",  // sky-600
           height:        WAVEFORM_HEIGHT,
           normalize:     true,
           interact:      true,
@@ -184,7 +184,7 @@ function WavesurferTimeline({
     <div className="space-y-3">
       {/* Waveform + overlay container */}
       <div
-        className="relative rounded-lg overflow-hidden bg-slate-50 border border-slate-100"
+        className="relative rounded-lg overflow-hidden bg-gray-50 border border-gray-100"
         style={{ height: `${WAVEFORM_HEIGHT}px` }}
       >
         {/* WaveSurfer renders its canvas inside this div */}
@@ -217,9 +217,9 @@ function WavesurferTimeline({
 
         {/* Loading spinner */}
         {wsStatus === "loading" && (
-          <div className="absolute inset-0 flex items-center justify-center bg-slate-50/80">
+          <div className="absolute inset-0 flex items-center justify-center bg-gray-50/80">
             <span
-              className="h-5 w-5 rounded-full border-2 border-sky-500 border-t-transparent animate-spin"
+              className="h-5 w-5 rounded-full border-2 border-blue-500 border-t-transparent animate-spin"
               aria-hidden="true"
             />
             <span className="sr-only">Loading waveform…</span>
@@ -243,7 +243,7 @@ function WavesurferTimeline({
           }
           {isPlaying ? "Pause" : "Play"}
         </Button>
-        <span className="flex items-center gap-1 text-xs text-slate-400">
+        <span className="flex items-center gap-1 text-xs text-gray-400">
           <Volume2 className="h-3.5 w-3.5" aria-hidden="true" />
           Click a coloured region to jump to that event
         </span>

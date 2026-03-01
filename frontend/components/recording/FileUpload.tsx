@@ -121,24 +121,24 @@ export function FileUpload({
           relative flex flex-col items-center justify-center gap-3
           rounded-xl border-2 border-dashed p-12 text-center
           transition-colors select-none
-          focus-visible:outline focus-visible:outline-2 focus-visible:outline-sky-600 focus-visible:outline-offset-2
+          focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600 focus-visible:outline-offset-2
           ${disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}
           ${
             isDragging
-              ? "border-sky-400 bg-sky-50"
-              : "border-slate-200 bg-slate-50 hover:border-sky-300 hover:bg-sky-50/50"
+              ? "border-blue-400 bg-blue-50"
+              : "border-gray-200 bg-gray-50 hover:border-blue-300 hover:bg-blue-50/50"
           }
         `}
       >
         <Upload
-          className={`h-8 w-8 ${isDragging ? "text-sky-500" : "text-slate-300"}`}
+          className={`h-8 w-8 ${isDragging ? "text-blue-500" : "text-gray-300"}`}
           aria-hidden="true"
         />
         <div>
-          <p className="text-sm font-medium text-slate-700">
+          <p className="text-sm font-medium text-gray-700">
             {isDragging ? "Drop your audio file here" : "Click to upload or drag and drop"}
           </p>
-          <p className="text-xs text-slate-400 mt-1">.wav · .mp3 · .m4a · .webm</p>
+          <p className="text-xs text-gray-400 mt-1">.wav · .mp3 · .m4a · .webm</p>
         </div>
       </div>
 
@@ -168,7 +168,7 @@ export function FileUpload({
           <button
             onClick={handleClear}
             aria-label={`Remove ${selectedFile.name}`}
-            className="shrink-0 rounded text-green-600 hover:text-green-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-sky-600"
+            className="shrink-0 rounded text-green-600 hover:text-green-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
           >
             <X className="h-4 w-4" aria-hidden="true" />
           </button>

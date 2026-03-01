@@ -9,8 +9,8 @@ export function HighContrastToggle({ checked, onChange }: HighContrastToggleProp
   return (
     <div className="flex items-center justify-between gap-4">
       <div>
-        <p className="text-sm font-medium text-slate-900">High Contrast</p>
-        <p className="text-xs text-slate-500 mt-0.5">Dark background, bright text</p>
+        <p className="text-sm font-medium text-gray-900">High Contrast</p>
+        <p className="text-xs text-gray-500 mt-0.5">Dark background, bright text</p>
       </div>
       <button
         role="switch"
@@ -20,8 +20,8 @@ export function HighContrastToggle({ checked, onChange }: HighContrastToggleProp
         className={`
           relative inline-flex h-6 w-11 shrink-0 rounded-full border-2 border-transparent
           transition-colors duration-200
-          focus-visible:outline focus-visible:outline-2 focus-visible:outline-sky-600
-          ${checked ? "bg-sky-600" : "bg-slate-200"}
+          focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600
+          ${checked ? "bg-blue-600" : "bg-gray-200"}
         `}
       >
         <span

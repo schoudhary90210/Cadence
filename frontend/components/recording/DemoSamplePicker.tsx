@@ -26,12 +26,9 @@ export interface DemoSamplePickerProps {
 // ---------------------------------------------------------------------------
 
 const SAMPLE_STYLES: Record<string, string> = {
-  fluent:
-    "border-green-200 bg-green-50 hover:bg-green-100 hover:border-green-300",
-  stuttered:
-    "border-red-200 bg-red-50 hover:bg-red-100 hover:border-red-300",
-  mixed:
-    "border-orange-200 bg-orange-50 hover:bg-orange-100 hover:border-orange-300",
+  fluent:    "border-gray-200 bg-white hover:shadow-md hover:border-gray-300",
+  stuttered: "border-gray-200 bg-white hover:shadow-md hover:border-gray-300",
+  mixed:     "border-gray-200 bg-white hover:shadow-md hover:border-gray-300",
 };
 
 // ---------------------------------------------------------------------------
@@ -64,10 +61,10 @@ export function DemoSamplePicker({ onSampleSelected, disabled = false }: DemoSam
         aria-label="Loading demo samples"
       >
         <span
-          className="h-6 w-6 rounded-full border-2 border-sky-500 border-t-transparent animate-spin"
+          className="h-6 w-6 rounded-full border-2 border-blue-500 border-t-transparent animate-spin"
           aria-hidden="true"
         />
-        <span className="ml-3 text-sm text-slate-500">Loading samples…</span>
+        <span className="ml-3 text-sm text-gray-500">Loading samples…</span>
       </div>
     );
   }
@@ -94,13 +91,13 @@ export function DemoSamplePicker({ onSampleSelected, disabled = false }: DemoSam
           aria-label={`Analyze ${sample.label} demo sample: ${sample.description}. ${sample.duration} seconds.`}
           className={`
             rounded-xl border p-5 text-left transition-all
-            focus-visible:outline focus-visible:outline-2 focus-visible:outline-sky-600
+            focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600
             disabled:opacity-50 disabled:cursor-not-allowed
-            ${SAMPLE_STYLES[sample.label] ?? "border-slate-200 bg-slate-50 hover:bg-slate-100"}
+            ${SAMPLE_STYLES[sample.label] ?? "border-gray-200 bg-gray-50 hover:bg-gray-100"}
           `}
         >
           <div className="flex items-center gap-2 mb-2">
-            <span className="text-xs font-bold uppercase tracking-widest text-slate-600">
+            <span className="text-xs font-bold uppercase tracking-widest text-gray-600">
               {sample.label}
             </span>
             {sample.cached && (
@@ -113,8 +110,8 @@ export function DemoSamplePicker({ onSampleSelected, disabled = false }: DemoSam
               </span>
             )}
           </div>
-          <p className="text-sm text-slate-700 leading-snug">{sample.description}</p>
-          <p className="mt-2 text-xs text-slate-400">{sample.duration}s sample</p>
+          <p className="text-sm text-gray-700 leading-snug">{sample.description}</p>
+          <p className="mt-2 text-xs text-gray-400">{sample.duration}s sample</p>
         </button>
       ))}
     </div>

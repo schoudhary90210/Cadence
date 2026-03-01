@@ -189,13 +189,13 @@ export function ReadingPractice({ passage, onBack }: ReadingPracticeProps) {
           Back
         </Button>
         <div>
-          <h2 className="text-xl font-bold text-slate-900">{passage.title}</h2>
-          <p className="text-sm text-slate-500 capitalize">{passage.difficulty} passage</p>
+          <h2 className="text-xl font-bold text-gray-900">{passage.title}</h2>
+          <p className="text-sm text-gray-500 capitalize">{passage.difficulty} passage</p>
         </div>
       </div>
 
       {/* Passage / coloured results */}
-      <div className="rounded-xl border border-slate-200 bg-slate-50 p-5">
+      <div className="rounded-xl border border-gray-200 bg-gray-50 p-5">
         {status === "done" && wordResults ? (
           <p className="text-lg leading-relaxed">
             {wordResults.map((wr, i) => (
@@ -209,13 +209,13 @@ export function ReadingPractice({ passage, onBack }: ReadingPracticeProps) {
             ))}
           </p>
         ) : (
-          <p className="text-lg leading-relaxed text-slate-700">{passage.text}</p>
+          <p className="text-lg leading-relaxed text-gray-700">{passage.text}</p>
         )}
       </div>
 
       {/* Legend */}
       {status === "done" && (
-        <div className="flex flex-wrap gap-4 text-xs text-slate-600">
+        <div className="flex flex-wrap gap-4 text-xs text-gray-600">
           <span className="flex items-center gap-1.5">
             <CheckCircle2 className="h-3.5 w-3.5 text-green-600" aria-hidden="true" />
             Matched
@@ -238,29 +238,29 @@ export function ReadingPractice({ passage, onBack }: ReadingPracticeProps) {
       {/* Results summary */}
       {status === "done" && rawResult && (
         <div className="grid gap-3 sm:grid-cols-3 text-center">
-          <div className="rounded-lg border border-slate-200 bg-white p-4">
-            <p className="text-3xl font-extrabold text-slate-900">{accuracy}%</p>
-            <p className="text-xs text-slate-500 mt-1">Word accuracy</p>
+          <div className="rounded-lg border border-gray-200 bg-white p-4">
+            <p className="text-3xl font-extrabold text-gray-900">{accuracy}%</p>
+            <p className="text-xs text-gray-500 mt-1">Word accuracy</p>
           </div>
-          <div className="rounded-lg border border-slate-200 bg-white p-4">
-            <p className="text-3xl font-extrabold text-slate-900">
+          <div className="rounded-lg border border-gray-200 bg-white p-4">
+            <p className="text-3xl font-extrabold text-gray-900">
               {rawResult.metrics.total_disfluencies}
             </p>
-            <p className="text-xs text-slate-500 mt-1">Disfluency events</p>
+            <p className="text-xs text-gray-500 mt-1">Disfluency events</p>
           </div>
-          <div className="rounded-lg border border-slate-200 bg-white p-4">
-            <p className="text-3xl font-extrabold text-slate-900">
+          <div className="rounded-lg border border-gray-200 bg-white p-4">
+            <p className="text-3xl font-extrabold text-gray-900">
               {rawResult.metrics.speaking_rate_syl_sec.toFixed(1)}
             </p>
-            <p className="text-xs text-slate-500 mt-1">Syllables / sec</p>
+            <p className="text-xs text-gray-500 mt-1">Syllables / sec</p>
           </div>
         </div>
       )}
 
       {/* Recorder */}
       {status === "idle" && (
-        <div className="rounded-xl border border-slate-200 bg-white p-6">
-          <p className="text-sm text-slate-500 mb-4 text-center">
+        <div className="rounded-xl border border-gray-200 bg-white p-6">
+          <p className="text-sm text-gray-500 mb-4 text-center">
             Read the passage above aloud, then click Stop when done.
           </p>
           <AudioRecorder
@@ -274,10 +274,10 @@ export function ReadingPractice({ passage, onBack }: ReadingPracticeProps) {
       {status === "analyzing" && (
         <div className="flex flex-col items-center gap-3 py-8">
           <div
-            className="h-8 w-8 rounded-full border-4 border-slate-200 border-t-violet-600 animate-spin"
+            className="h-8 w-8 rounded-full border-4 border-gray-200 border-t-blue-600 animate-spin"
             aria-hidden="true"
           />
-          <p role="status" aria-live="polite" className="text-sm text-slate-600">
+          <p role="status" aria-live="polite" className="text-sm text-gray-600">
             {stage ?? "Analyzing…"}
           </p>
         </div>

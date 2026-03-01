@@ -69,11 +69,11 @@ export function ConversationPractice({ prompt, onNewQuestion }: ConversationPrac
   return (
     <div className="space-y-6">
       {/* Prompt card */}
-      <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-6">
-        <p className="text-xs font-semibold uppercase tracking-wider text-emerald-600 mb-2">
+      <div className="rounded-xl border border-gray-200 bg-gray-50 border-l-4 border-l-blue-600 p-6">
+        <p className="text-xs font-semibold uppercase tracking-wider text-blue-600 mb-2">
           {categoryLabel}
         </p>
-        <p className="text-xl font-medium text-slate-900">{prompt.prompt}</p>
+        <p className="text-xl font-medium text-gray-900">{prompt.prompt}</p>
       </div>
 
       {/* New question (idle only) */}
@@ -93,8 +93,8 @@ export function ConversationPractice({ prompt, onNewQuestion }: ConversationPrac
 
       {/* Recorder */}
       {status === "idle" && (
-        <div className="rounded-xl border border-slate-200 bg-white p-6">
-          <p className="text-sm text-slate-500 mb-4 text-center">
+        <div className="rounded-xl border border-gray-200 bg-white p-6">
+          <p className="text-sm text-gray-500 mb-4 text-center">
             Answer the question above. Speak naturally — at least 20 seconds for best results.
           </p>
           <AudioRecorder
@@ -108,10 +108,10 @@ export function ConversationPractice({ prompt, onNewQuestion }: ConversationPrac
       {status === "analyzing" && (
         <div className="flex flex-col items-center gap-3 py-8">
           <div
-            className="h-8 w-8 rounded-full border-4 border-slate-200 border-t-emerald-600 animate-spin"
+            className="h-8 w-8 rounded-full border-4 border-gray-200 border-t-blue-600 animate-spin"
             aria-hidden="true"
           />
-          <p role="status" aria-live="polite" className="text-sm text-slate-600">
+          <p role="status" aria-live="polite" className="text-sm text-gray-600">
             {stage ?? "Analyzing…"}
           </p>
         </div>
@@ -122,27 +122,27 @@ export function ConversationPractice({ prompt, onNewQuestion }: ConversationPrac
         <div className="space-y-4">
           {/* Score grid */}
           <div className="grid gap-3 sm:grid-cols-4 text-center">
-            <div className="rounded-lg border border-slate-200 bg-white p-4">
-              <p className="text-3xl font-extrabold text-slate-900">
+            <div className="rounded-lg border border-gray-200 bg-white p-4">
+              <p className="text-3xl font-extrabold text-gray-900">
                 {result.score.value.toFixed(0)}
               </p>
-              <p className="text-xs text-slate-500 mt-1">Fluency score</p>
+              <p className="text-xs text-gray-500 mt-1">Fluency score</p>
             </div>
-            <div className="rounded-lg border border-slate-200 bg-white p-4">
-              <p className="text-3xl font-extrabold text-slate-900">{fillerEvents.length}</p>
-              <p className="text-xs text-slate-500 mt-1">Filler words</p>
+            <div className="rounded-lg border border-gray-200 bg-white p-4">
+              <p className="text-3xl font-extrabold text-gray-900">{fillerEvents.length}</p>
+              <p className="text-xs text-gray-500 mt-1">Filler words</p>
             </div>
-            <div className="rounded-lg border border-slate-200 bg-white p-4">
-              <p className="text-3xl font-extrabold text-slate-900">
+            <div className="rounded-lg border border-gray-200 bg-white p-4">
+              <p className="text-3xl font-extrabold text-gray-900">
                 {result.metrics.speaking_rate_syl_sec.toFixed(1)}
               </p>
-              <p className="text-xs text-slate-500 mt-1">Syllables / sec</p>
+              <p className="text-xs text-gray-500 mt-1">Syllables / sec</p>
             </div>
-            <div className="rounded-lg border border-slate-200 bg-white p-4">
-              <p className="text-3xl font-extrabold text-slate-900">
+            <div className="rounded-lg border border-gray-200 bg-white p-4">
+              <p className="text-3xl font-extrabold text-gray-900">
                 {result.metrics.pace_variability.toFixed(2)}
               </p>
-              <p className="text-xs text-slate-500 mt-1">Pace variability</p>
+              <p className="text-xs text-gray-500 mt-1">Pace variability</p>
             </div>
           </div>
 
@@ -166,11 +166,11 @@ export function ConversationPractice({ prompt, onNewQuestion }: ConversationPrac
           )}
 
           {/* Transcript */}
-          <div className="rounded-lg border border-slate-200 bg-slate-50 p-4">
-            <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-2">
+          <div className="rounded-lg border border-gray-200 bg-gray-50 p-4">
+            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">
               Your response
             </p>
-            <p className="text-sm text-slate-700 leading-relaxed">
+            <p className="text-sm text-gray-700 leading-relaxed">
               {result.transcript.text}
             </p>
           </div>
@@ -183,7 +183,7 @@ export function ConversationPractice({ prompt, onNewQuestion }: ConversationPrac
             </Button>
             <Button
               onClick={onNewQuestion}
-              className="bg-emerald-600 hover:bg-emerald-700 text-white"
+              className="bg-blue-600 hover:bg-blue-700 text-white"
             >
               <RefreshCw className="mr-2 h-4 w-4" aria-hidden="true" />
               New question

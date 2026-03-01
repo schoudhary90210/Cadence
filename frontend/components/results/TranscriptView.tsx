@@ -68,7 +68,7 @@ export function TranscriptView({ transcript, events }: TranscriptViewProps) {
     return (
       <section aria-labelledby="transcript-heading">
         <h2 id="transcript-heading" className="sr-only">Transcript</h2>
-        <p className="text-sm leading-relaxed text-slate-700">{text}</p>
+        <p className="text-sm leading-relaxed text-gray-700">{text}</p>
       </section>
     );
   }
@@ -100,7 +100,7 @@ export function TranscriptView({ transcript, events }: TranscriptViewProps) {
       </div>
 
       {/* Word-by-word highlighted transcript */}
-      <p className="text-sm leading-loose text-slate-700 select-text">
+      <p className="text-sm leading-loose text-gray-700 select-text">
         {words.map((word, i) => {
           const ev = findOverlappingEvent(word, events);
           const key = `${word.word}-${i}`;
