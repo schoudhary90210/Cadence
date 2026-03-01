@@ -9,7 +9,7 @@
 | **Anish Mantri** | Frontend Development, UI/UX Design |
 | **Benjamin Lelivelt** | Frontend Development, Accessibility |
 
-Built for **CheesHacks 2026** — Health & Lifestyle Theme
+Built for **CheeseHacks 2026** — Health & Lifestyle Theme
 
 ---
 
