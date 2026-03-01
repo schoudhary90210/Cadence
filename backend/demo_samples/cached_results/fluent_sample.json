@@ -1,0 +1,336 @@
+{
+  "id": "c2a03716-b05a-4262-9b8d-07441de206ff",
+  "mode": "RULES_ONLY",
+  "transcript": {
+    "text": "The quick brown fox jumps over the lazy dog. Speech fluency is an important aspect of communication that affects millions of people worldwide. Every day people practice speaking clearly and confidently to improve the ability to express themselves.",
+    "words": [
+      {
+        "word": "The",
+        "start": 0.18,
+        "end": 0.6
+      },
+      {
+        "word": "quick",
+        "start": 0.6,
+        "end": 0.82
+      },
+      {
+        "word": "brown",
+        "start": 0.82,
+        "end": 1.3
+      },
+      {
+        "word": "fox",
+        "start": 1.3,
+        "end": 1.66
+      },
+      {
+        "word": "jumps",
+        "start": 1.66,
+        "end": 2.12
+      },
+      {
+        "word": "over",
+        "start": 2.12,
+        "end": 2.46
+      },
+      {
+        "word": "the",
+        "start": 2.46,
+        "end": 2.6
+      },
+      {
+        "word": "lazy",
+        "start": 2.6,
+        "end": 2.86
+      },
+      {
+        "word": "dog.",
+        "start": 2.86,
+        "end": 3.4
+      },
+      {
+        "word": "Speech",
+        "start": 4.0,
+        "end": 4.26
+      },
+      {
+        "word": "fluency",
+        "start": 4.26,
+        "end": 4.82
+      },
+      {
+        "word": "is",
+        "start": 4.82,
+        "end": 5.1
+      },
+      {
+        "word": "an",
+        "start": 5.1,
+        "end": 5.2
+      },
+      {
+        "word": "important",
+        "start": 5.2,
+        "end": 5.48
+      },
+      {
+        "word": "aspect",
+        "start": 5.48,
+        "end": 6.12
+      },
+      {
+        "word": "of",
+        "start": 6.12,
+        "end": 6.42
+      },
+      {
+        "word": "communication",
+        "start": 6.42,
+        "end": 6.76
+      },
+      {
+        "word": "that",
+        "start": 6.76,
+        "end": 7.44
+      },
+      {
+        "word": "affects",
+        "start": 7.44,
+        "end": 7.66
+      },
+      {
+        "word": "millions",
+        "start": 7.66,
+        "end": 8.02
+      },
+      {
+        "word": "of",
+        "start": 8.02,
+        "end": 8.3
+      },
+      {
+        "word": "people",
+        "start": 8.3,
+        "end": 8.5
+      },
+      {
+        "word": "worldwide.",
+        "start": 8.5,
+        "end": 9.02
+      },
+      {
+        "word": "Every",
+        "start": 9.96,
+        "end": 10.06
+      },
+      {
+        "word": "day",
+        "start": 10.06,
+        "end": 10.42
+      },
+      {
+        "word": "people",
+        "start": 10.42,
+        "end": 10.76
+      },
+      {
+        "word": "practice",
+        "start": 10.76,
+        "end": 11.18
+      },
+      {
+        "word": "speaking",
+        "start": 11.18,
+        "end": 11.62
+      },
+      {
+        "word": "clearly",
+        "start": 11.62,
+        "end": 12.14
+      },
+      {
+        "word": "and",
+        "start": 12.14,
+        "end": 12.48
+      },
+      {
+        "word": "confidently",
+        "start": 12.48,
+        "end": 13.02
+      },
+      {
+        "word": "to",
+        "start": 13.02,
+        "end": 13.38
+      },
+      {
+        "word": "improve",
+        "start": 13.38,
+        "end": 13.62
+      },
+      {
+        "word": "the",
+        "start": 13.62,
+        "end": 13.92
+      },
+      {
+        "word": "ability",
+        "start": 13.92,
+        "end": 14.36
+      },
+      {
+        "word": "to",
+        "start": 14.36,
+        "end": 14.66
+      },
+      {
+        "word": "express",
+        "start": 14.66,
+        "end": 15.02
+      },
+      {
+        "word": "themselves.",
+        "start": 15.02,
+        "end": 15.46
+      }
+    ]
+  },
+  "phonetic_transcript": null,
+  "segments": [
+    {
+      "type": "silence",
+      "start_ms": 0,
+      "end_ms": 550
+    },
+    {
+      "type": "speech",
+      "start_ms": 550,
+      "end_ms": 900
+    },
+    {
+      "type": "silence",
+      "start_ms": 900,
+      "end_ms": 1150
+    },
+    {
+      "type": "speech",
+      "start_ms": 1150,
+      "end_ms": 3450
+    },
+    {
+      "type": "silence",
+      "start_ms": 3450,
+      "end_ms": 4019
+    },
+    {
+      "type": "speech",
+      "start_ms": 4019,
+      "end_ms": 6250
+    },
+    {
+      "type": "silence",
+      "start_ms": 6250,
+      "end_ms": 6350
+    },
+    {
+      "type": "speech",
+      "start_ms": 6350,
+      "end_ms": 6410
+    },
+    {
+      "type": "silence",
+      "start_ms": 6410,
+      "end_ms": 6530
+    },
+    {
+      "type": "speech",
+      "start_ms": 6530,
+      "end_ms": 9410
+    },
+    {
+      "type": "silence",
+      "start_ms": 9410,
+      "end_ms": 9960
+    },
+    {
+      "type": "speech",
+      "start_ms": 9960,
+      "end_ms": 10590
+    },
+    {
+      "type": "silence",
+      "start_ms": 10590,
+      "end_ms": 10690
+    },
+    {
+      "type": "speech",
+      "start_ms": 10690,
+      "end_ms": 15910
+    },
+    {
+      "type": "silence",
+      "start_ms": 15910,
+      "end_ms": 16169
+    }
+  ],
+  "events": [
+    {
+      "type": "block",
+      "subtype": null,
+      "start_ms": 3450,
+      "end_ms": 4019,
+      "confidence": 0.9,
+      "source": "rules",
+      "text": null
+    },
+    {
+      "type": "block",
+      "subtype": null,
+      "start_ms": 9410,
+      "end_ms": 9960,
+      "confidence": 0.9,
+      "source": "rules",
+      "text": null
+    }
+  ],
+  "metrics": {
+    "speaking_rate_syl_sec": 3.711,
+    "articulation_rate": 4.389,
+    "pace_variability": 0.859,
+    "total_disfluencies": 2,
+    "disfluencies_per_100_syllables": 3.33,
+    "total_syllables": 60,
+    "speech_duration_sec": 13.671,
+    "total_duration_sec": 16.169
+  },
+  "score": {
+    "value": 82.1,
+    "severity": "mild",
+    "breakdown": {
+      "blocks": 15.0,
+      "prolongations": 0.0,
+      "sound_reps": 0.0,
+      "word_reps": 0.0,
+      "fillers": 0.0,
+      "pace": 2.86
+    }
+  },
+  "latency": {
+    "preprocessing_ms": 146.0,
+    "whisper_ms": 3547.2,
+    "vad_ms": 1651.7,
+    "rules_ms": 39.5,
+    "scoring_ms": 1.0,
+    "total_ms": 5822.8,
+    "w2v_classifier_ms": null,
+    "w2v_phonetic_ms": null
+  },
+  "limitations": [
+    "Prototype heuristic thresholds — not clinically validated",
+    "Noise-sensitive: best results with clean, close-mic audio",
+    "English only",
+    "Not a medical diagnostic tool"
+  ],
+  "created_at": "2026-03-01T03:06:31.462687"
+}

@@ -1,0 +1,393 @@
+{
+  "id": "482958e6-6416-486d-94cd-033b47f32bd0",
+  "mode": "RULES_ONLY",
+  "transcript": {
+    "text": "The quick Boba Brown Fox um jumps over the the lazy dog speech Speech fluency is Unimportant But because it affects millions of people",
+    "words": [
+      {
+        "word": "The",
+        "start": 0.21,
+        "end": 0.67
+      },
+      {
+        "word": "quick",
+        "start": 0.67,
+        "end": 1.07
+      },
+      {
+        "word": "Boba",
+        "start": 1.07,
+        "end": 1.57
+      },
+      {
+        "word": "Brown",
+        "start": 1.57,
+        "end": 1.81
+      },
+      {
+        "word": "Fox",
+        "start": 1.81,
+        "end": 2.21
+      },
+      {
+        "word": "um",
+        "start": 2.21,
+        "end": 3.15
+      },
+      {
+        "word": "jumps",
+        "start": 3.15,
+        "end": 3.73
+      },
+      {
+        "word": "over",
+        "start": 3.73,
+        "end": 4.11
+      },
+      {
+        "word": "the",
+        "start": 4.11,
+        "end": 4.41
+      },
+      {
+        "word": "the",
+        "start": 4.41,
+        "end": 5.65
+      },
+      {
+        "word": "lazy",
+        "start": 5.65,
+        "end": 5.95
+      },
+      {
+        "word": "dog",
+        "start": 5.95,
+        "end": 6.47
+      },
+      {
+        "word": "speech",
+        "start": 6.47,
+        "end": 7.17
+      },
+      {
+        "word": "Speech",
+        "start": 8.82,
+        "end": 9.38
+      },
+      {
+        "word": "fluency",
+        "start": 9.38,
+        "end": 9.92
+      },
+      {
+        "word": "is",
+        "start": 9.92,
+        "end": 10.54
+      },
+      {
+        "word": "Unimportant",
+        "start": 11.9,
+        "end": 12.7
+      },
+      {
+        "word": "But",
+        "start": 12.7,
+        "end": 13.84
+      },
+      {
+        "word": "because",
+        "start": 13.84,
+        "end": 15.1
+      },
+      {
+        "word": "it",
+        "start": 15.1,
+        "end": 15.62
+      },
+      {
+        "word": "affects",
+        "start": 15.62,
+        "end": 15.96
+      },
+      {
+        "word": "millions",
+        "start": 15.96,
+        "end": 16.76
+      },
+      {
+        "word": "of",
+        "start": 16.76,
+        "end": 18.44
+      },
+      {
+        "word": "people",
+        "start": 18.44,
+        "end": 19.06
+      }
+    ]
+  },
+  "phonetic_transcript": null,
+  "segments": [
+    {
+      "type": "silence",
+      "start_ms": 0,
+      "end_ms": 540
+    },
+    {
+      "type": "speech",
+      "start_ms": 540,
+      "end_ms": 2620
+    },
+    {
+      "type": "silence",
+      "start_ms": 2620,
+      "end_ms": 2780
+    },
+    {
+      "type": "speech",
+      "start_ms": 2780,
+      "end_ms": 3360
+    },
+    {
+      "type": "silence",
+      "start_ms": 3360,
+      "end_ms": 3620
+    },
+    {
+      "type": "speech",
+      "start_ms": 3620,
+      "end_ms": 4910
+    },
+    {
+      "type": "silence",
+      "start_ms": 4910,
+      "end_ms": 5570
+    },
+    {
+      "type": "speech",
+      "start_ms": 5570,
+      "end_ms": 6650
+    },
+    {
+      "type": "silence",
+      "start_ms": 6650,
+      "end_ms": 6890
+    },
+    {
+      "type": "speech",
+      "start_ms": 6890,
+      "end_ms": 7600
+    },
+    {
+      "type": "silence",
+      "start_ms": 7600,
+      "end_ms": 8910
+    },
+    {
+      "type": "speech",
+      "start_ms": 8910,
+      "end_ms": 9060
+    },
+    {
+      "type": "silence",
+      "start_ms": 9060,
+      "end_ms": 9160
+    },
+    {
+      "type": "speech",
+      "start_ms": 9160,
+      "end_ms": 10140
+    },
+    {
+      "type": "silence",
+      "start_ms": 10140,
+      "end_ms": 10290
+    },
+    {
+      "type": "speech",
+      "start_ms": 10290,
+      "end_ms": 10760
+    },
+    {
+      "type": "silence",
+      "start_ms": 10760,
+      "end_ms": 11010
+    },
+    {
+      "type": "speech",
+      "start_ms": 11010,
+      "end_ms": 11730
+    },
+    {
+      "type": "silence",
+      "start_ms": 11730,
+      "end_ms": 12170
+    },
+    {
+      "type": "speech",
+      "start_ms": 12170,
+      "end_ms": 12440
+    },
+    {
+      "type": "silence",
+      "start_ms": 12440,
+      "end_ms": 12550
+    },
+    {
+      "type": "speech",
+      "start_ms": 12550,
+      "end_ms": 12990
+    },
+    {
+      "type": "silence",
+      "start_ms": 12990,
+      "end_ms": 13390
+    },
+    {
+      "type": "speech",
+      "start_ms": 13390,
+      "end_ms": 14230
+    },
+    {
+      "type": "silence",
+      "start_ms": 14230,
+      "end_ms": 14690
+    },
+    {
+      "type": "speech",
+      "start_ms": 14690,
+      "end_ms": 15760
+    },
+    {
+      "type": "silence",
+      "start_ms": 15760,
+      "end_ms": 15880
+    },
+    {
+      "type": "speech",
+      "start_ms": 15880,
+      "end_ms": 16250
+    },
+    {
+      "type": "silence",
+      "start_ms": 16250,
+      "end_ms": 16630
+    },
+    {
+      "type": "speech",
+      "start_ms": 16630,
+      "end_ms": 17890
+    },
+    {
+      "type": "silence",
+      "start_ms": 17890,
+      "end_ms": 18380
+    },
+    {
+      "type": "speech",
+      "start_ms": 18380,
+      "end_ms": 18570
+    },
+    {
+      "type": "silence",
+      "start_ms": 18570,
+      "end_ms": 18780
+    },
+    {
+      "type": "speech",
+      "start_ms": 18780,
+      "end_ms": 19200
+    },
+    {
+      "type": "silence",
+      "start_ms": 19200,
+      "end_ms": 20137
+    }
+  ],
+  "events": [
+    {
+      "type": "block",
+      "subtype": null,
+      "start_ms": 4910,
+      "end_ms": 5570,
+      "confidence": 0.9,
+      "source": "rules",
+      "text": null
+    },
+    {
+      "type": "block",
+      "subtype": null,
+      "start_ms": 7600,
+      "end_ms": 8910,
+      "confidence": 0.9,
+      "source": "rules",
+      "text": null
+    },
+    {
+      "type": "repetition",
+      "subtype": "word_rep",
+      "start_ms": 4110,
+      "end_ms": 5650,
+      "confidence": 1.0,
+      "source": "rules",
+      "text": "the the"
+    },
+    {
+      "type": "repetition",
+      "subtype": "word_rep",
+      "start_ms": 6470,
+      "end_ms": 9380,
+      "confidence": 1.0,
+      "source": "rules",
+      "text": "speech Speech"
+    },
+    {
+      "type": "filler",
+      "subtype": null,
+      "start_ms": 2210,
+      "end_ms": 3150,
+      "confidence": 0.9,
+      "source": "rules",
+      "text": "um"
+    }
+  ],
+  "metrics": {
+    "speaking_rate_syl_sec": 1.589,
+    "articulation_rate": 2.477,
+    "pace_variability": 0.632,
+    "total_disfluencies": 5,
+    "disfluencies_per_100_syllables": 15.62,
+    "total_syllables": 32,
+    "speech_duration_sec": 12.92,
+    "total_duration_sec": 20.137
+  },
+  "score": {
+    "value": 69.0,
+    "severity": "moderate",
+    "breakdown": {
+      "blocks": 15.0,
+      "prolongations": 0.0,
+      "sound_reps": 0.0,
+      "word_reps": 8.0,
+      "fillers": 3.12,
+      "pace": 4.84
+    }
+  },
+  "latency": {
+    "preprocessing_ms": 110.2,
+    "whisper_ms": 878.8,
+    "vad_ms": 2.5,
+    "rules_ms": 0.3,
+    "scoring_ms": 0.0,
+    "total_ms": 991.8,
+    "w2v_classifier_ms": null,
+    "w2v_phonetic_ms": null
+  },
+  "limitations": [
+    "Prototype heuristic thresholds — not clinically validated",
+    "Noise-sensitive: best results with clean, close-mic audio",
+    "English only",
+    "Not a medical diagnostic tool"
+  ],
+  "created_at": "2026-03-01T03:06:32.455858"
+}
