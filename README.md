@@ -1,20 +1,38 @@
-# Cadence
+<div align="center">
 
-**Speech fluency analytics platform** — record or upload audio, get instant disfluency detection, fluency scoring, and personalized practice recommendations. Built for CheeseHacks 2026.
+# ~ *Cadence* ~
 
-**Live Demo:** [frontend-three-rho-71.vercel.app](https://frontend-three-rho-71.vercel.app)
-**API:** [cadence-api-qrotwdz63a-uc.a.run.app](https://cadence-api-qrotwdz63a-uc.a.run.app/health)
+### Speech Fluency Analytics Platform
+
+[![Live Demo](https://img.shields.io/badge/LIVE_DEMO-Visit_App-blue?style=for-the-badge&logo=vercel)](https://frontend-three-rho-71.vercel.app)
+[![API Status](https://img.shields.io/badge/API-Online-brightgreen?style=for-the-badge&logo=googlecloud)](https://cadence-api-qrotwdz63a-uc.a.run.app/health)
+[![Built For](https://img.shields.io/badge/CheesHacks-2026-orange?style=for-the-badge)](https://cheeshacks.com)
+
+**Record or upload audio. Get instant disfluency detection, fluency scoring, and personalized practice recommendations.**
+
+[![Python](https://img.shields.io/badge/Python-3.11+-3776AB?style=flat-square&logo=python&logoColor=white)](https://python.org)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.111-009688?style=flat-square&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
+[![Next.js](https://img.shields.io/badge/Next.js-14-black?style=flat-square&logo=next.js&logoColor=white)](https://nextjs.org)
+[![PyTorch](https://img.shields.io/badge/PyTorch-Wav2Vec2-EE4C2C?style=flat-square&logo=pytorch&logoColor=white)](https://pytorch.org)
+[![Tailwind](https://img.shields.io/badge/Tailwind_CSS-3.x-06B6D4?style=flat-square&logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
+[![GCP](https://img.shields.io/badge/Google_Cloud-Run-4285F4?style=flat-square&logo=googlecloud&logoColor=white)](https://cloud.google.com)
+
+---
+
+*Built by* **Siddhant Choudhary** | **Christian Cortez** | **Anish Mantri** | **Benjamin Lelivelt**
+
+</div>
 
 ---
 
 ## Screenshots
 
 | Home | Analyze | Learn |
-|------|---------|-------|
+|:----:|:-------:|:-----:|
 | ![Home](docs/screenshots/home.png) | ![Analyze](docs/screenshots/analyze.png) | ![Learn](docs/screenshots/learn.png) |
 
 | Practice | History |
-|----------|---------|
+|:--------:|:-------:|
 | ![Practice](docs/screenshots/practice.png) | ![History](docs/screenshots/history.png) |
 
 ---
@@ -23,7 +41,7 @@
 
 Cadence analyzes speech in real time to detect stuttering patterns including **blocks**, **repetitions**, **prolongations**, and **filler words**. It provides:
 
-- **Fluency Score** (0–100) with severity classification (Mild / Moderate / Moderate-Severe / Severe)
+- **Fluency Score** (0-100) with severity classification (Mild / Moderate / Moderate-Severe / Severe)
 - **Disfluency event timeline** overlaid on the audio waveform
 - **Word-level transcript** with highlighted problem areas
 - **Speaking rate metrics** (syllables/sec, articulation rate, pace variability)
@@ -34,25 +52,25 @@ Cadence analyzes speech in real time to detect stuttering patterns including **b
 ### Two-Tier Analysis Pipeline
 
 | Tier | Mode | What It Does |
-|------|------|-------------|
-| **Tier 1** | `RULES_ONLY` | VAD silence detection, Levenshtein-based repetition matching, filler word detection, speaking rate analysis |
-| **Tier 2** | `HYBRID_ML` | Everything in Tier 1 + Wav2Vec2 neural classifier + CTC phonetic transcription for sound-level repetition detection |
+|:----:|:----:|:-------------|
+| **1** | `RULES_ONLY` | VAD silence detection, Levenshtein-based repetition matching, filler word detection, speaking rate analysis |
+| **2** | `HYBRID_ML` | Everything in Tier 1 + Wav2Vec2 neural classifier + CTC phonetic transcription for sound-level repetition detection |
 
 ---
 
 ## Tech Stack
 
 | Layer | Technology |
-|-------|-----------|
+|:------|:-----------|
 | **Backend** | Python 3.11, FastAPI, SQLAlchemy + SQLite |
 | **Frontend** | Next.js 14 (App Router), React 18, TypeScript, Tailwind CSS |
 | **ML / DSP** | PyTorch, Wav2Vec2, faster-whisper, librosa, scikit-learn |
-| **Cloud (optional)** | Google Cloud Speech-to-Text, Cloud Storage, Firestore |
+| **Cloud** | Google Cloud Speech-to-Text, Cloud Storage, Firestore, Cloud Run |
 | **UI** | Framer Motion, Recharts, WaveSurfer.js, Radix UI primitives |
 
 ---
 
-## Quick Start (Local Setup)
+## Quick Start
 
 ### Prerequisites
 
@@ -65,139 +83,54 @@ Cadence analyzes speech in real time to detect stuttering patterns including **b
   - Windows: Download from [ffmpeg.org](https://ffmpeg.org/download.html) and add to PATH
 - ~2 GB disk space (ML models download on first run)
 
-### 1. Clone the Repository
+### 1. Clone
 
 ```bash
 git clone https://github.com/schoudhary90210/Cadence.git
 cd Cadence
 ```
 
-### 2. Backend Setup
+### 2. Backend
 
 ```bash
 cd backend
-
-# Create virtual environment
 python3 -m venv venv
 source venv/bin/activate    # macOS / Linux
 # venv\Scripts\activate     # Windows
-
-# Install dependencies
 pip install -r requirements.txt
-
-# Start the backend server
 uvicorn main:app --host 0.0.0.0 --port 8000
 ```
 
-The backend will:
-- Create a SQLite database (`fluencylens.db`) automatically
-- Download NLTK data and Whisper/Wav2Vec2 models on first startup (~1-2 min)
-- Serve the API at `http://localhost:8000`
+> The backend auto-downloads NLTK data and Whisper/Wav2Vec2 models on first startup (~1-2 min).
 
-**Verify:** Open `http://localhost:8000/health` — you should see:
+**Verify:** `http://localhost:8000/health`
 ```json
 {"status": "ok", "mode": "HYBRID_ML", "uptime": 5.2}
 ```
 
-### 3. Frontend Setup
+### 3. Frontend
 
 Open a **new terminal**:
 
 ```bash
 cd frontend
-
-# Install dependencies
 npm install
-
-# Build the app
 npx next build
-
-# Start the frontend server
 npx next start -p 3000
 ```
 
 **Verify:** Open `http://localhost:3000` in your browser.
 
-### 4. You're Done
+### 4. Done
 
-Both servers should be running:
-- **Backend API:** `http://localhost:8000`
-- **Frontend App:** `http://localhost:3000`
-
----
-
-## Environment Variables (Optional)
-
-All environment variables have sensible defaults. You only need to set these if you want to customize behavior:
-
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `ANALYSIS_MODE` | `HYBRID_ML` | `RULES_ONLY` for faster analysis without ML models |
-| `WHISPER_MODEL` | `base.en` | Whisper model size (`tiny.en`, `base.en`, `small.en`) |
-| `CORS_ORIGINS` | `http://localhost:3000` | Comma-separated allowed origins |
-| `LOG_LEVEL` | `INFO` | Logging verbosity |
-| `CLOUD_STT_ENABLED` | `true` | Enable Google Cloud Speech-to-Text (requires credentials) |
-| `GCS_ENABLED` | `true` | Enable Google Cloud Storage (requires credentials) |
-| `FIRESTORE_ENABLED` | `true` | Enable Firestore (requires credentials) |
-
-> **Note:** Google Cloud features degrade gracefully — if credentials aren't set up, the app works fine without them using local-only processing.
+| Service | URL |
+|:--------|:----|
+| Backend API | `http://localhost:8000` |
+| Frontend App | `http://localhost:3000` |
 
 ---
 
-## Project Structure
-
-```
-Cadence/
-├── backend/
-│   ├── main.py                  # FastAPI application + all routes
-│   ├── config.py                # All tunable constants and thresholds
-│   ├── requirements.txt         # Python dependencies
-│   ├── pipeline/                # Analysis pipeline modules
-│   │   ├── orchestrator.py      # Main pipeline coordinator
-│   │   ├── audio_preprocessing.py
-│   │   ├── transcription.py     # Whisper speech-to-text
-│   │   ├── vad.py               # Voice Activity Detection
-│   │   ├── repetition.py        # Levenshtein-based repetition detection
-│   │   ├── filler.py            # Filler word detection
-│   │   ├── prolongation.py      # Sound prolongation detection
-│   │   ├── speaking_rate.py     # Syllable rate + pace variability
-│   │   ├── scoring.py           # Composite fluency scoring
-│   │   ├── wav2vec_classifier.py  # ML disfluency classifier (Tier 2)
-│   │   ├── wav2vec_phonetic.py    # CTC phonetic transcription (Tier 2)
-│   │   └── cloud_stt.py          # Google Cloud STT integration
-│   ├── models/
-│   │   └── schemas.py           # Pydantic data models (source of truth)
-│   ├── db/
-│   │   ├── database.py          # SQLAlchemy + SQLite setup
-│   │   └── crud.py              # Database operations
-│   ├── learn/
-│   │   ├── courses.py           # 4 adaptive practice courses
-│   │   └── progress.py          # User progress tracking
-│   └── demo_samples/            # Pre-cached demo audio files
-│       └── cached_results/      # Instant-return cached analysis JSONs
-├── frontend/
-│   ├── app/                     # Next.js App Router pages
-│   │   ├── page.tsx             # Landing page
-│   │   ├── analyze/page.tsx     # Record / Upload / Demo analysis
-│   │   ├── results/[id]/        # Analysis results view
-│   │   ├── learn/               # Adaptive learning courses
-│   │   ├── practice/read/       # Reading practice (4 tiers + progress test)
-│   │   ├── practice/speak/      # Conversation practice
-│   │   └── history/page.tsx     # Session history + charts
-│   ├── components/              # React components
-│   │   ├── recording/           # AudioRecorder, FileUpload, DemoSamplePicker
-│   │   ├── results/             # FluencyGauge, EventTimeline, TranscriptView
-│   │   ├── practice/            # ReadingPractice component
-│   │   ├── history/             # SessionList component
-│   │   └── accessibility/       # AccessibilityProvider (high contrast, etc.)
-│   └── lib/
-│       ├── api.ts               # Typed API client
-│       └── types.ts             # TypeScript types (mirrors backend schemas)
-```
-
----
-
-## Features In Detail
+## Features
 
 ### Analysis Pipeline
 
@@ -207,16 +140,16 @@ Cadence/
 4. **Repetition Detection** — Sliding window n-gram matching with Levenshtein similarity (threshold 0.85)
 5. **Filler Detection** — Dictionary-based matching for "um", "uh", "like", "you know", etc.
 6. **Speaking Rate** — Syllable counting via CMUDict, rolling window pace variability
-7. **ML Classification** (Tier 2) — Random Forest on Wav2Vec2 embeddings, trained on SEP-28k dataset
-8. **Phonetic Analysis** (Tier 2) — CTC character-level transcription for sound repetition detection
+7. **ML Classification** *(Tier 2)* — Random Forest on Wav2Vec2 embeddings, trained on SEP-28k dataset
+8. **Phonetic Analysis** *(Tier 2)* — CTC character-level transcription for sound repetition detection
 9. **Scoring** — Weighted penalty system: blocks (15pts), prolongations (12pts), sound reps (10pts), word reps (8pts), fillers (5pts)
 
 ### Practice System
 
 - **4 Difficulty Tiers:** Easy, Medium, Hard, Ultra Hard — 8 exercises each (32 total)
-- **Fixed Progress Test:** Single passage with 8 progressively harder sentences — tracked over time in History
+- **Fixed Progress Test:** Single passage with 8 progressively harder sentences — tracked over time
 - **Word-by-word feedback:** Green (matched), Red (missed), Orange (disfluency), Yellow (filler nearby)
-- **Score tracking:** Previous attempt and all-time best per exercise, persisted in localStorage
+- **Score tracking:** Previous attempt and all-time best per exercise
 
 ### Learn System
 
@@ -239,12 +172,12 @@ Cadence/
 ## API Endpoints
 
 | Method | Endpoint | Description |
-|--------|----------|-------------|
+|:------:|:---------|:------------|
 | `GET` | `/health` | Server status, analysis mode, uptime |
-| `POST` | `/analyze` | Upload audio file for analysis (form field: `file`) |
+| `POST` | `/analyze` | Upload audio file for analysis |
 | `GET` | `/sessions` | List all past sessions (newest first) |
 | `GET` | `/sessions/{id}` | Full analysis result for a session |
-| `GET` | `/sessions/date/{date}` | Sessions for a specific date (YYYY-MM-DD) |
+| `GET` | `/sessions/date/{date}` | Sessions for a specific date |
 | `GET` | `/sessions/week/{date}` | Sessions for the week starting at date |
 | `GET` | `/sessions/stats` | Aggregate statistics across all sessions |
 | `GET` | `/demo-samples` | List available demo audio files |
@@ -261,46 +194,83 @@ Cadence/
 
 ## Demo Samples
 
-Three pre-cached audio samples are included for instant demo:
+Three pre-cached audio samples for instant demo (no processing delay):
 
-| Sample | Expected Score | Severity | Events |
-|--------|---------------|----------|--------|
-| `fluent_sample.m4a` | ~97 | Mild | 0 disfluencies |
-| `stuttered_sample.m4a` | ~59 | Moderate-Severe | 5 events (blocks, repetitions, fillers) |
-| `mixed_sample.m4a` | ~80 | Moderate | 1 event (block) |
-
-These return cached results instantly — no processing delay during demos.
+| Sample | Score | Severity | Events |
+|:-------|:-----:|:--------:|:------:|
+| `fluent_sample.m4a` | ~97 | Mild | 0 |
+| `stuttered_sample.m4a` | ~59 | Moderate-Severe | 5 |
+| `mixed_sample.m4a` | ~80 | Moderate | 1 |
 
 ---
 
 ## Scoring System
 
-| Component | Penalty (per event) |
-|-----------|-------------------|
-| Blocks | 15 points |
-| Prolongations | 12 points |
-| Sound Repetitions | 10 points |
-| Word Repetitions | 8 points |
-| Fillers | 5 points |
-| Pace Variance | 10 points |
+| Component | Penalty |
+|:----------|:-------:|
+| Blocks | 15 pts |
+| Prolongations | 12 pts |
+| Sound Repetitions | 10 pts |
+| Word Repetitions | 8 pts |
+| Fillers | 5 pts |
+| Pace Variance | 10 pts |
 
-**Score = 100 - total penalties** (clamped to 0–100)
+**Score = 100 - total penalties** (clamped to 0-100)
 
-| Score Range | Severity |
-|-------------|----------|
-| 80–100 | Mild |
-| 60–79 | Moderate |
-| 40–59 | Moderate-Severe |
-| 0–39 | Severe |
+| Score | Severity |
+|:-----:|:---------|
+| 80-100 | Mild |
+| 60-79 | Moderate |
+| 40-59 | Moderate-Severe |
+| 0-39 | Severe |
+
+---
+
+## Project Structure
+
+```
+Cadence/
+├── backend/
+│   ├── main.py                     # FastAPI application + all routes
+│   ├── config.py                   # Tunable constants and thresholds
+│   ├── requirements.txt            # Python dependencies
+│   ├── pipeline/                   # Analysis pipeline modules
+│   │   ├── orchestrator.py         # Main pipeline coordinator
+│   │   ├── audio_preprocessing.py  # Format conversion
+│   │   ├── transcription.py        # Whisper speech-to-text
+│   │   ├── vad.py                  # Voice Activity Detection
+│   │   ├── repetition.py           # Levenshtein repetition detection
+│   │   ├── filler.py               # Filler word detection
+│   │   ├── prolongation.py         # Sound prolongation detection
+│   │   ├── speaking_rate.py        # Syllable rate + pace variability
+│   │   ├── scoring.py              # Composite fluency scoring
+│   │   ├── wav2vec_classifier.py   # ML disfluency classifier (Tier 2)
+│   │   ├── wav2vec_phonetic.py     # CTC phonetic transcription (Tier 2)
+│   │   └── cloud_stt.py            # Google Cloud STT integration
+│   ├── models/
+│   │   └── schemas.py              # Pydantic data models
+│   ├── db/
+│   │   ├── database.py             # SQLAlchemy + SQLite setup
+│   │   └── crud.py                 # Database operations
+│   ├── learn/
+│   │   ├── courses.py              # 4 adaptive practice courses
+│   │   └── progress.py             # User progress tracking
+│   └── demo_samples/               # Pre-cached demo audio files
+├── frontend/
+│   ├── app/                        # Next.js App Router pages
+│   ├── components/                 # React components
+│   └── lib/                        # API client + TypeScript types
+└── scripts/                        # Deployment scripts
+```
 
 ---
 
 ## Troubleshooting
 
 | Issue | Solution |
-|-------|---------|
-| `ModuleNotFoundError` on backend start | Make sure you activated the venv: `source venv/bin/activate` |
-| "Analysis failed" when recording/uploading | **Install ffmpeg** — it's required to decode browser audio (WebM/M4A). Run `brew install ffmpeg` (macOS) or `sudo apt install ffmpeg` (Linux) |
+|:------|:---------|
+| `ModuleNotFoundError` on backend start | Activate the venv: `source venv/bin/activate` |
+| "Analysis failed" when recording/uploading | **Install ffmpeg** — `brew install ffmpeg` (macOS) or `sudo apt install ffmpeg` (Linux) |
 | Models downloading slowly | First request downloads ~500MB of models. Subsequent requests are instant. |
 | Port already in use | Kill existing processes: `lsof -ti:8000 \| xargs kill -9` |
 | Frontend build fails | Delete `.next` and `node_modules`, then `npm install && npx next build` |
@@ -321,12 +291,14 @@ These return cached results instantly — no processing delay during demos.
 
 ## Built With
 
-- [FastAPI](https://fastapi.tiangolo.com/) — High-performance Python web framework
-- [Next.js 14](https://nextjs.org/) — React framework with App Router
-- [Wav2Vec2](https://huggingface.co/facebook/wav2vec2-base) — Self-supervised speech representations
-- [faster-whisper](https://github.com/SYSTRAN/faster-whisper) — CTranslate2 Whisper implementation
-- [librosa](https://librosa.org/) — Audio analysis library
-- [Tailwind CSS](https://tailwindcss.com/) — Utility-first CSS
-- [Framer Motion](https://www.framer.com/motion/) — Animation library
-- [Recharts](https://recharts.org/) — React charting library
-- [WaveSurfer.js](https://wavesurfer.xyz/) — Audio waveform visualization
+[FastAPI](https://fastapi.tiangolo.com/) | [Next.js 14](https://nextjs.org/) | [Wav2Vec2](https://huggingface.co/facebook/wav2vec2-base) | [faster-whisper](https://github.com/SYSTRAN/faster-whisper) | [librosa](https://librosa.org/) | [Tailwind CSS](https://tailwindcss.com/) | [Framer Motion](https://www.framer.com/motion/) | [Recharts](https://recharts.org/) | [WaveSurfer.js](https://wavesurfer.xyz/)
+
+---
+
+<div align="center">
+
+*Made with dedication for CheesHacks 2026 — Health & Lifestyle*
+
+**Siddhant Choudhary** | **Christian Cortez** | **Anish Mantri** | **Benjamin Lelivelt**
+
+</div>
