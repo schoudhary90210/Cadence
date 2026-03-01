@@ -152,14 +152,6 @@ Built for **CheeseHacks 2026** — Health & Lifestyle Theme
 
 ---
 
-## AI Tools
-
-| Tool | Usage |
-|:-----|:------|
-| [Claude](https://claude.ai/) (Anthropic) | Assisted with implementation planning |
-
----
-
 ## License
 
 This project was created for CheeseHacks 2026 (hackathon). Individual dependencies retain their respective licenses as listed above.
