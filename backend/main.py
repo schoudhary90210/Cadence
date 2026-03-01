@@ -112,6 +112,18 @@ async def startup():
             logger.info("librosa JIT warmup complete")
         except Exception as e:
             logger.warning(f"librosa warmup skipped: {e}")
+        # Auto-download NLTK cmudict for syllable counting (skips if already present)
+        try:
+            import nltk
+            import ssl
+            try:
+                ssl._create_default_https_context = ssl._create_unverified_context
+            except AttributeError:
+                pass
+            nltk.download("cmudict", quiet=True)
+            logger.info("NLTK cmudict ready")
+        except Exception as e:
+            logger.warning(f"NLTK cmudict download skipped (vowel fallback will be used): {e}")
     await asyncio.get_event_loop().run_in_executor(None, _warm)
 
 

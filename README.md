@@ -66,16 +66,13 @@ source venv/bin/activate    # macOS / Linux
 # Install dependencies
 pip install -r requirements.txt
 
-# Download NLTK data (for syllable counting)
-python3 -c "import nltk; nltk.download('cmudict')"
-
 # Start the backend server
 uvicorn main:app --host 0.0.0.0 --port 8000
 ```
 
 The backend will:
 - Create a SQLite database (`fluencylens.db`) automatically
-- Download Whisper and Wav2Vec2 models on first request (~1-2 min)
+- Download NLTK data and Whisper/Wav2Vec2 models on first startup (~1-2 min)
 - Serve the API at `http://localhost:8000`
 
 **Verify:** Open `http://localhost:8000/health` — you should see:
