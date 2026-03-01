@@ -176,6 +176,18 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--c4d); fo
   0%, 100% { opacity:1; }
   50%      { opacity:.4; }
 }
+@keyframes s5FlyInLeft {
+  from { opacity:0; transform:translateX(-90px); filter:blur(3px); }
+  to   { opacity:1; transform:translateX(0); filter:blur(0); }
+}
+@keyframes s5FlyInRight {
+  from { opacity:0; transform:translateX(90px); filter:blur(3px); }
+  to   { opacity:1; transform:translateX(0); filter:blur(0); }
+}
+@keyframes s5FlyInUp {
+  from { opacity:0; transform:translateY(36px); filter:blur(2px); }
+  to   { opacity:1; transform:translateY(0); filter:blur(0); }
+}
 
 /* ═══════════════════════════════════════════
    SLIDE 1: THE HOOK
@@ -529,17 +541,17 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--c4d); fo
 .s3-left-header { opacity:0; animation:up .6s ease .1s forwards; }
 .s3-eyebrow {
   font-family:'Barlow Condensed',sans-serif;
-  font-size:12px; letter-spacing:.22em; text-transform:uppercase;
+  font-size:13px; letter-spacing:.22em; text-transform:uppercase;
   color:var(--c3); margin-bottom:6px;
 }
 .s3-heading {
   font-family:'Playfair Display',serif;
-  font-weight:700; font-size:clamp(26px,2.9vw,36px);
+  font-weight:700; font-size:clamp(30px,3.2vw,40px);
   color:var(--c1); letter-spacing:-.015em; line-height:1.1;
 }
 .s3-subhead {
   font-family:'Barlow',sans-serif;
-  font-weight:300; font-size:17px;
+  font-weight:300; font-size:18px;
   color:var(--c2); margin-top:6px; line-height:1.5;
 }
 
@@ -580,11 +592,11 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--c4d); fo
 }
 .s3-card-name {
   font-family:'Barlow Condensed',sans-serif;
-  font-weight:600; font-size:15px; letter-spacing:.03em; line-height:1.2;
+  font-weight:600; font-size:17px; letter-spacing:.03em; line-height:1.2;
 }
 .s3-card-detail {
   font-family:'JetBrains Mono',monospace;
-  font-size:12px; color:var(--c2); margin-top:2px; line-height:1.45; opacity:.8;
+  font-size:13px; color:var(--c2); margin-top:2px; line-height:1.45; opacity:.8;
 }
 
 /* Tier colors */
@@ -610,7 +622,7 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--c4d); fo
 .s3-tier-div:nth-of-type(2) { animation:fadeIn .4s ease .8s forwards; }
 .s3-tier-pill {
   font-family:'Barlow Condensed',sans-serif;
-  font-size:10px; font-weight:700; letter-spacing:.14em; text-transform:uppercase;
+  font-size:11px; font-weight:700; letter-spacing:.14em; text-transform:uppercase;
   padding:2px 8px; border-radius:2px;
 }
 .s3-tier-pill.t1 { background:#5A786340; color:var(--c2); }
@@ -626,12 +638,12 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--c4d); fo
 .s3-right-header { opacity:0; animation:up .6s ease .2s forwards; }
 .s3-right-heading {
   font-family:'Playfair Display',serif;
-  font-weight:700; font-size:clamp(22px,2.4vw,30px);
+  font-weight:700; font-size:clamp(26px,2.8vw,34px);
   color:var(--c1); letter-spacing:-.01em; margin-bottom:3px;
 }
 .s3-right-sub {
   font-family:'Barlow',sans-serif;
-  font-weight:300; font-size:16px; color:var(--c2);
+  font-weight:300; font-size:17px; color:var(--c2);
 }
 
 .s3-algo-grid {
@@ -664,26 +676,26 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--c4d); fo
 
 .s3-algo-num {
   font-family:'JetBrains Mono',monospace;
-  font-size:10px; color:var(--c3); letter-spacing:.1em;
+  font-size:11px; color:var(--c3); letter-spacing:.1em;
 }
 .s3-algo.ml .s3-algo-num { color:var(--purple); }
 
 .s3-algo-title {
   font-family:'Barlow Condensed',sans-serif;
-  font-weight:700; font-size:17px; letter-spacing:.02em;
+  font-weight:700; font-size:19px; letter-spacing:.02em;
   color:var(--c1); line-height:1.2;
 }
 
 .s3-algo-desc {
   font-family:'JetBrains Mono',monospace;
-  font-size:12px; color:var(--c2); line-height:1.5; opacity:.85;
+  font-size:13px; color:var(--c2); line-height:1.5; opacity:.85;
 }
 .s3-algo.ml .s3-algo-desc { color:#c4b5fd; }
 
 .s3-algo-tag {
   display:inline-block;
   font-family:'Barlow Condensed',sans-serif;
-  font-size:9px; font-weight:700; letter-spacing:.14em; text-transform:uppercase;
+  font-size:10px; font-weight:700; letter-spacing:.14em; text-transform:uppercase;
   padding:2px 6px; border-radius:2px; margin-top:auto; align-self:flex-start;
 }
 .s3-algo.dsp .s3-algo-tag { background:#5A786335; color:var(--c2); }
@@ -698,13 +710,13 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--c4d); fo
 }
 .s3-zero-badge {
   font-family:'Barlow Condensed',sans-serif;
-  font-weight:700; font-size:12px; letter-spacing:.15em; text-transform:uppercase;
+  font-weight:700; font-size:13px; letter-spacing:.15em; text-transform:uppercase;
   color:var(--c4d); background:var(--c2);
   padding:4px 10px; border-radius:2px; flex-shrink:0;
 }
 .s3-zero-text {
   font-family:'Barlow',sans-serif;
-  font-weight:300; font-size:16px; color:var(--c2); line-height:1.45;
+  font-weight:300; font-size:18px; color:var(--c2); line-height:1.45;
 }
 .s3-zero-text strong { font-style:normal; color:var(--c1); font-weight:500; }
 
@@ -749,11 +761,11 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--c4d); fo
   padding:5px 14px; border-radius:2px;
 }
 
-/* 2×2 grid (reduced from 3×2) */
+/* Slide 4 grid */
 .s4-grid {
   display:grid;
   grid-template-columns:1fr 1fr;
-  grid-template-rows:1fr 1fr;
+  grid-template-rows:auto 1fr;
   gap:14px; min-height:0;
 }
 
@@ -771,7 +783,12 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--c4d); fo
 .s4-card:nth-child(1) { animation:up .65s ease .25s forwards; }
 .s4-card:nth-child(2) { animation:up .65s ease .38s forwards; }
 .s4-card:nth-child(3) { animation:up .65s ease .51s forwards; }
-.s4-card:nth-child(4) { animation:up .65s ease .64s forwards; }
+
+.s4-card.dual {
+  grid-column:1 / -1;
+  border-color:#a78bfa65;
+  background:linear-gradient(135deg, #a78bfa14 0%, #5A786320 100%);
+}
 
 .s4-card.primary {
   border-color:var(--c2);
@@ -791,17 +808,14 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--c4d); fo
   border-color:#90AB8B50;
   background:linear-gradient(135deg, #90AB8B0e 0%, #5A786308 100%);
 }
-.s4-card.vs {
-  border-color:#6b4c3b50;
-  background:#2e2018;
-}
 
 .s4-card-icon { font-size:22px; line-height:1; margin-bottom:2px; }
 .s4-card-num {
   font-family:'JetBrains Mono',monospace;
   font-size:10px; color:var(--c3); letter-spacing:.12em; text-transform:uppercase;
 }
-.s4-card.vs .s4-card-num { color:#8b6b4c; }
+
+.s4-card.dual .s4-card-num { color:var(--purple); }
 
 .s4-card-title {
   font-family:'Barlow Condensed',sans-serif;
@@ -814,9 +828,7 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--c4d); fo
   font-weight:300; font-size:14px;
   color:var(--c2); line-height:1.6; flex:1;
 }
-.s4-card.vs .s4-card-body { color:#a07858; }
 .s4-card-body strong { color:var(--c1); font-weight:500; }
-.s4-card.vs .s4-card-body strong { color:var(--warm); }
 
 .s4-card-tag {
   display:inline-block;
@@ -827,9 +839,7 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--c4d); fo
 .s4-card.primary .s4-card-tag { background:#5A786340; color:var(--c2); }
 .s4-card.secondary .s4-card-tag { background:#5A786328; color:var(--c2); }
 .s4-card.accent .s4-card-tag { background:#90AB8B20; color:var(--c2); }
-.s4-card.vs .s4-card-tag { background:#6b4c3b40; color:var(--warm); }
-
-.s4-strike { text-decoration:line-through; opacity:.5; }
+.s4-card.dual .s4-card-tag { background:#a78bfa2c; color:var(--purple-light); }
 
 /* Bottom statement */
 .s4-statement {
@@ -887,7 +897,7 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--c4d); fo
   font-family:'Barlow Condensed',sans-serif;
   font-size:10px; letter-spacing:.22em; text-transform:uppercase;
   color:var(--c3); margin-bottom:44px;
-  opacity:0; animation:up .5s ease .2s forwards;
+  opacity:0;
 }
 .s5-top-rule {
   width:48px; height:1px; background:var(--c3);
@@ -899,7 +909,7 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--c4d); fo
   font-weight:300; font-size:clamp(13px,1.5vw,17px);
   letter-spacing:.28em; text-transform:uppercase;
   color:var(--c2); margin-bottom:24px;
-  opacity:0; animation:up .7s ease .6s forwards;
+  opacity:0;
 }
 .s5-main-quote {
   font-family:'Playfair Display',serif;
@@ -910,6 +920,10 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--c4d); fo
   max-width:860px; margin:0 auto;
   opacity:0; animation:up 1s ease .9s forwards;
   position:relative;
+}
+.s5-main-quote .w {
+  opacity:0;
+  display:inline-block;
 }
 .s5-highlight {
   font-style:normal; font-weight:700;
@@ -931,7 +945,7 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--c4d); fo
 .s5-lockup {
   margin-top:44px;
   display:flex; flex-direction:column; align-items:center; gap:10px;
-  opacity:0; animation:up .8s ease 2.2s forwards;
+  opacity:0;
 }
 .s5-product-name {
   font-family:'Playfair Display',serif;
@@ -948,7 +962,37 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--c4d); fo
 .s5-pillars {
   margin-top:30px;
   display:flex; align-items:center; gap:0;
-  opacity:0; animation:up .7s ease 2.6s forwards;
+  opacity:0;
+}
+
+#sf4.active .s5-slide-num {
+  opacity:1;
+}
+
+#sf4.active .s5-for-line {
+  opacity:1;
+}
+
+#sf4.active .s5-main-quote {
+  opacity:1;
+}
+
+#sf4.active .s5-lockup {
+  opacity:1;
+}
+
+#sf4.active .s5-pillars {
+  opacity:1;
+}
+
+@keyframes wordTrickle {
+  from { opacity:0; transform:translateY(12px); }
+  to { opacity:1; transform:translateY(0); }
+}
+
+#sf4.active .s5-main-quote .w {
+  animation:wordTrickle 0.4s ease forwards;
+  animation-delay:calc(1.0s + (var(--w-index, 0) * 0.08s));
 }
 .s5-pillar {
   display:flex; flex-direction:column; align-items:center; gap:5px;
@@ -1010,7 +1054,7 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--c4d); fo
     <div class="s1-detail-strip">
       <div class="s1-detail-card">
         <div class="s1-detail-k">Cost Barrier</div>
-        <div class="s1-detail-v"><strong>$150 per hour</strong> for speech therapy.</div>
+        <div class="s1-detail-v"><strong>$150/hour</strong> for speech therapy.</div>
       </div>
 
       <div class="s1-detail-card">
@@ -1042,7 +1086,6 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--c4d); fo
         <div class="s2-eyebrow">Live Demo</div>
         <div class="s2-heading">See It Work.</div>
       </div>
-      <div class="s2-instruction">1-minute live demo — three inputs in, full fluency analysis out</div>
     </div>
 
     <!-- Demo area -->
@@ -1247,8 +1290,20 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--c4d); fo
       <div class="s4-tiebreaker">★ Tiebreaker Criterion</div>
     </div>
 
-    <!-- 2×2 Card Grid -->
+    <!-- Card Grid -->
     <div class="s4-grid">
+      <!-- Featured Card -->
+      <div class="s4-card primary dual">
+        <div class="s4-card-icon">🧠</div>
+        <div class="s4-card-num">Differentiator 02</div>
+        <div class="s4-card-title">Dual-Action wav2vec2</div>
+        <div class="s4-card-body">
+          One backbone, two independent jobs: <strong>(1) acoustic event classification</strong> and <strong>(2) character-level CTC phonetic tracking.</strong>
+          This dual action catches both broad speech patterns and fine sound-level repetitions.
+        </div>
+        <div class="s4-card-tag">Dual Model Roles</div>
+      </div>
+
       <!-- Card 1 -->
       <div class="s4-card primary">
         <div class="s4-card-icon">🔬</div>
@@ -1259,19 +1314,6 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--c4d); fo
           <strong>Focus stays on interpretable fluency signals, not generic text generation.</strong>
         </div>
         <div class="s4-card-tag">Custom DSP · ML</div>
-      </div>
-
-      <!-- Card 2 -->
-      <div class="s4-card primary">
-        <div class="s4-card-icon">🧠</div>
-        <div class="s4-card-num">Differentiator 02</div>
-        <div class="s4-card-title">Dual-Purpose wav2vec2</div>
-        <div class="s4-card-body">
-          Same architecture — <strong>two completely different roles.</strong>
-          One hears acoustic patterns. One reads phonemes.
-          They catch what each other misses.
-        </div>
-        <div class="s4-card-tag">Novel Architecture</div>
       </div>
 
       <!-- Card 3 -->
@@ -1285,20 +1327,6 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--c4d); fo
           Audio processed and deleted. Privacy by design.
         </div>
         <div class="s4-card-tag">Accessible · Private</div>
-      </div>
-
-      <!-- Card 4: vs -->
-      <div class="s4-card vs">
-        <div class="s4-card-icon">⚔️</div>
-        <div class="s4-card-num">vs. Existing Apps</div>
-        <div class="s4-card-title" style="color:var(--warm);">Stamurai, Speech Blubs…</div>
-        <div class="s4-card-body">
-          <span class="s4-strike">Guided drill tools only</span><br>
-          <span class="s4-strike">No real-time acoustic detection</span><br>
-          <span class="s4-strike">No objective fluency measurement</span><br>
-          <span class="s4-strike">Paid subscriptions required</span>
-        </div>
-        <div class="s4-card-tag">Gap in Market</div>
       </div>
     </div>
 
@@ -1437,6 +1465,50 @@ function revealS1Solution() {
   s1SolutionRevealed = true;
 }
 
+function wrapSlide5QuoteWords() {
+  const quote = document.querySelector('#sf4 .s5-main-quote');
+  if (!quote || quote.dataset.wordized === '1') return;
+
+  const wrapNodeWords = (node, state) => {
+    if (node.nodeType === Node.TEXT_NODE) {
+      const text = node.nodeValue;
+      if (!text || !text.trim()) return document.createTextNode(text || '');
+
+      const fragment = document.createDocumentFragment();
+      const parts = text.split(/(\s+)/);
+      parts.forEach((part) => {
+        if (!part) return;
+        if (/^\s+$/.test(part)) {
+          fragment.appendChild(document.createTextNode(part));
+          return;
+        }
+        const span = document.createElement('span');
+        span.className = 'w';
+        span.style.setProperty('--w-index', state.index);
+        span.textContent = part;
+        fragment.appendChild(span);
+        state.index += 1;
+      });
+      return fragment;
+    }
+
+    if (node.nodeType === Node.ELEMENT_NODE) {
+      const clone = node.cloneNode(false);
+      node.childNodes.forEach((child) => clone.appendChild(wrapNodeWords(child, state)));
+      return clone;
+    }
+
+    return node.cloneNode(true);
+  };
+
+  const state = { index: 0 };
+  const fragment = document.createDocumentFragment();
+  quote.childNodes.forEach((child) => fragment.appendChild(wrapNodeWords(child, state)));
+  quote.textContent = '';
+  quote.appendChild(fragment);
+  quote.dataset.wordized = '1';
+}
+
 function go(n) {
   if (n < 0 || n >= TOTAL) return;
   document.getElementById('sf'+cur).classList.remove('active');
@@ -1468,6 +1540,7 @@ function tFS() {
   else document.exitFullscreen();
 }
 
+wrapSlide5QuoteWords();
 document.getElementById('pf').style.width = (1/TOTAL*100)+'%';
 document.getElementById('sf0').addEventListener('click', () => {
   if (cur === 0 && !s1SolutionRevealed) revealS1Solution();
