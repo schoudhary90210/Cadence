@@ -50,6 +50,7 @@ const SOURCE_BADGE_COLORS: Record<EventSource, string> = {
   ml: "bg-purple-900/60 text-purple-300 border-purple-700",
   phonetic: "bg-amber-900/60 text-amber-300 border-amber-700",
   hybrid: "bg-emerald-900/60 text-emerald-300 border-emerald-700",
+  cloud_stt: "bg-blue-900/60 text-blue-300 border-blue-700",
 };
 
 const EVENT_TYPE_LABELS: Record<EventType, string> = {
@@ -68,6 +69,7 @@ const LATENCY_COLORS: Record<string, string> = {
   scoring: "#10b981",
   classifier: "#a855f7",
   phonetic: "#f97316",
+  cloud_stt: "#3b82f6",
 };
 
 // Scoring weights + severity bands (mirror backend config.py)
@@ -91,7 +93,7 @@ const SCORING_CONFIG = {
     "Frame hop": "10 ms",
     "Energy threshold": "0.3 × mean RMS",
     "Merge gap": "100 ms",
-    "Block threshold": "≥ 750 ms",
+    "Block threshold": "≥ 600 ms",
   },
 };
 
@@ -256,6 +258,7 @@ export function JudgeMode({ result }: JudgeModeProps) {
     ml: 0,
     phonetic: 0,
     hybrid: 0,
+    cloud_stt: 0,
   };
   events.forEach((e) => {
     sourceCounts[e.source]++;
@@ -285,6 +288,13 @@ export function JudgeMode({ result }: JudgeModeProps) {
       name: "Phonetic",
       ms: latency.w2v_phonetic_ms,
       color: LATENCY_COLORS.phonetic,
+    });
+  }
+  if (latency.cloud_stt_ms !== null) {
+    latencyEntries.push({
+      name: "Cloud STT",
+      ms: latency.cloud_stt_ms,
+      color: LATENCY_COLORS.cloud_stt,
     });
   }
   const totalStageMs = latencyEntries.reduce((s, e) => s + e.ms, 0);
@@ -607,7 +617,83 @@ export function JudgeMode({ result }: JudgeModeProps) {
             )}
           </div>
 
-          {/* ── 7. Limitations ─────────────────────────────────────── */}
+          {/* ── 7. Cloud Integration ──────────────────────────────── */}
+          {(result.cloud_stt_transcript || result.gcs_uri || latency.cloud_stt_ms !== null) && (
+            <div>
+              <p className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-3">
+                Cloud Integration
+              </p>
+              <div className="space-y-3">
+
+                {/* Cloud STT transcript comparison */}
+                {result.cloud_stt_transcript && (
+                  <div className="rounded border border-blue-800/40 bg-blue-950/30 p-3">
+                    <div className="flex items-center gap-2 mb-2">
+                      <span className="inline-flex items-center rounded border border-blue-700 bg-blue-900/60 px-1.5 py-0.5 text-[10px] font-semibold text-blue-300">
+                        Google Cloud Speech-to-Text
+                      </span>
+                      {latency.cloud_stt_ms !== null && (
+                        <span className="font-mono text-[10px] text-blue-400">
+                          {latency.cloud_stt_ms.toFixed(0)} ms
+                        </span>
+                      )}
+                    </div>
+                    <div className="grid gap-2 sm:grid-cols-2">
+                      <div>
+                        <p className="text-[10px] font-semibold uppercase text-slate-500 tracking-wider mb-1">
+                          Whisper (local)
+                        </p>
+                        <p className="text-xs text-slate-400 leading-relaxed break-words">
+                          {result.transcript.text}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-[10px] font-semibold uppercase text-slate-500 tracking-wider mb-1">
+                          Cloud STT (Google)
+                        </p>
+                        <p className="text-xs text-slate-400 leading-relaxed break-words">
+                          {result.cloud_stt_transcript.text}
+                        </p>
+                      </div>
+                    </div>
+                    <p className="text-[10px] text-slate-500 mt-2 italic">
+                      Whisper: {result.transcript.words.length} words
+                      {" · "}Cloud STT: {result.cloud_stt_transcript.words.length} words
+                      {latency.cloud_stt_ms !== null && latency.whisper_ms > 0 && (
+                        <>
+                          {" · "}Latency: Whisper {latency.whisper_ms.toFixed(0)}ms vs Cloud {latency.cloud_stt_ms.toFixed(0)}ms
+                        </>
+                      )}
+                    </p>
+                  </div>
+                )}
+
+                {/* GCS + Firestore badges */}
+                <div className="flex flex-wrap gap-2">
+                  {result.gcs_uri && (
+                    <div className="rounded border border-slate-600 bg-slate-800/50 px-3 py-1.5">
+                      <p className="text-[10px] font-semibold uppercase text-slate-500 tracking-wider">
+                        Cloud Storage
+                      </p>
+                      <p className="text-[10px] text-slate-400 font-mono mt-0.5 break-all">
+                        {result.gcs_uri}
+                      </p>
+                    </div>
+                  )}
+                  <div className="rounded border border-slate-600 bg-slate-800/50 px-3 py-1.5 flex items-center gap-2">
+                    <CheckCircle2 className="h-3 w-3 text-emerald-400" aria-hidden="true" />
+                    <span className="text-[10px] text-slate-400">Firestore</span>
+                  </div>
+                  <div className="rounded border border-slate-600 bg-slate-800/50 px-3 py-1.5 flex items-center gap-2">
+                    <CheckCircle2 className="h-3 w-3 text-emerald-400" aria-hidden="true" />
+                    <span className="text-[10px] text-slate-400">Cloud Run</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* ── 8. Limitations ─────────────────────────────────────── */}
           <div className="rounded border border-amber-800/40 bg-amber-950/30 p-3">
             <p className="text-[10px] font-semibold uppercase text-amber-500 tracking-wider mb-1.5">
               Prototype Limitations

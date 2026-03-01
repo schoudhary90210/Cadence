@@ -1,0 +1,9 @@
+venv/
+__pycache__/
+*.pyc
+.env
+audio_uploads/
+ml_cache/training_clips/
+node_modules/
+*.bak
+.pytest_cache/

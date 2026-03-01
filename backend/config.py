@@ -103,6 +103,14 @@ DEMO_CACHED_RESULTS_DIR = "demo_samples/cached_results"
 AUDIO_UPLOADS_DIR = os.getenv("AUDIO_UPLOADS_DIR", "audio_uploads")
 
 # ---------------------------------------------------------------------------
+# Google Cloud Platform integration (all optional — graceful degradation)
+# ---------------------------------------------------------------------------
+CLOUD_STT_ENABLED = os.getenv("CLOUD_STT_ENABLED", "true").lower() == "true"
+GCS_ENABLED = os.getenv("GCS_ENABLED", "true").lower() == "true"
+GCS_BUCKET_NAME = os.getenv("GCS_BUCKET_NAME", "cadence-audio-cadence-cheeshacks")
+FIRESTORE_ENABLED = os.getenv("FIRESTORE_ENABLED", "true").lower() == "true"
+
+# ---------------------------------------------------------------------------
 # Logging
 # ---------------------------------------------------------------------------
 LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO")

@@ -46,6 +46,7 @@ class EventSource(str, Enum):
     ML = "ml"
     PHONETIC = "phonetic"
     HYBRID = "hybrid"
+    CLOUD_STT = "cloud_stt"
 
 
 class SegmentType(str, Enum):
@@ -139,6 +140,7 @@ class PipelineLatency(BaseModel):
     total_ms: float
     w2v_classifier_ms: Optional[float] = None   # null in RULES_ONLY
     w2v_phonetic_ms: Optional[float] = None     # null in RULES_ONLY
+    cloud_stt_ms: Optional[float] = None        # null when Cloud STT disabled
 
 
 # ---------------------------------------------------------------------------
@@ -150,12 +152,14 @@ class AnalysisResult(BaseModel):
     mode: AnalysisMode
     transcript: Transcript
     phonetic_transcript: Optional[PhoneticTranscript] = None   # HYBRID_ML only
+    cloud_stt_transcript: Optional[Transcript] = None          # when Cloud STT enabled
     segments: List[VADSegment]
     events: List[DisfluencyEvent]
     metrics: AnalysisMetrics
     score: FluencyScore
     latency: PipelineLatency
     limitations: List[str]
+    gcs_uri: Optional[str] = None                              # GCS audio URI if uploaded
     created_at: datetime = Field(default_factory=datetime.utcnow)
 
 

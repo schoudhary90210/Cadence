@@ -1,13 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  async rewrites() {
-    return [
-      {
-        source: "/api/:path*",
-        destination: `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"}/:path*`,
-      },
-    ];
-  },
+  output: "export",
+  images: { unoptimized: true },
+  // Rewrites don't work with static export — API calls go direct to NEXT_PUBLIC_API_URL
 };
 
 module.exports = nextConfig;

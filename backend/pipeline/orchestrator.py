@@ -23,6 +23,7 @@ from models.schemas import (
     AnalysisResult,
     DisfluencyEvent,
     EventSource,
+    EventType,
     FluencyScore,
     PipelineLatency,
     Severity,
@@ -129,6 +130,39 @@ def analyze_audio(
         logger.debug(f"Scoring: {t_scoring_ms:.0f} ms — score={score_result.value}")
 
         # ------------------------------------------------------------------
+        # Cloud STT — dual transcription (runs alongside Whisper)
+        # ------------------------------------------------------------------
+        cloud_stt_transcript_obj = None
+        t_cloud_stt_ms: Optional[float] = None
+
+        if config.CLOUD_STT_ENABLED:
+            t0 = time.perf_counter()
+            try:
+                from pipeline.cloud_stt import cloud_transcribe
+                cloud_result = cloud_transcribe(norm_path)
+                t_cloud_stt_ms = _ms(t0)
+                if cloud_result is not None:
+                    cloud_stt_transcript_obj = Transcript(
+                        text=cloud_result.text,
+                        words=cloud_result.words,
+                    )
+                    # Compare: find words Cloud STT detected that Whisper missed
+                    cloud_extra_events = _compare_transcripts(
+                        transcript_result.words, cloud_result.words
+                    )
+                    if cloud_extra_events:
+                        all_events.extend(cloud_extra_events)
+                        # Re-score with additional events
+                        score_result = compute_score(all_events, rate_result)
+                        logger.info(
+                            f"Cloud STT: {len(cloud_extra_events)} extra events, "
+                            f"re-scored to {score_result.value}"
+                        )
+                    logger.info(f"Cloud STT: {t_cloud_stt_ms:.0f} ms")
+            except Exception as exc:
+                logger.warning(f"Cloud STT failed — skipping: {exc}")
+
+        # ------------------------------------------------------------------
         # Tier 2 — HYBRID_ML (wav2vec2 classifier + phonetic layer)
         # ------------------------------------------------------------------
         t_w2v_classifier_ms: Optional[float] = None
@@ -212,6 +246,7 @@ def analyze_audio(
             total_ms=round(t_total_ms, 1),
             w2v_classifier_ms=round(t_w2v_classifier_ms, 1) if t_w2v_classifier_ms else None,
             w2v_phonetic_ms=round(t_w2v_phonetic_ms, 1) if t_w2v_phonetic_ms else None,
+            cloud_stt_ms=round(t_cloud_stt_ms, 1) if t_cloud_stt_ms else None,
         )
 
         return AnalysisResult(
@@ -221,6 +256,7 @@ def analyze_audio(
                 words=transcript_result.words,
             ),
             phonetic_transcript=phonetic_transcript,
+            cloud_stt_transcript=cloud_stt_transcript_obj,
             segments=vad_result.segments,
             events=all_events,
             metrics=metrics,
@@ -249,6 +285,66 @@ def _ms(t_start: float) -> float:
 def _events_overlap(a: DisfluencyEvent, b: DisfluencyEvent) -> bool:
     """Check if two events overlap in time."""
     return a.start_ms < b.end_ms and b.start_ms < a.end_ms
+
+
+def _compare_transcripts(
+    whisper_words: list,
+    cloud_words: list,
+) -> List[DisfluencyEvent]:
+    """
+    Compare Whisper and Cloud STT word lists to find repeated words that
+    Whisper normalised away but Cloud STT preserved.
+
+    Looks for consecutive repeated words in Cloud STT output that don't
+    appear in the Whisper output at the same time region.
+    """
+    if not cloud_words or not whisper_words:
+        return []
+
+    extra_events: List[DisfluencyEvent] = []
+
+    # Build a set of Whisper word intervals for quick lookup
+    whisper_texts_at_time = {}
+    for w in whisper_words:
+        key = (round(w.start, 1), round(w.end, 1))
+        whisper_texts_at_time[key] = w.word.lower().strip()
+
+    # Look for consecutive repeated words in Cloud STT
+    i = 0
+    while i < len(cloud_words) - 1:
+        w1 = cloud_words[i]
+        w2 = cloud_words[i + 1]
+        word1_clean = w1.word.lower().strip().rstrip(".,!?")
+        word2_clean = w2.word.lower().strip().rstrip(".,!?")
+
+        if word1_clean == word2_clean and word1_clean:
+            # Check if Whisper has this repetition
+            whisper_has_rep = False
+            for j in range(len(whisper_words) - 1):
+                ww1 = whisper_words[j].word.lower().strip().rstrip(".,!?")
+                ww2 = whisper_words[j + 1].word.lower().strip().rstrip(".,!?")
+                if ww1 == ww2 == word1_clean:
+                    # Check time overlap
+                    if (abs(whisper_words[j].start - w1.start) < 1.0):
+                        whisper_has_rep = True
+                        break
+
+            if not whisper_has_rep:
+                extra_events.append(
+                    DisfluencyEvent(
+                        type=EventType.REPETITION,
+                        start_ms=int(w1.start * 1000),
+                        end_ms=int(w2.end * 1000),
+                        confidence=0.75,
+                        source=EventSource.CLOUD_STT,
+                        text=f"{w1.word} {w2.word}",
+                    )
+                )
+            i += 2  # skip past the pair
+        else:
+            i += 1
+
+    return extra_events
 
 
 def _ensemble_merge(

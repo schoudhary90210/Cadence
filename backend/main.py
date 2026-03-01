@@ -37,6 +37,8 @@ from config import (
     CORS_ORIGINS,
     DEMO_CACHED_RESULTS_DIR,
     DEMO_SAMPLES_DIR,
+    FIRESTORE_ENABLED,
+    GCS_ENABLED,
     LIMITATIONS,
     LOG_LEVEL,
     MAX_UPLOAD_SIZE_MB,
@@ -166,7 +168,14 @@ async def analyze(
         # Point audio at the existing demo sample file if present
         demo_audio = Path(DEMO_SAMPLES_DIR) / f"{stem}.m4a"
         audio_path: Optional[str] = str(demo_audio) if demo_audio.exists() else None
-        crud.save_session(db, result, display_name, audio_file_path=audio_path)
+        if FIRESTORE_ENABLED:
+            try:
+                from db.firestore_db import save_session_firestore
+                save_session_firestore(result, display_name, audio_file_path=audio_path)
+            except Exception:
+                crud.save_session(db, result, display_name, audio_file_path=audio_path)
+        else:
+            crud.save_session(db, result, display_name, audio_file_path=audio_path)
         logger.info(f"[CACHED] {display_name} — score {result.score.value}")
         return result
 
@@ -203,7 +212,28 @@ async def analyze(
             except OSError:
                 pass
 
-    crud.save_session(db, result, display_name, audio_file_path=audio_file_path)
+    # GCS upload (background, non-blocking)
+    if GCS_ENABLED and audio_file_path:
+        try:
+            from storage.gcs import upload_to_gcs
+            gcs_uri = await asyncio.get_event_loop().run_in_executor(
+                None, lambda: upload_to_gcs(audio_file_path, result.id)
+            )
+            if gcs_uri:
+                result = result.model_copy(update={"gcs_uri": gcs_uri})
+        except Exception as exc:
+            logger.warning(f"GCS upload failed — continuing: {exc}")
+
+    # Save to Firestore if enabled, otherwise SQLite
+    if FIRESTORE_ENABLED:
+        try:
+            from db.firestore_db import save_session_firestore
+            save_session_firestore(result, display_name, audio_file_path=audio_file_path)
+        except Exception:
+            crud.save_session(db, result, display_name, audio_file_path=audio_file_path)
+    else:
+        crud.save_session(db, result, display_name, audio_file_path=audio_file_path)
+
     logger.info(f"Analyzed {display_name} — score {result.score.value}")
     return result
 
@@ -211,12 +241,28 @@ async def analyze(
 @app.get("/sessions", response_model=List[SessionSummary], tags=["sessions"])
 async def list_sessions(db: Session = Depends(get_db)):
     """List all past analysis sessions as lightweight summaries, newest first."""
+    if FIRESTORE_ENABLED:
+        try:
+            from db.firestore_db import get_sessions_firestore
+            sessions = get_sessions_firestore()
+            if sessions:
+                return sessions
+        except Exception:
+            pass
     return crud.list_sessions(db)
 
 
 @app.get("/sessions/{session_id}", response_model=AnalysisResult, tags=["sessions"])
 async def get_session(session_id: str, db: Session = Depends(get_db)):
     """Return full AnalysisResult for a specific session."""
+    if FIRESTORE_ENABLED:
+        try:
+            from db.firestore_db import get_session_firestore
+            result = get_session_firestore(session_id)
+            if result:
+                return result
+        except Exception:
+            pass
     result = crud.get_session(db, session_id)
     if not result:
         raise HTTPException(status_code=404, detail=f"Session {session_id} not found")
@@ -282,10 +328,15 @@ async def analyze_demo(filename: str, db: Session = Depends(get_db)):
             update={"id": str(uuid.uuid4()), "created_at": datetime.utcnow()}
         )
         demo_audio_path = str(Path(DEMO_SAMPLES_DIR) / filename)
-        crud.save_session(
-            db, result, filename,
-            audio_file_path=demo_audio_path if Path(demo_audio_path).exists() else None,
-        )
+        _audio = demo_audio_path if Path(demo_audio_path).exists() else None
+        if FIRESTORE_ENABLED:
+            try:
+                from db.firestore_db import save_session_firestore
+                save_session_firestore(result, filename, audio_file_path=_audio)
+            except Exception:
+                crud.save_session(db, result, filename, audio_file_path=_audio)
+        else:
+            crud.save_session(db, result, filename, audio_file_path=_audio)
         logger.info(f"Returning cached result for {filename}")
         return result
 
@@ -312,7 +363,15 @@ async def get_session_audio(session_id: str, db: Session = Depends(get_db)):
     Stream the original audio file for a session.
     Returns 404 if the session has no stored audio (e.g. older sessions before audio retention was added).
     """
-    audio_path = crud.get_session_audio_path(db, session_id)
+    audio_path = None
+    if FIRESTORE_ENABLED:
+        try:
+            from db.firestore_db import get_session_audio_path_firestore
+            audio_path = get_session_audio_path_firestore(session_id)
+        except Exception:
+            pass
+    if not audio_path:
+        audio_path = crud.get_session_audio_path(db, session_id)
     if not audio_path:
         raise HTTPException(status_code=404, detail="Session not found")
     if not os.path.exists(audio_path):

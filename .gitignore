@@ -4,6 +4,7 @@ __pycache__/
 .env
 *.db
 .next/
+out/
 *.pyc
 .DS_Store
 audio_uploads/

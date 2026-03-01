@@ -25,6 +25,11 @@ scikit-learn>=1.4.0
 nltk>=3.8.1         # CMUDict for syllable counting
 python-Levenshtein>=0.25.0
 
+# Google Cloud Platform (optional — graceful degradation if missing)
+google-cloud-speech>=2.21.0
+google-cloud-storage>=2.14.0
+google-cloud-firestore>=2.14.0
+
 # Utilities
 python-dotenv==1.0.1
 aiofiles==23.2.1

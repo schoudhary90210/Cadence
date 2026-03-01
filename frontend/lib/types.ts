@@ -23,7 +23,7 @@ export type EventType =
 
 export type EventSubtype = "sound_rep" | "word_rep" | "phrase_rep";
 
-export type EventSource = "rules" | "ml" | "phonetic" | "hybrid";
+export type EventSource = "rules" | "ml" | "phonetic" | "hybrid" | "cloud_stt";
 
 export type SegmentType = "speech" | "silence";
 
@@ -106,6 +106,7 @@ export interface PipelineLatency {
   total_ms: number;
   w2v_classifier_ms: number | null;
   w2v_phonetic_ms: number | null;
+  cloud_stt_ms: number | null;
 }
 
 // ---------------------------------------------------------------------------
@@ -117,12 +118,14 @@ export interface AnalysisResult {
   mode: AnalysisMode;
   transcript: Transcript;
   phonetic_transcript: PhoneticTranscript | null;
+  cloud_stt_transcript: Transcript | null;
   segments: VADSegment[];
   events: DisfluencyEvent[];
   metrics: AnalysisMetrics;
   score: FluencyScore;
   latency: PipelineLatency;
   limitations: string[];
+  gcs_uri: string | null;
   created_at: string;    // ISO8601
 }
 
@@ -211,6 +214,7 @@ export const SOURCE_LABELS: Record<EventSource, string> = {
   ml: "ML classifier",
   phonetic: "Phonetic CTC",
   hybrid: "Hybrid",
+  cloud_stt: "Cloud STT",
 };
 
 export const DISCLAIMER =
