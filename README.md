@@ -297,7 +297,7 @@ Cadence/
 
 <div align="center">
 
-*Made with dedication for CheesHacks 2026 — Health & Lifestyle*
+*Made with dedication for CheeseHacks 2026 — Health & Lifestyle*
 
 **Siddhant Choudhary** | **Christian Cortez** | **Anish Mantri** | **Benjamin Lelivelt**
 
