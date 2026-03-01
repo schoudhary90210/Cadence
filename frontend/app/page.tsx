@@ -1,17 +1,12 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Mic, BookOpen, MessageSquare, Upload, Zap, AlertTriangle, Shield } from "lucide-react";
-import { motion } from "framer-motion";
+import { Mic, BookOpen, Clock, PlayCircle, GraduationCap } from "lucide-react";
+import { motion, useInView } from "framer-motion";
 
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
-
-import { analyzeAudio, analyzeDemoSample } from "@/lib/api";
+import { analyzeDemoSample } from "@/lib/api";
 import type { DemoSample } from "@/lib/types";
 
 // ---------------------------------------------------------------------------
@@ -45,38 +40,84 @@ const DEMO_SAMPLES: DemoSample[] = [
 const FEATURES = [
   {
     icon: Mic,
-    title: "Record & Analyze",
-    description:
-      "Record your voice or upload an audio file. Cadence detects blocks, repetitions, prolongations, and filler words in seconds.",
+    title: "Real-time Analysis",
+    description: "Record or upload audio. Detect blocks, repetitions, and fillers in seconds.",
     href: "/analyze",
-    cta: "Start analyzing",
-    color: "text-sky-600",
-    badge: "Live",
-    badgeVariant: "default" as const,
+  },
+  {
+    icon: GraduationCap,
+    title: "Learn & Progress",
+    description: "Personalized courses targeting your speech patterns. Level up with practice.",
+    href: "/learn",
   },
   {
     icon: BookOpen,
-    title: "Reading Practice",
-    description:
-      "Read a target passage aloud. Cadence highlights matched words in green and disfluencies in red — instant feedback on every sentence.",
+    title: "Practice Modes",
+    description: "Reading and conversation practice with instant word-level feedback.",
     href: "/practice/read",
-    cta: "Try reading practice",
-    color: "text-violet-600",
-    badge: "Live",
-    badgeVariant: "default" as const,
   },
   {
-    icon: MessageSquare,
-    title: "Conversation Practice",
-    description:
-      "Answer a random prompt (casual, interview, storytelling). Results focus on filler count, speaking rate, and pace consistency.",
-    href: "/practice/speak",
-    cta: "Try conversation practice",
-    color: "text-emerald-600",
-    badge: "Live",
-    badgeVariant: "default" as const,
+    icon: Clock,
+    title: "Session History",
+    description: "Track your fluency score over time and review past sessions.",
+    href: "/history",
   },
 ];
+
+const STATS = [
+  { target: 70, suffix: "M+", label: "People who stutter worldwide" },
+  { target: 6, suffix: "", label: "Pipeline stages" },
+  { target: 100, suffix: "", label: "Fluency score scale" },
+];
+
+// ---------------------------------------------------------------------------
+// Count-up hook
+// ---------------------------------------------------------------------------
+
+function useCountUp(target: number, duration = 1500) {
+  const [count, setCount] = useState(0);
+  const ref = useRef<HTMLSpanElement>(null);
+  const inView = useInView(ref, { once: true, margin: "-50px" });
+
+  useEffect(() => {
+    if (!inView) return;
+    const start = performance.now();
+    let rafId: number;
+
+    function tick(now: number) {
+      const elapsed = now - start;
+      const progress = Math.min(elapsed / duration, 1);
+      // ease-out
+      const eased = 1 - Math.pow(1 - progress, 3);
+      setCount(Math.round(eased * target));
+      if (progress < 1) rafId = requestAnimationFrame(tick);
+    }
+
+    rafId = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(rafId);
+  }, [inView, target, duration]);
+
+  return { count, ref };
+}
+
+// ---------------------------------------------------------------------------
+// Stat item (hook must be at component level, not in a map callback)
+// ---------------------------------------------------------------------------
+
+function StatItem({ target, suffix, label }: { target: number; suffix: string; label: string }) {
+  const { count, ref } = useCountUp(target);
+  return (
+    <div>
+      <span
+        ref={ref}
+        className="text-5xl font-extrabold text-gray-900 tabular-nums"
+      >
+        {count}{suffix}
+      </span>
+      <p className="text-sm text-gray-500 mt-2">{label}</p>
+    </div>
+  );
+}
 
 // ---------------------------------------------------------------------------
 // Component
@@ -84,23 +125,10 @@ const FEATURES = [
 
 export default function LandingPage() {
   const router = useRouter();
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const [isDragging, setIsDragging] = useState(false);
   const [stage, setStage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const inProgress = stage !== null;
-
-  async function handleFile(file: File) {
-    setError(null);
-    try {
-      const result = await analyzeAudio(file, setStage);
-      router.push(`/results/${result.id}`);
-    } catch (e: unknown) {
-      setError(e instanceof Error ? e.message : "Analysis failed. Try again.");
-      setStage(null);
-    }
-  }
 
   async function handleDemo(sample: DemoSample) {
     setError(null);
@@ -114,80 +142,124 @@ export default function LandingPage() {
     }
   }
 
+  const titleChars = "Cadence".split("");
+
   return (
-    <div className="space-y-16">
+    <div className="space-y-24">
 
       {/* ── Hero ─────────────────────────────────────────────────────────── */}
-      <motion.section
-        initial={{ opacity: 0, y: 24 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="pt-6 text-center space-y-6"
+      <section
+        className="pt-12 text-center space-y-8"
         aria-labelledby="hero-heading"
       >
-        <h1
-          id="hero-heading"
-          className="text-5xl font-extrabold tracking-tight text-slate-900 sm:text-6xl"
-        >
-          Cadence
-          <span className="block text-2xl font-semibold text-slate-500 mt-2 tracking-normal">
-            Speech Fluency Analytics
-          </span>
+        <h1 id="hero-heading" className="text-6xl sm:text-7xl font-extrabold tracking-tight text-gray-900">
+          {titleChars.map((char, i) => (
+            <motion.span
+              key={i}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: i * 0.03 }}
+              className="inline-block"
+            >
+              {char}
+            </motion.span>
+          ))}
         </h1>
 
-        {/* Impact statement */}
-        <p className="mx-auto max-w-2xl text-lg text-slate-600 leading-relaxed">
-          <strong className="text-slate-800">70 million people worldwide stutter.</strong>{" "}
-          Therapy costs $150/session. We built free, browser-based fluency analytics
-          so anyone can measure, track, and improve their speech — no waiting room required.
-        </p>
-
-        {/* Medical disclaimer badge — prominent */}
-        <div
-          role="note"
-          aria-label="Important: prototype tool, not medical diagnosis"
-          className="inline-flex items-center gap-2 rounded-full border border-amber-300 bg-amber-50 px-4 py-2 text-sm font-medium text-amber-800"
+        <motion.p
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.25 }}
+          className="text-xl text-gray-500 max-w-lg mx-auto"
         >
-          <AlertTriangle className="h-4 w-4 shrink-0" aria-hidden="true" />
-          This is a prototype practice tool, not medical diagnosis.
+          Speech fluency analytics for everyone.
+        </motion.p>
+
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.4 }}
+        >
+          <Link
+            href="/analyze"
+            className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-8 py-3 text-base font-semibold text-white shadow-sm hover:bg-blue-700 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
+          >
+            Start Analysis
+          </Link>
+        </motion.div>
+      </section>
+
+      {/* ── Features ─────────────────────────────────────────────────────── */}
+      <section aria-labelledby="features-heading">
+        <h2 id="features-heading" className="sr-only">Features</h2>
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          {FEATURES.map((f, i) => {
+            const Icon = f.icon;
+            return (
+              <motion.div
+                key={f.href}
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-50px" }}
+                transition={{ duration: 0.4, delay: i * 0.08 }}
+              >
+                <Link
+                  href={f.href}
+                  className="block rounded-xl border border-gray-200 bg-white p-6 hover:shadow-md transition-shadow focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
+                >
+                  <Icon className="h-6 w-6 text-gray-400 mb-4" aria-hidden="true" />
+                  <h3 className="font-semibold text-gray-900 mb-1">{f.title}</h3>
+                  <p className="text-sm text-gray-500 leading-relaxed">{f.description}</p>
+                </Link>
+              </motion.div>
+            );
+          })}
+        </div>
+      </section>
+
+      {/* ── Stats ────────────────────────────────────────────────────────── */}
+      <section aria-label="Key statistics" className="grid gap-8 sm:grid-cols-3 text-center">
+        {STATS.map((stat) => (
+          <StatItem key={stat.label} target={stat.target} suffix={stat.suffix} label={stat.label} />
+        ))}
+      </section>
+
+      {/* ── Demo samples ──────────────────────────────────────────────────── */}
+      <section aria-labelledby="demo-heading" className="space-y-6">
+        <div className="text-center">
+          <h2 id="demo-heading" className="text-2xl font-bold text-gray-900">
+            Try a Demo
+          </h2>
+          <p className="mt-1 text-sm text-gray-500">
+            Pre-computed results — instant, no pipeline delay.
+          </p>
         </div>
 
-        <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
-          <Button
-            size="lg"
-            onClick={() => fileInputRef.current?.click()}
-            disabled={inProgress}
-            aria-label="Upload an audio file to analyze"
-            className="bg-sky-600 hover:bg-sky-700 focus-visible:ring-sky-500"
-          >
-            <Upload className="mr-2 h-4 w-4" aria-hidden="true" />
-            Upload Audio
-          </Button>
-          <Button
-            variant="outline"
-            size="lg"
-            asChild
-          >
-            <Link href="/analyze" aria-label="Go to the full analyze page">
-              <Mic className="mr-2 h-4 w-4" aria-hidden="true" />
-              Record Live
-            </Link>
-          </Button>
+        <div className="grid gap-4 sm:grid-cols-3">
+          {DEMO_SAMPLES.map((sample) => (
+            <button
+              key={sample.filename}
+              onClick={() => handleDemo(sample)}
+              disabled={inProgress}
+              aria-label={`Analyze ${sample.label} sample: ${sample.description}`}
+              className="
+                rounded-xl border border-gray-200 bg-white p-5 text-left transition-all
+                hover:shadow-md hover:border-gray-300
+                focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600
+                disabled:opacity-50 disabled:cursor-not-allowed
+              "
+            >
+              <div className="flex items-center gap-2 mb-2">
+                <PlayCircle className="h-4 w-4 text-gray-400" aria-hidden="true" />
+                <span className="text-xs font-bold uppercase tracking-widest text-gray-500">
+                  {sample.label}
+                </span>
+              </div>
+              <p className="text-sm text-gray-700 leading-snug">{sample.description}</p>
+              <p className="mt-2 text-xs text-gray-400">{sample.duration}s</p>
+            </button>
+          ))}
         </div>
-
-        {/* Hidden file input */}
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept="audio/*,.m4a,.wav,.mp3,.webm"
-          aria-label="Select audio file for analysis"
-          className="hidden"
-          onChange={(e) => {
-            const file = e.target.files?.[0];
-            if (file) handleFile(file);
-            e.target.value = "";
-          }}
-        />
 
         {/* Progress / error feedback */}
         {inProgress && (
@@ -195,148 +267,16 @@ export default function LandingPage() {
             role="status"
             aria-live="polite"
             aria-atomic="true"
-            className="text-sm text-sky-600 font-medium animate-pulse"
+            className="text-sm text-blue-600 font-medium animate-pulse text-center"
           >
             {stage}
           </p>
         )}
         {error && (
-          <p role="alert" className="text-sm text-red-600">
+          <p role="alert" className="text-sm text-red-600 text-center">
             {error}
           </p>
         )}
-      </motion.section>
-
-      <Separator />
-
-      {/* ── Feature cards ─────────────────────────────────────────────────── */}
-      <section aria-labelledby="features-heading">
-        <h2
-          id="features-heading"
-          className="text-center text-2xl font-bold text-slate-800 mb-8"
-        >
-          What you can do with Cadence
-        </h2>
-        <div className="grid gap-6 sm:grid-cols-3">
-          {FEATURES.map((f, i) => {
-            const Icon = f.icon;
-            return (
-              <motion.div
-                key={f.href}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4, delay: i * 0.1 }}
-              >
-                <Card className="h-full flex flex-col hover:shadow-md transition-shadow">
-                  <CardHeader className="pb-3">
-                    <div className="flex items-center justify-between mb-2">
-                      <Icon className={`h-6 w-6 ${f.color}`} aria-hidden="true" />
-                      <Badge variant={f.badgeVariant}>{f.badge}</Badge>
-                    </div>
-                    <CardTitle className="text-lg">{f.title}</CardTitle>
-                    <CardDescription className="text-sm leading-relaxed">
-                      {f.description}
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="mt-auto pt-0">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      asChild
-                      className={`px-0 font-medium ${f.color} hover:bg-transparent`}
-                    >
-                      <Link href={f.href} aria-label={f.cta}>
-                        {f.cta} →
-                      </Link>
-                    </Button>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            );
-          })}
-        </div>
-      </section>
-
-      <Separator />
-
-      {/* ── Demo samples ──────────────────────────────────────────────────── */}
-      <section aria-labelledby="demo-heading">
-        <div className="text-center mb-6">
-          <h2 id="demo-heading" className="text-2xl font-bold text-slate-800">
-            Try a Demo Sample
-          </h2>
-          <p className="mt-1 text-sm text-slate-500">
-            Pre-computed results return instantly — no pipeline delay.
-          </p>
-        </div>
-
-        <div className="grid gap-4 sm:grid-cols-3">
-          {DEMO_SAMPLES.map((sample) => {
-            const colorMap: Record<string, string> = {
-              fluent:    "border-green-200 bg-green-50 hover:bg-green-100 hover:border-green-300",
-              stuttered: "border-red-200 bg-red-50 hover:bg-red-100 hover:border-red-300",
-              mixed:     "border-orange-200 bg-orange-50 hover:bg-orange-100 hover:border-orange-300",
-            };
-            return (
-              <button
-                key={sample.filename}
-                onClick={() => handleDemo(sample)}
-                disabled={inProgress}
-                aria-label={`Analyze ${sample.label} sample: ${sample.description}`}
-                className={`
-                  rounded-xl border p-5 text-left transition-all
-                  focus-visible:outline focus-visible:outline-2 focus-visible:outline-sky-600
-                  disabled:opacity-50 disabled:cursor-not-allowed
-                  ${colorMap[sample.label] ?? "border-slate-200 bg-slate-50 hover:bg-slate-100"}
-                `}
-              >
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="text-xs font-bold uppercase tracking-widest text-slate-600">
-                    {sample.label}
-                  </span>
-                  {sample.cached && (
-                    <span
-                      className="inline-flex items-center gap-1 rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-700"
-                      aria-label="Instant cached result"
-                    >
-                      <Zap className="h-3 w-3" aria-hidden="true" />
-                      Instant
-                    </span>
-                  )}
-                </div>
-                <p className="text-sm text-slate-700 leading-snug">{sample.description}</p>
-                <p className="mt-2 text-xs text-slate-400">{sample.duration}s</p>
-              </button>
-            );
-          })}
-        </div>
-      </section>
-
-      {/* ── Privacy + past sessions ───────────────────────────────────────── */}
-      <section className="space-y-4" aria-label="Privacy information and session history">
-        <Card className="border-slate-200 bg-slate-50">
-          <CardContent className="flex items-start gap-3 pt-5">
-            <Shield
-              className="mt-0.5 h-5 w-5 shrink-0 text-slate-400"
-              aria-hidden="true"
-            />
-            <p className="text-sm text-slate-600 leading-relaxed">
-              <strong className="text-slate-700">Privacy:</strong>{" "}
-              Audio is processed on-server and deleted after analysis.
-              No recordings are stored without your consent.
-              Analysis results are saved locally to your session history only.
-            </p>
-          </CardContent>
-        </Card>
-
-        <div className="text-center">
-          <Link
-            href="/history"
-            className="text-sm text-sky-600 hover:underline rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-sky-600"
-          >
-            View past sessions →
-          </Link>
-        </div>
       </section>
 
     </div>

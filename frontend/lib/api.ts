@@ -7,9 +7,15 @@
 import type {
   AnalysisResult,
   ConversationPrompt,
+  CourseExercise,
+  CourseInfo,
+  CourseProgress,
   DemoSample,
+  DiagnosticReport,
   HealthResponse,
+  LearnSession,
   ReadingPassage,
+  SessionResult,
   SessionSummary,
 } from "./types";
 
@@ -116,6 +122,79 @@ export async function getPrompt(category?: string): Promise<ConversationPrompt> 
     ? `/practice/prompts?category=${encodeURIComponent(category)}`
     : "/practice/prompts";
   return apiFetch<ConversationPrompt>(path);
+}
+
+// ---------------------------------------------------------------------------
+// Learn system
+// ---------------------------------------------------------------------------
+
+/** POST /learn/diagnostic */
+export async function getDiagnostic(
+  file: File,
+  userId: string,
+): Promise<{ analysis: AnalysisResult; diagnostic: DiagnosticReport }> {
+  const form = new FormData();
+  form.append("file", file);
+  return apiFetch(`/learn/diagnostic?userId=${encodeURIComponent(userId)}`, {
+    method: "POST",
+    body: form,
+  });
+}
+
+/** GET /learn/courses */
+export async function getCourses(): Promise<CourseInfo[]> {
+  return apiFetch<CourseInfo[]>("/learn/courses");
+}
+
+/** GET /learn/courses/:courseType/exercise?level= */
+export async function getExercise(
+  courseType: string,
+  level: number,
+): Promise<CourseExercise> {
+  return apiFetch<CourseExercise>(
+    `/learn/courses/${encodeURIComponent(courseType)}/exercise?level=${level}`,
+  );
+}
+
+/** POST /learn/courses/:courseType/sessions */
+export async function submitLearnSession(
+  file: File,
+  courseType: string,
+  userId: string,
+  level: number,
+): Promise<SessionResult> {
+  const form = new FormData();
+  form.append("file", file);
+  return apiFetch<SessionResult>(
+    `/learn/courses/${encodeURIComponent(courseType)}/sessions?userId=${encodeURIComponent(userId)}&level=${level}`,
+    { method: "POST", body: form },
+  );
+}
+
+/** GET /learn/progress/:userId */
+export async function getProgress(
+  userId: string,
+): Promise<{ courses: CourseProgress[] }> {
+  return apiFetch(`/learn/progress/${encodeURIComponent(userId)}`);
+}
+
+/** GET /learn/progress/:userId/:courseType */
+export async function getCourseProgress(
+  userId: string,
+  courseType: string,
+): Promise<{
+  started: boolean;
+  courseType: string;
+  course_name: string;
+  current_level: number;
+  consecutive_passes: number;
+  total_sessions: number;
+  best_scores: Record<string, number>;
+  sessions: LearnSession[];
+}> {
+  return apiFetch(
+    `/learn/progress/${encodeURIComponent(userId)}/${encodeURIComponent(courseType)}`,
+  );
 }
 
 /** GET /metrics/latest */

@@ -184,6 +184,67 @@ export interface ConversationPrompt {
 }
 
 // ---------------------------------------------------------------------------
+// Learn system
+// ---------------------------------------------------------------------------
+
+export interface DiagnosticReport {
+  impediment_profile: Record<string, number>;
+  primary_impediment: string;
+  recommended_courses: string[];
+  report_text: string;
+}
+
+export interface CourseInfo {
+  course_type: string;
+  name: string;
+  description: string;
+  icon: string;
+  total_levels: number;
+}
+
+export interface CourseExercise {
+  course_name: string;
+  level: number;
+  exercise_text: string;
+  instruction: string;
+  level_type: string;
+  pass_threshold: number;
+}
+
+export interface SessionResult {
+  score: number;
+  severity: string;
+  passed: boolean;
+  consecutive_passes: number;
+  next_action: "RETRY" | "ADVANCE" | "COMPLETE";
+  current_level: number;
+  events: DisfluencyEvent[];
+  total_disfluencies: number;
+}
+
+export interface CourseProgress {
+  courseType: string;
+  course_name: string;
+  current_level: number;
+  consecutive_passes: number;
+  total_sessions: number;
+  best_scores: Record<string, number>;
+}
+
+export interface LearnSession {
+  id: string;
+  userId: string;
+  courseType: string;
+  level: number;
+  exercise_text: string;
+  score: number;
+  passed: boolean;
+  events_count: number;
+  gcs_uri: string | null;
+  timestamp: string;
+}
+
+// ---------------------------------------------------------------------------
 // UI-only helpers
 // ---------------------------------------------------------------------------
 
