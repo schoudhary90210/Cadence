@@ -66,28 +66,28 @@ Cadence is a browser-based platform that analyzes speech disfluencies using a cu
 ## Architecture
 
 ```
-                         ┌─────────────────────────────────┐
-                         │         Next.js Frontend         │
-                         │   React 18 + Tailwind + Framer   │
-                         └──────────────┬──────────────────┘
-                                        │ REST API
-                         ┌──────────────▼──────────────────┐
-                         │        FastAPI Backend           │
-                         │         Python 3.11              │
-                         └──────────────┬──────────────────┘
-                                        │
-              ┌─────────────────────────┼─────────────────────────┐
-              │                         │                         │
-   ┌──────────▼──────────┐  ┌──────────▼──────────┐  ┌──────────▼──────────┐
-   │   Tier 1: Rules     │  │   Tier 2: ML        │  │   Cloud (optional)  │
-   │                      │  │                      │  │                      │
-   │ • Whisper STT        │  │ • Wav2Vec2 classifier│  │ • Cloud Speech-to-  │
-   │ • Energy-based VAD   │  │   (RandomForest on   │  │   Text (dual trans.) │
-   │ • Levenshtein reps   │  │    wav2vec2-base)    │  │ • Cloud Storage      │
-   │ • Filler detection   │  │ • CTC phonetic       │  │ • Firestore          │
-   │ • Syllable rate      │  │   (wav2vec2-960h)    │  │                      │
-   │ • Scoring engine     │  │ • Ensemble merge     │  │                      │
-   └──────────────────────┘  └──────────────────────┘  └──────────────────────┘
+                    ┌───────────────────────────────────┐
+                    │         Next.js Frontend           │
+                    │    React 18 + Tailwind + Framer    │
+                    └────────────────┬──────────────────┘
+                                     │ REST API
+                    ┌────────────────▼──────────────────┐
+                    │         FastAPI Backend            │
+                    │          Python 3.11               │
+                    └────────────────┬──────────────────┘
+                                     │
+           ┌─────────────────────────┼─────────────────────────┐
+           │                         │                         │
+┌──────────▼──────────┐  ┌──────────▼──────────┐  ┌──────────▼──────────┐
+│   Tier 1: Rules     │  │    Tier 2: ML       │  │  Cloud (optional)   │
+│                      │  │                      │  │                      │
+│ ● Whisper STT        │  │ ● Wav2Vec2 + RF     │  │ ● Cloud Speech-to-  │
+│ ● Energy-based VAD   │  │   disfluency clf.   │  │   Text (dual STT)   │
+│ ● Levenshtein reps   │  │ ● CTC phonetic      │  │ ● Cloud Storage     │
+│ ● Filler detection   │  │   (wav2vec2-960h)   │  │ ● Firestore         │
+│ ● Syllable rate      │  │ ● Ensemble merge    │  │ ● Cloud Run deploy  │
+│ ● Scoring engine     │  │   with confidence   │  │   (Docker + 4GB)    │
+└──────────────────────┘  └──────────────────────┘  └──────────────────────┘
 ```
 
 | Layer | Technology |
