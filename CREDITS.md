@@ -156,7 +156,7 @@ Built for **CheeseHacks 2026** — Health & Lifestyle Theme
 
 | Tool | Usage |
 |:-----|:------|
-| [Claude](https://claude.ai/) (Anthropic) | Assisted with implementation planning and README formatting |
+| [Claude](https://claude.ai/) (Anthropic) | Assisted with implementation planning |
 
 ---
 
