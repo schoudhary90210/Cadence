@@ -6,8 +6,10 @@ from Whisper word timestamps.
 Thresholds and window sizes come from config.py — never hardcoded here.
 """
 
+from __future__ import annotations
+
 import re
-from typing import List, Set, Tuple
+from typing import List, Optional, Set, Tuple
 
 from config import LEVENSHTEIN_THRESHOLD, REPETITION_WINDOW_SIZES
 from models.schemas import DisfluencyEvent, EventSource, EventSubtype, EventType, WordTimestamp
@@ -49,7 +51,7 @@ def _normalise(word: str) -> str:
     return re.sub(r"[^\w']", "", word.lower()).strip()
 
 
-def _check_sound_rep(word: WordTimestamp) -> DisfluencyEvent | None:
+def _check_sound_rep(word: WordTimestamp) -> Optional[DisfluencyEvent]:
     """
     Return a SOUND_REP event if this single token looks like a stuttered form.
     Returns None if the word looks clean.
