@@ -1,0 +1,10 @@
+Model: SVM_RBF
+Weighted F1: 0.9112
+Train samples: 960
+Test samples: 240
+Classes: ['block', 'filler', 'fluent', 'prolongation', 'sound_rep', 'word_rep']
+
+All results:
+  RandomForest: F1=0.8745
+  GradientBoosting: F1=0.8613
+  SVM_RBF: F1=0.9112
