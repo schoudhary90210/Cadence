@@ -6,7 +6,7 @@
 
 [![Live Demo](https://img.shields.io/badge/LIVE_DEMO-Visit_App-blue?style=for-the-badge&logo=vercel)](https://frontend-three-rho-71.vercel.app)
 [![API Status](https://img.shields.io/badge/API-Online-brightgreen?style=for-the-badge&logo=googlecloud)](https://cadence-api-qrotwdz63a-uc.a.run.app/health)
-[![Built For](https://img.shields.io/badge/CheesHacks-2026-orange?style=for-the-badge)](https://cheeshacks.com)
+[![Built For](https://img.shields.io/badge/CheeseHacks-2026-orange?style=for-the-badge)](https://cheeshacks.com)
 
 **Record or upload audio. Get instant disfluency detection, fluency scoring, and personalized practice recommendations.**
 
