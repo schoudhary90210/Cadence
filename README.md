@@ -1,6 +1,6 @@
 # Cadence
 
-**Speech fluency analytics platform** — record or upload audio, get instant disfluency detection, fluency scoring, and personalized practice recommendations. Built for CheesHacks 2026.
+**Speech fluency analytics platform** — record or upload audio, get instant disfluency detection, fluency scoring, and personalized practice recommendations. Built for CheeseHacks 2026.
 
 **Live Demo:** [frontend-three-rho-71.vercel.app](https://frontend-three-rho-71.vercel.app)
 **API:** [cadence-api-qrotwdz63a-uc.a.run.app](https://cadence-api-qrotwdz63a-uc.a.run.app/health)
