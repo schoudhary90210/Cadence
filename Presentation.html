@@ -440,6 +440,10 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--c4d); fo
   position:relative; overflow:hidden;
 }
 
+.s2-demo-video {
+  padding:0; gap:0;
+}
+
 .s2-demo-icon {
   width:80px; height:80px;
   border-radius:50%;
@@ -1464,15 +1468,17 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--c4d); fo
     <!-- Demo area -->
     <div class="s2-demo-area">
       <!-- Main demo panel -->
-      <div class="s2-demo-main">
+      <div class="s2-demo-main s2-demo-video">
         <div class="s2-demo-badge">▶ LIVE</div>
-        <div class="s2-demo-icon">🎙️</div>
-        <div class="s2-demo-label">Live App Demo</div>
-        <div class="s2-demo-sublabel">
-          Mic / upload audio → backend analysis API → fluency score, event timeline, waveform
-        </div>
+        <iframe
+          src="https://www.youtube.com/embed/XKAkRPKZyQE?rel=0&modestbranding=1&color=white"
+          title="Cadence Live Demo"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen
+          style="width:100%; height:100%; position:absolute; top:0; left:0; border-radius:14px;"
+        ></iframe>
       </div>
-
       <!-- Side cards: what to watch for -->
       <div class="s2-side">
         <div class="s2-side-title">What You'll See</div>
