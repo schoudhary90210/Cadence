@@ -35,7 +35,7 @@ Cadence is a browser-based platform that analyzes speech disfluencies using a cu
 
 ---
 
-## Screenshots
+## Screenshots of UI
 
 | Home | Analyze |
 |:----:|:-------:|
@@ -56,6 +56,8 @@ Cadence is a browser-based platform that analyzes speech disfluencies using a cu
 **Learn** — A diagnostic test identifies the user's primary disfluency type, then recommends from 4 adaptive courses (Blocks, Repetitions, Prolongations, Fillers). Each course has 5 levels. Score 80+ to pass; 3 consecutive passes to advance.
 
 **History** — Apple Screen Time-inspired session history with day/week toggle, severity-colored bar charts, date navigation, and aggregate statistics.
+
+**Google Cloud Integration** — Optional cloud layer that enhances every part of the platform. Cloud Speech-to-Text runs dual transcription alongside Whisper to catch words that local models normalize away (e.g., stuttered fragments). Cloud Storage provides durable audio persistence so recordings survive server restarts. Firestore replaces SQLite in production for cloud-native session and progress storage. All deployed on Cloud Run with a Docker container that pre-downloads ML models at build time for zero cold-start latency. Every GCP feature degrades gracefully — the app works fully offline without credentials.
 
 **Accessibility** — High contrast mode, large text, reduced motion, adjustable text spacing, full keyboard navigation, ARIA labels on all interactive elements.
 
