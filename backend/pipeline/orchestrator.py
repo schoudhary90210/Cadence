@@ -103,15 +103,18 @@ def analyze_audio(
         t0 = time.perf_counter()
         from pipeline.repetition import detect_repetitions
         from pipeline.filler import detect_fillers
-        rep_events  = detect_repetitions(transcript_result.words)
-        fill_events = detect_fillers(transcript_result.words)
-        rules_events = vad_result.detected_blocks + rep_events + fill_events
+        from pipeline.prolongation import detect_prolongations
+        rep_events   = detect_repetitions(transcript_result.words)
+        fill_events  = detect_fillers(transcript_result.words)
+        prol_events  = detect_prolongations(norm_path, transcript_result.words)
+        rules_events = vad_result.detected_blocks + rep_events + fill_events + prol_events
         all_events   = list(rules_events)
         t_rules_ms   = _ms(t0)
         logger.debug(
             f"Rules: {t_rules_ms:.0f} ms — "
             f"{len(vad_result.detected_blocks)} blocks, "
-            f"{len(rep_events)} reps, {len(fill_events)} fillers"
+            f"{len(rep_events)} reps, {len(fill_events)} fillers, "
+            f"{len(prol_events)} prolongations"
         )
 
         # ------------------------------------------------------------------

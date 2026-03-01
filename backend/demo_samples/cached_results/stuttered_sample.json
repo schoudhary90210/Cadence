@@ -1,5 +1,5 @@
 {
-  "id": "7f250a81-a499-4a20-b418-ba73fc6e2840",
+  "id": "328a6237-162d-456d-b895-70c117cb1235",
   "mode": "HYBRID_ML",
   "transcript": {
     "text": "The quick Boba Brown Fox um jumps over the the lazy dog speech Speech fluency is Unimportant But because it affects millions of people",
@@ -711,6 +711,131 @@
       }
     ]
   },
+  "cloud_stt_transcript": {
+    "text": "The quick Bubba brown fox jumps over the lazy dog speech. Speech fluency is a unimportant. Um, but because it affects millions of people",
+    "words": [
+      {
+        "word": "The",
+        "start": 0.4,
+        "end": 0.9
+      },
+      {
+        "word": "quick",
+        "start": 0.9,
+        "end": 1.3
+      },
+      {
+        "word": "Bubba",
+        "start": 1.3,
+        "end": 1.8
+      },
+      {
+        "word": "brown",
+        "start": 1.8,
+        "end": 2.0
+      },
+      {
+        "word": "fox",
+        "start": 2.0,
+        "end": 2.4
+      },
+      {
+        "word": "jumps",
+        "start": 2.4,
+        "end": 4.0
+      },
+      {
+        "word": "over",
+        "start": 4.0,
+        "end": 4.1
+      },
+      {
+        "word": "the",
+        "start": 4.1,
+        "end": 4.7
+      },
+      {
+        "word": "lazy",
+        "start": 4.7,
+        "end": 6.2
+      },
+      {
+        "word": "dog",
+        "start": 6.2,
+        "end": 6.7
+      },
+      {
+        "word": "speech.",
+        "start": 6.7,
+        "end": 7.6
+      },
+      {
+        "word": "Speech",
+        "start": 8.8,
+        "end": 9.6
+      },
+      {
+        "word": "fluency",
+        "start": 9.6,
+        "end": 9.9
+      },
+      {
+        "word": "is",
+        "start": 9.9,
+        "end": 10.5
+      },
+      {
+        "word": "a",
+        "start": 10.5,
+        "end": 11.3
+      },
+      {
+        "word": "unimportant.",
+        "start": 11.3,
+        "end": 12.9
+      },
+      {
+        "word": "Um,",
+        "start": 12.9,
+        "end": 13.7
+      },
+      {
+        "word": "but",
+        "start": 13.7,
+        "end": 15.1
+      },
+      {
+        "word": "because",
+        "start": 15.1,
+        "end": 15.2
+      },
+      {
+        "word": "it",
+        "start": 15.2,
+        "end": 15.5
+      },
+      {
+        "word": "affects",
+        "start": 15.5,
+        "end": 16.1
+      },
+      {
+        "word": "millions",
+        "start": 16.1,
+        "end": 17.5
+      },
+      {
+        "word": "of",
+        "start": 17.5,
+        "end": 18.4
+      },
+      {
+        "word": "people",
+        "start": 18.4,
+        "end": 19.0
+      }
+    ]
+  },
   "segments": [
     {
       "type": "silence",
@@ -896,7 +1021,7 @@
       "end_ms": 860,
       "confidence": 0.8500000000000001,
       "source": "phonetic",
-      "text": "(the)×2"
+      "text": "(the)\u00d72"
     },
     {
       "type": "filler",
@@ -915,6 +1040,15 @@
       "confidence": 1.0,
       "source": "hybrid",
       "text": "the the"
+    },
+    {
+      "type": "block",
+      "subtype": null,
+      "start_ms": 4910,
+      "end_ms": 5570,
+      "confidence": 0.9,
+      "source": "rules",
+      "text": null
     },
     {
       "type": "repetition",
@@ -939,8 +1073,8 @@
     "speaking_rate_syl_sec": 1.589,
     "articulation_rate": 2.477,
     "pace_variability": 0.632,
-    "total_disfluencies": 5,
-    "disfluencies_per_100_syllables": 15.62,
+    "total_disfluencies": 6,
+    "disfluencies_per_100_syllables": 18.75,
     "total_syllables": 32,
     "speech_duration_sec": 12.92,
     "total_duration_sec": 20.137
@@ -958,20 +1092,22 @@
     }
   },
   "latency": {
-    "preprocessing_ms": 113.0,
-    "whisper_ms": 908.7,
-    "vad_ms": 1.9,
-    "rules_ms": 0.3,
+    "preprocessing_ms": 120.0,
+    "whisper_ms": 1003.8,
+    "vad_ms": 2.1,
+    "rules_ms": 247.4,
     "scoring_ms": 0.0,
-    "total_ms": 2743.8,
-    "w2v_classifier_ms": 870.2,
-    "w2v_phonetic_ms": 849.4
+    "total_ms": 6607.2,
+    "w2v_classifier_ms": 888.4,
+    "w2v_phonetic_ms": 826.9,
+    "cloud_stt_ms": 3517.9
   },
   "limitations": [
-    "Prototype heuristic thresholds — not clinically validated",
+    "Prototype heuristic thresholds \u2014 not clinically validated",
     "Noise-sensitive: best results with clean, close-mic audio",
     "English only",
     "Not a medical diagnostic tool"
   ],
-  "created_at": "2026-03-01T05:03:57.773098"
+  "gcs_uri": null,
+  "created_at": "2026-03-01T07:32:10.350271"
 }

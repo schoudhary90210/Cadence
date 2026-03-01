@@ -25,11 +25,11 @@ VAD_FRAME_MS = 25                   # RMS frame length
 VAD_HOP_MS = 10                     # frame hop
 VAD_ENERGY_THRESHOLD_MULTIPLIER = 0.3  # fraction of mean RMS to call silence
 SILENCE_MERGE_GAP_MS = 100          # merge silence regions closer than this
-BLOCK_SILENCE_THRESHOLD_MS = 750    # silence >= this inside utterance = block event.
-                                    # Natural prosody pauses (sentence breaks, commas,
-                                    # breath groups) typically run 400–600 ms and are NOT
-                                    # blocks. Clinical literature puts real stuttering
-                                    # blocks at 750 ms+, so we sit at that boundary.
+BLOCK_SILENCE_THRESHOLD_MS = 600    # silence >= this inside utterance = block event.
+                                    # Lowered from 750 to 600 to catch mid-severity blocks.
+                                    # Natural prosody pauses (commas, breath groups) are
+                                    # typically 300–500 ms. Sentence-boundary filter (Filter B)
+                                    # prevents inter-sentence pauses from triggering.
 
 # ---------------------------------------------------------------------------
 # Repetition detection
@@ -41,8 +41,8 @@ REPETITION_WINDOW_SIZES = [1, 2, 3] # word n-gram windows to check
 # Filler / interjection detection
 # ---------------------------------------------------------------------------
 FILLER_WORDS = [
-    "um", "uh", "erm", "like", "you know",
-    "i mean", "ah", "hmm", "so", "right",
+    "um", "uh", "erm", "er", "eh", "ah", "hm", "hmm", "mm",
+    "huh", "like", "you know", "i mean", "so", "right",
 ]
 
 # ---------------------------------------------------------------------------

@@ -124,14 +124,12 @@ def _detect_blocks(
 
     Two additional accuracy filters are applied when applicable:
 
-    Filter A — preceding speech duration check:
-        The speech segment immediately before the silence must be at least
-        200 ms long. This eliminates noise artifacts (micro-blips of < 200 ms
-        classified as speech) that would otherwise pass the within-utterance
-        check and falsely trigger a block. The following speech segment is NOT
-        checked: after a real stuttering block the speaker's first attempt to
-        resume can be short as they struggle to continue — requiring 200 ms
-        after would suppress genuine blocks.
+    Filter A — nearby speech check:
+        At least one speech segment must end within 1000 ms before the silence
+        starts.  This catches blocks that follow short speech bursts while still
+        rejecting leading silence at the very start of the recording (before any
+        speech at all). The following speech segment is NOT checked: after a real
+        stuttering block the speaker's first attempt to resume can be short.
 
     Filter B — sentence-boundary skip (requires `words`):
         If any sentence-terminal word (ending in . ! ?) has its Whisper end
@@ -166,19 +164,19 @@ def _detect_blocks(
         if not has_speech_before or not has_speech_after:
             continue
 
-        # ── Filter A: preceding speech segment must be ≥ 200 ms ────────────
-        # After _merge_short_silences the list strictly alternates speech/silence,
-        # so segments[i-1] is the immediately preceding speech (guaranteed to
-        # exist by the has_speech_before check above).
-        #
-        # We only check the PRECEDING segment. A noise artifact (< 200 ms blip
-        # classified as speech) before a long silence would otherwise pass the
-        # within-utterance check and trigger a false positive. The FOLLOWING
-        # segment is intentionally not checked: after a real stuttering block,
-        # the speaker's first attempt to resume can be short (< 200 ms) as they
-        # struggle to continue — requiring 200 ms after would suppress real blocks.
-        prev_speech_dur = segments[i - 1].end_ms - segments[i - 1].start_ms
-        if prev_speech_dur < 200:
+        # ── Filter A: any speech segment ending within 1000 ms before silence ─
+        # Check whether ANY speech segment (of any duration) ends within 1000 ms
+        # before this silence starts. This is more permissive than the old rule
+        # (which required the immediately preceding speech to be ≥ 200 ms) and
+        # catches blocks that follow short speech bursts or rapid word attempts.
+        # Leading silence before the very first speech is already excluded by
+        # the has_speech_before check above.
+        silence_start = seg.start_ms
+        has_nearby_speech = any(
+            s.type == SegmentType.SPEECH and (silence_start - s.end_ms) <= 1000
+            for s in segments[:i]
+        )
+        if not has_nearby_speech:
             continue
 
         # ── Filter B: sentence-boundary skip ────────────────────────────────

@@ -1,5 +1,5 @@
 {
-  "id": "c2693ed5-f087-4245-bfa2-83c7b7202d47",
+  "id": "2b8ff692-28f8-41fb-86ec-05cc031e74ef",
   "mode": "HYBRID_ML",
   "transcript": {
     "text": "The quick brown fox jumps over the lazy dog. Speech fluency is an important aspect of communication. Every day people practice speaking to improve themselves.",
@@ -806,6 +806,141 @@
       }
     ]
   },
+  "cloud_stt_transcript": {
+    "text": "The quick brown fox jumps over the lazy dog speech. Fluency is an important aspect of of communication every day. People practice speaking to improve themselves.",
+    "words": [
+      {
+        "word": "The",
+        "start": 0.6,
+        "end": 0.9
+      },
+      {
+        "word": "quick",
+        "start": 0.9,
+        "end": 1.2
+      },
+      {
+        "word": "brown",
+        "start": 1.2,
+        "end": 1.5
+      },
+      {
+        "word": "fox",
+        "start": 1.5,
+        "end": 2.0
+      },
+      {
+        "word": "jumps",
+        "start": 2.0,
+        "end": 2.6
+      },
+      {
+        "word": "over",
+        "start": 2.6,
+        "end": 2.8
+      },
+      {
+        "word": "the",
+        "start": 2.8,
+        "end": 2.9
+      },
+      {
+        "word": "lazy",
+        "start": 2.9,
+        "end": 4.1
+      },
+      {
+        "word": "dog",
+        "start": 4.1,
+        "end": 4.5
+      },
+      {
+        "word": "speech.",
+        "start": 4.5,
+        "end": 6.7
+      },
+      {
+        "word": "Fluency",
+        "start": 6.7,
+        "end": 7.1
+      },
+      {
+        "word": "is",
+        "start": 7.1,
+        "end": 8.0
+      },
+      {
+        "word": "an",
+        "start": 8.0,
+        "end": 8.6
+      },
+      {
+        "word": "important",
+        "start": 8.6,
+        "end": 8.8
+      },
+      {
+        "word": "aspect",
+        "start": 8.8,
+        "end": 9.3
+      },
+      {
+        "word": "of",
+        "start": 9.3,
+        "end": 9.6
+      },
+      {
+        "word": "of",
+        "start": 9.6,
+        "end": 10.8
+      },
+      {
+        "word": "communication",
+        "start": 10.8,
+        "end": 11.6
+      },
+      {
+        "word": "every",
+        "start": 11.6,
+        "end": 12.5
+      },
+      {
+        "word": "day.",
+        "start": 12.5,
+        "end": 12.6
+      },
+      {
+        "word": "People",
+        "start": 12.6,
+        "end": 13.1
+      },
+      {
+        "word": "practice",
+        "start": 13.1,
+        "end": 15.4
+      },
+      {
+        "word": "speaking",
+        "start": 15.4,
+        "end": 15.7
+      },
+      {
+        "word": "to",
+        "start": 15.7,
+        "end": 16.0
+      },
+      {
+        "word": "improve",
+        "start": 16.0,
+        "end": 16.4
+      },
+      {
+        "word": "themselves.",
+        "start": 16.4,
+        "end": 17.0
+      }
+    ]
+  },
   "segments": [
     {
       "type": "silence",
@@ -957,20 +1092,22 @@
     }
   },
   "latency": {
-    "preprocessing_ms": 105.0,
-    "whisper_ms": 930.5,
-    "vad_ms": 2.1,
-    "rules_ms": 0.3,
+    "preprocessing_ms": 108.2,
+    "whisper_ms": 914.7,
+    "vad_ms": 1.7,
+    "rules_ms": 192.9,
     "scoring_ms": 0.0,
-    "total_ms": 2458.9,
-    "w2v_classifier_ms": 709.3,
-    "w2v_phonetic_ms": 711.4
+    "total_ms": 6109.5,
+    "w2v_classifier_ms": 781.2,
+    "w2v_phonetic_ms": 699.1,
+    "cloud_stt_ms": 3411.2
   },
   "limitations": [
-    "Prototype heuristic thresholds — not clinically validated",
+    "Prototype heuristic thresholds \u2014 not clinically validated",
     "Noise-sensitive: best results with clean, close-mic audio",
     "English only",
     "Not a medical diagnostic tool"
   ],
-  "created_at": "2026-03-01T05:04:00.232490"
+  "gcs_uri": null,
+  "created_at": "2026-03-01T07:32:16.461059"
 }
