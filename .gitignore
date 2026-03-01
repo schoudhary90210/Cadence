@@ -6,3 +6,4 @@ __pycache__/
 .next/
 *.pyc
 .DS_Store
+audio_uploads/

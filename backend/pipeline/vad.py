@@ -8,7 +8,7 @@ All thresholds are sourced from config.py — tune there, never here.
 
 import time
 from pathlib import Path
-from typing import List, Union
+from typing import List, Optional, Union
 
 import librosa
 import numpy as np
@@ -22,7 +22,7 @@ from config import (
     VAD_FRAME_MS,
     VAD_HOP_MS,
 )
-from models.schemas import DisfluencyEvent, EventSource, EventType, SegmentType, VADSegment
+from models.schemas import DisfluencyEvent, EventSource, EventType, SegmentType, VADSegment, WordTimestamp
 
 
 # ---------------------------------------------------------------------------
@@ -110,7 +110,11 @@ def _merge_short_silences(segments: List[VADSegment], gap_ms: int) -> List[VADSe
     return result
 
 
-def _detect_blocks(segments: List[VADSegment], threshold_ms: int) -> List[DisfluencyEvent]:
+def _detect_blocks(
+    segments: List[VADSegment],
+    threshold_ms: int,
+    words: Optional[List[WordTimestamp]] = None,
+) -> List[DisfluencyEvent]:
     """
     Find silence segments longer than threshold_ms that fall *within* the utterance,
     and return them as DisfluencyEvent objects of type BLOCK.
@@ -118,9 +122,29 @@ def _detect_blocks(segments: List[VADSegment], threshold_ms: int) -> List[Disflu
     A silence at the very beginning or very end of the recording is ambient
     silence, not a block. We only flag pauses that have speech on both sides.
 
+    Two additional accuracy filters are applied when applicable:
+
+    Filter A — preceding speech duration check:
+        The speech segment immediately before the silence must be at least
+        200 ms long. This eliminates noise artifacts (micro-blips of < 200 ms
+        classified as speech) that would otherwise pass the within-utterance
+        check and falsely trigger a block. The following speech segment is NOT
+        checked: after a real stuttering block the speaker's first attempt to
+        resume can be short as they struggle to continue — requiring 200 ms
+        after would suppress genuine blocks.
+
+    Filter B — sentence-boundary skip (requires `words`):
+        If any sentence-terminal word (ending in . ! ?) has its Whisper end
+        timestamp within ±200 ms of the silence's start, the pause is a natural
+        inter-sentence breath, not a pathological block. Skip it.
+        Tolerance is kept tight (200 ms) so that blocks occurring right after a
+        sentence end are not incorrectly suppressed.
+
     Args:
-        segments:     Merged VAD segment list.
+        segments:     Merged VAD segment list (alternating speech/silence).
         threshold_ms: Minimum silence duration to qualify as a block.
+        words:        Optional word-timestamp list from Whisper. When provided,
+                      enables the sentence-boundary filter.
 
     Returns:
         List of DisfluencyEvent (type=BLOCK) representing detected blocks.
@@ -133,19 +157,55 @@ def _detect_blocks(segments: List[VADSegment], threshold_ms: int) -> List[Disflu
         duration = seg.end_ms - seg.start_ms
         if duration < threshold_ms:
             continue
-        # Within-utterance check: speech must exist before AND after
+
+        # ── Within-utterance check ──────────────────────────────────────────
+        # Speech must exist somewhere before AND somewhere after this silence.
+        # (Ambient leading/trailing silence is not a block.)
         has_speech_before = any(s.type == SegmentType.SPEECH for s in segments[:i])
         has_speech_after  = any(s.type == SegmentType.SPEECH for s in segments[i + 1:])
-        if has_speech_before and has_speech_after:
-            blocks.append(
-                DisfluencyEvent(
-                    type=EventType.BLOCK,
-                    start_ms=seg.start_ms,
-                    end_ms=seg.end_ms,
-                    confidence=0.9,
-                    source=EventSource.RULES,
-                )
+        if not has_speech_before or not has_speech_after:
+            continue
+
+        # ── Filter A: preceding speech segment must be ≥ 200 ms ────────────
+        # After _merge_short_silences the list strictly alternates speech/silence,
+        # so segments[i-1] is the immediately preceding speech (guaranteed to
+        # exist by the has_speech_before check above).
+        #
+        # We only check the PRECEDING segment. A noise artifact (< 200 ms blip
+        # classified as speech) before a long silence would otherwise pass the
+        # within-utterance check and trigger a false positive. The FOLLOWING
+        # segment is intentionally not checked: after a real stuttering block,
+        # the speaker's first attempt to resume can be short (< 200 ms) as they
+        # struggle to continue — requiring 200 ms after would suppress real blocks.
+        prev_speech_dur = segments[i - 1].end_ms - segments[i - 1].start_ms
+        if prev_speech_dur < 200:
+            continue
+
+        # ── Filter B: sentence-boundary skip ────────────────────────────────
+        # If a sentence-terminal word's end timestamp is within 200 ms of this
+        # silence's start, it is a natural inter-sentence pause — not a block.
+        # We require the word to end before (or very close to) the silence start
+        # so we don't suppress blocks that happen mid-word.
+        if words is not None:
+            silence_start_ms = seg.start_ms
+            is_sentence_boundary = any(
+                word.word.strip().endswith(('.', '!', '?'))
+                and (word.end * 1000) <= silence_start_ms + 50   # word ends before/at silence
+                and silence_start_ms - (word.end * 1000) <= 200  # gap is ≤ 200 ms
+                for word in words
             )
+            if is_sentence_boundary:
+                continue
+
+        blocks.append(
+            DisfluencyEvent(
+                type=EventType.BLOCK,
+                start_ms=seg.start_ms,
+                end_ms=seg.end_ms,
+                confidence=0.9,
+                source=EventSource.RULES,
+            )
+        )
 
     return blocks
 
@@ -154,7 +214,10 @@ def _detect_blocks(segments: List[VADSegment], threshold_ms: int) -> List[Disflu
 # Public API
 # ---------------------------------------------------------------------------
 
-def detect_voice_activity(audio_path: Union[str, Path]) -> VADResult:
+def detect_voice_activity(
+    audio_path: Union[str, Path],
+    words: Optional[List[WordTimestamp]] = None,
+) -> VADResult:
     """
     Segment audio into speech/silence regions and detect pathological blocks.
 
@@ -165,15 +228,20 @@ def detect_voice_activity(audio_path: Union[str, Path]) -> VADResult:
         4. Label each frame speech/silence
         5. Convert frames → ms-accurate VADSegments
         6. Merge speech segments separated by < SILENCE_MERGE_GAP_MS (100ms)
-        7. Detect blocks: silence >= BLOCK_SILENCE_THRESHOLD_MS (500ms) within utterance
+        7. Detect blocks: silence >= BLOCK_SILENCE_THRESHOLD_MS (750ms) within
+           utterance, with two additional accuracy filters:
+           - Adjacent speech segments must each be ≥ 200 ms (noise artifact filter)
+           - Sentence-boundary silences are skipped when transcript words are provided
 
     Args:
         audio_path: Path to a preprocessed 16kHz mono WAV file.
+        words:      Optional Whisper word-timestamp list. When provided, enables
+                    the sentence-boundary filter in block detection.
 
     Returns:
         VADResult with:
             segments        — full list of speech/silence regions (ms)
-            detected_blocks — silence regions >= 500ms within the utterance
+            detected_blocks — silence regions >= 750ms within the utterance
             latency_ms      — wall-clock time for this call
 
     Raises:
@@ -232,7 +300,7 @@ def detect_voice_activity(audio_path: Union[str, Path]) -> VADResult:
     # ------------------------------------------------------------------
     # 7. Block detection (within-utterance only)
     # ------------------------------------------------------------------
-    blocks = _detect_blocks(merged, BLOCK_SILENCE_THRESHOLD_MS)
+    blocks = _detect_blocks(merged, BLOCK_SILENCE_THRESHOLD_MS, words=words)
 
     latency_ms = round((time.perf_counter() - t0) * 1000, 1)
 

@@ -8,7 +8,7 @@ import os
 # ---------------------------------------------------------------------------
 # Pipeline mode
 # ---------------------------------------------------------------------------
-ANALYSIS_MODE = os.getenv("ANALYSIS_MODE", "RULES_ONLY")  # "RULES_ONLY" | "HYBRID_ML"
+ANALYSIS_MODE = os.getenv("ANALYSIS_MODE", "HYBRID_ML")  # "RULES_ONLY" | "HYBRID_ML"
 
 # ---------------------------------------------------------------------------
 # Audio
@@ -25,7 +25,11 @@ VAD_FRAME_MS = 25                   # RMS frame length
 VAD_HOP_MS = 10                     # frame hop
 VAD_ENERGY_THRESHOLD_MULTIPLIER = 0.3  # fraction of mean RMS to call silence
 SILENCE_MERGE_GAP_MS = 100          # merge silence regions closer than this
-BLOCK_SILENCE_THRESHOLD_MS = 500    # silence >= this inside utterance = block event
+BLOCK_SILENCE_THRESHOLD_MS = 750    # silence >= this inside utterance = block event.
+                                    # Natural prosody pauses (sentence breaks, commas,
+                                    # breath groups) typically run 400–600 ms and are NOT
+                                    # blocks. Clinical literature puts real stuttering
+                                    # blocks at 750 ms+, so we sit at that boundary.
 
 # ---------------------------------------------------------------------------
 # Repetition detection

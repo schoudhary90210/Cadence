@@ -14,13 +14,15 @@ import os
 import time
 import uuid
 from pathlib import Path
-from typing import Optional
+from typing import List, Optional
 
 import config
 from models.schemas import (
     AnalysisMetrics,
     AnalysisMode,
     AnalysisResult,
+    DisfluencyEvent,
+    EventSource,
     FluencyScore,
     PipelineLatency,
     Severity,
@@ -46,7 +48,8 @@ def analyze_audio(
         speaking_rate → scoring
 
     Tier 2 (runs only when mode == HYBRID_ML and models are available):
-        wav2vec_classifier → wav2vec_phonetic → result merge
+        wav2vec_classifier → wav2vec_phonetic → detect_sound_repetitions
+        → ensemble merge with confidence boosting → re-score
         Falls back to Tier 1 result on any ML failure.
 
     Args:
@@ -86,7 +89,7 @@ def analyze_audio(
         # ------------------------------------------------------------------
         t0 = time.perf_counter()
         from pipeline.vad import detect_voice_activity
-        vad_result = detect_voice_activity(norm_path)
+        vad_result = detect_voice_activity(norm_path, words=transcript_result.words)
         t_vad_ms = _ms(t0)
         logger.debug(
             f"VAD: {t_vad_ms:.0f} ms, {len(vad_result.segments)} segments, "
@@ -101,8 +104,9 @@ def analyze_audio(
         from pipeline.filler import detect_fillers
         rep_events  = detect_repetitions(transcript_result.words)
         fill_events = detect_fillers(transcript_result.words)
-        all_events  = vad_result.detected_blocks + rep_events + fill_events
-        t_rules_ms  = _ms(t0)
+        rules_events = vad_result.detected_blocks + rep_events + fill_events
+        all_events   = list(rules_events)
+        t_rules_ms   = _ms(t0)
         logger.debug(
             f"Rules: {t_rules_ms:.0f} ms — "
             f"{len(vad_result.detected_blocks)} blocks, "
@@ -116,7 +120,7 @@ def analyze_audio(
         rate_result = analyze_speaking_rate(transcript_result.words, vad_result.segments)
 
         # ------------------------------------------------------------------
-        # Stage 6 — Composite scoring
+        # Stage 6 — Composite scoring (Tier 1 baseline)
         # ------------------------------------------------------------------
         t0 = time.perf_counter()
         from pipeline.scoring import compute_score
@@ -132,29 +136,50 @@ def analyze_audio(
         phonetic_transcript = None
 
         if mode == "HYBRID_ML":
+            # --- 7a. wav2vec2-base disfluency classifier ---
+            ml_events: List[DisfluencyEvent] = []
             t0 = time.perf_counter()
             try:
                 from pipeline.wav2vec_classifier import classify
-                ml_events = classify(norm_path, transcript_result.words)
-                all_events = _merge_events(all_events, ml_events)
+                ml_events = classify(norm_path)
                 t_w2v_classifier_ms = _ms(t0)
                 logger.info(f"wav2vec2 classifier: {t_w2v_classifier_ms:.0f} ms, "
                             f"{len(ml_events)} ML events")
             except Exception as exc:
-                logger.warning(f"wav2vec2 classifier failed — falling back to RULES_ONLY: {exc}")
+                logger.warning(f"wav2vec2 classifier failed — skipping: {exc}")
 
+            # --- 7b. wav2vec2-base-960h phonetic CTC ---
+            phonetic_events: List[DisfluencyEvent] = []
             t0 = time.perf_counter()
             try:
-                from pipeline.wav2vec_phonetic import transcribe_phonetic
+                from pipeline.wav2vec_phonetic import (
+                    transcribe_phonetic,
+                    detect_sound_repetitions,
+                )
                 phonetic_transcript = transcribe_phonetic(norm_path)
+                if phonetic_transcript is not None:
+                    phonetic_events = detect_sound_repetitions(phonetic_transcript)
                 t_w2v_phonetic_ms = _ms(t0)
-                logger.info(f"wav2vec2 phonetic: {t_w2v_phonetic_ms:.0f} ms")
+                logger.info(
+                    f"wav2vec2 phonetic: {t_w2v_phonetic_ms:.0f} ms, "
+                    f"{len(phonetic_events)} phonetic events"
+                )
             except Exception as exc:
                 logger.warning(f"wav2vec2 phonetic failed — skipping: {exc}")
 
-            # Re-score if ML events changed the event list
-            if t_w2v_classifier_ms is not None:
+            # --- 7c. Ensemble merge ---
+            if ml_events or phonetic_events:
+                all_events = _ensemble_merge(
+                    rules_events, ml_events, phonetic_events
+                )
+                # Re-score with the merged event list
                 score_result = compute_score(all_events, rate_result)
+                logger.info(
+                    f"Ensemble: {len(all_events)} total events "
+                    f"(rules={len(rules_events)}, ml={len(ml_events)}, "
+                    f"phonetic={len(phonetic_events)}), "
+                    f"score={score_result.value}"
+                )
 
         # ------------------------------------------------------------------
         # Build AnalysisMetrics
@@ -221,17 +246,71 @@ def _ms(t_start: float) -> float:
     return (time.perf_counter() - t_start) * 1000
 
 
-def _merge_events(rules_events, ml_events):
+def _events_overlap(a: DisfluencyEvent, b: DisfluencyEvent) -> bool:
+    """Check if two events overlap in time."""
+    return a.start_ms < b.end_ms and b.start_ms < a.end_ms
+
+
+def _ensemble_merge(
+    rules_events: List[DisfluencyEvent],
+    ml_events: List[DisfluencyEvent],
+    phonetic_events: List[DisfluencyEvent],
+) -> List[DisfluencyEvent]:
     """
-    Merge ML-detected events with rules-based events.
-    ML events that overlap an existing rules event are skipped (rules take priority).
+    Merge events from three sources with ensemble confidence boosting.
+
+    Algorithm:
+        1. Start with rules events as the base.
+        2. For each ML/phonetic event, check overlap with existing events.
+        3. If an ML/phonetic event overlaps a rules event OF THE SAME TYPE:
+           → create a 'hybrid' event with boosted confidence (min(conf * 1.2, 1.0))
+           → use the widest time span of the overlapping pair
+        4. If no overlap → add the event as-is (new detection from ML/phonetic).
+
+    Returns:
+        Merged and sorted event list.
     """
-    merged = list(rules_events)
+    merged: List[DisfluencyEvent] = list(rules_events)
+
+    # Process ML events
     for ml_ev in ml_events:
-        overlaps = any(
-            ml_ev.start_ms < ev.end_ms and ev.start_ms < ml_ev.end_ms
-            for ev in merged
-        )
-        if not overlaps:
+        matched = False
+        for idx, existing in enumerate(merged):
+            if _events_overlap(ml_ev, existing) and ml_ev.type == existing.type:
+                # Same type, overlapping → boost confidence, mark as hybrid
+                boosted_conf = min(existing.confidence * 1.2, 1.0)
+                merged[idx] = DisfluencyEvent(
+                    type=existing.type,
+                    subtype=existing.subtype or ml_ev.subtype,
+                    start_ms=min(existing.start_ms, ml_ev.start_ms),
+                    end_ms=max(existing.end_ms, ml_ev.end_ms),
+                    confidence=round(boosted_conf, 3),
+                    source=EventSource.HYBRID,
+                    text=existing.text or ml_ev.text,
+                )
+                matched = True
+                break
+        if not matched:
             merged.append(ml_ev)
+
+    # Process phonetic events
+    for ph_ev in phonetic_events:
+        matched = False
+        for idx, existing in enumerate(merged):
+            if _events_overlap(ph_ev, existing) and ph_ev.type == existing.type:
+                boosted_conf = min(existing.confidence * 1.2, 1.0)
+                merged[idx] = DisfluencyEvent(
+                    type=existing.type,
+                    subtype=existing.subtype or ph_ev.subtype,
+                    start_ms=min(existing.start_ms, ph_ev.start_ms),
+                    end_ms=max(existing.end_ms, ph_ev.end_ms),
+                    confidence=round(boosted_conf, 3),
+                    source=EventSource.HYBRID,
+                    text=existing.text or ph_ev.text,
+                )
+                matched = True
+                break
+        if not matched:
+            merged.append(ph_ev)
+
     return sorted(merged, key=lambda e: e.start_ms)
