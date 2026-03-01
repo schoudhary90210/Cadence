@@ -426,3 +426,324 @@ async def latest_metrics(db: Session = Depends(get_db)):
         "score":      result.score,
         "latency":    result.latency,
     }
+
+
+# ---------------------------------------------------------------------------
+# Learn system endpoints
+# ---------------------------------------------------------------------------
+
+@app.post("/learn/diagnostic", tags=["learn"])
+async def learn_diagnostic(
+    file: UploadFile = File(..., description="Audio file for diagnostic analysis"),
+    userId: Optional[str] = None,
+    db: Session = Depends(get_db),
+):
+    """
+    Run the full analysis pipeline and generate a diagnostic report
+    mapping disfluency patterns to recommended Learn courses.
+    """
+    try:
+        content = await file.read()
+        size_mb = len(content) / (1024 * 1024)
+        if size_mb > MAX_UPLOAD_SIZE_MB:
+            raise HTTPException(
+                status_code=413,
+                detail=f"File too large ({size_mb:.1f} MB). Max: {MAX_UPLOAD_SIZE_MB} MB",
+            )
+
+        display_name = file.filename or "diagnostic.m4a"
+        suffix = Path(display_name).suffix or ".m4a"
+
+        # Check demo cache first
+        stem = Path(display_name).stem
+        cached_path = Path(DEMO_CACHED_RESULTS_DIR) / f"{stem}.json"
+        if cached_path.exists():
+            result = AnalysisResult.model_validate_json(cached_path.read_text())
+            result = result.model_copy(
+                update={"id": str(uuid.uuid4()), "created_at": datetime.utcnow()}
+            )
+        else:
+            # Full pipeline
+            tmp_fd, tmp_path = tempfile.mkstemp(suffix=suffix, prefix="cadence_diag_")
+            os.close(tmp_fd)
+            try:
+                with open(tmp_path, "wb") as f:
+                    f.write(content)
+                from pipeline.orchestrator import analyze_audio
+                result = await asyncio.get_event_loop().run_in_executor(
+                    None, lambda: analyze_audio(tmp_path, mode=ANALYSIS_MODE)
+                )
+            finally:
+                if os.path.exists(tmp_path):
+                    try:
+                        os.unlink(tmp_path)
+                    except OSError:
+                        pass
+
+        # Generate diagnostic
+        from learn.diagnostic import generate_diagnostic
+        diagnostic = generate_diagnostic(result)
+
+        # If userId provided, init recommended courses
+        if userId:
+            try:
+                from learn.progress import init_course
+                for course_type in diagnostic["recommended_courses"]:
+                    init_course(userId, course_type)
+            except Exception as exc:
+                logger.warning(f"Failed to init courses for {userId}: {exc}")
+
+        return {
+            "analysis": result.model_dump(mode="json"),
+            "diagnostic": diagnostic,
+        }
+
+    except HTTPException:
+        raise
+    except Exception as exc:
+        logger.error(f"Learn diagnostic error: {exc}", exc_info=True)
+        raise HTTPException(status_code=500, detail=str(exc))
+
+
+@app.get("/learn/courses", tags=["learn"])
+async def learn_courses():
+    """Return list of all 4 Learn courses with metadata."""
+    try:
+        from learn.courses import get_all_courses
+        return get_all_courses()
+    except Exception as exc:
+        logger.error(f"Learn courses error: {exc}", exc_info=True)
+        raise HTTPException(status_code=500, detail=str(exc))
+
+
+@app.get("/learn/courses/{course_type}/exercise", tags=["learn"])
+async def learn_exercise(course_type: str, level: int = 1):
+    """Return a random exercise for the given course and level."""
+    try:
+        from learn.courses import COURSES, get_exercise
+
+        if course_type not in COURSES:
+            raise HTTPException(
+                status_code=404,
+                detail=f"Unknown course type: {course_type}. Valid: {list(COURSES.keys())}",
+            )
+        course = COURSES[course_type]
+        if level not in course["levels"]:
+            raise HTTPException(
+                status_code=400,
+                detail=f"Invalid level {level}. Valid: 1-{len(course['levels'])}",
+            )
+
+        level_data = course["levels"][level]
+        exercise_text = get_exercise(course_type, level)
+
+        return {
+            "course_name": course["name"],
+            "level": level,
+            "exercise_text": exercise_text,
+            "instruction": level_data["instruction"],
+            "level_type": level_data["level_type"],
+            "pass_threshold": level_data["pass_threshold"],
+        }
+
+    except HTTPException:
+        raise
+    except Exception as exc:
+        logger.error(f"Learn exercise error: {exc}", exc_info=True)
+        raise HTTPException(status_code=500, detail=str(exc))
+
+
+@app.post("/learn/courses/{course_type}/sessions", tags=["learn"])
+async def learn_submit_session(
+    course_type: str,
+    file: UploadFile = File(..., description="Audio recording of the exercise"),
+    userId: str = "",
+    level: int = 1,
+    db: Session = Depends(get_db),
+):
+    """
+    Submit a practice session: upload audio, run analysis,
+    evaluate pass/fail, track progress.
+    """
+    try:
+        if not userId:
+            raise HTTPException(status_code=400, detail="userId query param is required")
+
+        from learn.courses import COURSES
+        if course_type not in COURSES:
+            raise HTTPException(
+                status_code=404,
+                detail=f"Unknown course type: {course_type}",
+            )
+        course = COURSES[course_type]
+        if level not in course["levels"]:
+            raise HTTPException(
+                status_code=400,
+                detail=f"Invalid level {level}. Valid: 1-{len(course['levels'])}",
+            )
+
+        content = await file.read()
+        size_mb = len(content) / (1024 * 1024)
+        if size_mb > MAX_UPLOAD_SIZE_MB:
+            raise HTTPException(
+                status_code=413,
+                detail=f"File too large ({size_mb:.1f} MB). Max: {MAX_UPLOAD_SIZE_MB} MB",
+            )
+
+        display_name = file.filename or "learn_session.m4a"
+        suffix = Path(display_name).suffix or ".m4a"
+
+        # Check demo cache
+        stem = Path(display_name).stem
+        cached_path = Path(DEMO_CACHED_RESULTS_DIR) / f"{stem}.json"
+        if cached_path.exists():
+            result = AnalysisResult.model_validate_json(cached_path.read_text())
+            result = result.model_copy(
+                update={"id": str(uuid.uuid4()), "created_at": datetime.utcnow()}
+            )
+            gcs_uri = None
+        else:
+            tmp_fd, tmp_path = tempfile.mkstemp(suffix=suffix, prefix="cadence_learn_")
+            os.close(tmp_fd)
+            gcs_uri = None
+            try:
+                with open(tmp_path, "wb") as f:
+                    f.write(content)
+
+                from pipeline.orchestrator import analyze_audio
+                result = await asyncio.get_event_loop().run_in_executor(
+                    None, lambda: analyze_audio(tmp_path, mode=ANALYSIS_MODE)
+                )
+
+                # GCS upload for learn sessions
+                if GCS_ENABLED:
+                    try:
+                        from storage.gcs import upload_to_gcs as _upload
+                        session_id = result.id
+                        gcs_blob = f"learn/{userId}/{course_type}/level_{level}/{session_id}{suffix}"
+                        # Use the raw upload function pattern
+                        from google.cloud import storage as gcs_storage
+                        client = gcs_storage.Client()
+                        bucket = client.bucket(config.GCS_BUCKET_NAME)
+                        blob = bucket.blob(gcs_blob)
+                        blob.upload_from_filename(tmp_path)
+                        gcs_uri = f"gs://{config.GCS_BUCKET_NAME}/{gcs_blob}"
+                        logger.info(f"Learn audio uploaded to {gcs_uri}")
+                    except Exception as exc:
+                        logger.warning(f"GCS learn upload failed — continuing: {exc}")
+            finally:
+                if os.path.exists(tmp_path):
+                    try:
+                        os.unlink(tmp_path)
+                    except OSError:
+                        pass
+
+        score_value = result.score.value
+        exercise_text = display_name  # Use filename as fallback exercise reference
+
+        # Evaluate and advance
+        from learn.progress import evaluate_and_advance, save_learn_session
+        eval_result = evaluate_and_advance(userId, course_type, score_value)
+
+        # Save session record
+        save_learn_session(
+            user_id=userId,
+            course_type=course_type,
+            level=level,
+            exercise_text=exercise_text,
+            score=score_value,
+            passed=eval_result["passed"],
+            events_count=result.metrics.total_disfluencies,
+            gcs_uri=gcs_uri,
+        )
+
+        return {
+            "score": score_value,
+            "severity": result.score.severity.value,
+            "passed": eval_result["passed"],
+            "consecutive_passes": eval_result["consecutive_passes"],
+            "next_action": eval_result["next_action"],
+            "current_level": eval_result["current_level"],
+            "events": [e.model_dump(mode="json") for e in result.events],
+            "total_disfluencies": result.metrics.total_disfluencies,
+        }
+
+    except HTTPException:
+        raise
+    except Exception as exc:
+        logger.error(f"Learn session error: {exc}", exc_info=True)
+        raise HTTPException(status_code=500, detail=str(exc))
+
+
+@app.get("/learn/progress/{user_id}", tags=["learn"])
+async def learn_progress(user_id: str):
+    """Return progress for all active courses for a user."""
+    try:
+        from learn.progress import get_all_progress
+        from learn.courses import COURSES
+
+        all_progress = get_all_progress(user_id)
+        courses = []
+        for p in all_progress:
+            course_type = p.get("courseType", "")
+            course_meta = COURSES.get(course_type, {})
+            courses.append({
+                "courseType": course_type,
+                "course_name": course_meta.get("name", course_type),
+                "current_level": p.get("current_level", 1),
+                "consecutive_passes": p.get("consecutive_passes", 0),
+                "total_sessions": p.get("total_sessions", 0),
+                "best_scores": p.get("best_scores", {}),
+            })
+
+        return {"courses": courses}
+
+    except Exception as exc:
+        logger.error(f"Learn progress error: {exc}", exc_info=True)
+        raise HTTPException(status_code=500, detail=str(exc))
+
+
+@app.get("/learn/progress/{user_id}/{course_type}", tags=["learn"])
+async def learn_progress_detail(user_id: str, course_type: str):
+    """Return progress + last 10 sessions for a specific user+course."""
+    try:
+        from learn.progress import get_progress, get_session_history
+        from learn.courses import COURSES
+
+        if course_type not in COURSES:
+            raise HTTPException(
+                status_code=404,
+                detail=f"Unknown course type: {course_type}",
+            )
+
+        progress = get_progress(user_id, course_type)
+        if not progress:
+            return {
+                "started": False,
+                "courseType": course_type,
+                "course_name": COURSES[course_type]["name"],
+                "current_level": 0,
+                "consecutive_passes": 0,
+                "total_sessions": 0,
+                "best_scores": {},
+                "sessions": [],
+            }
+
+        sessions = get_session_history(user_id, course_type, limit=10)
+
+        return {
+            "started": True,
+            "courseType": course_type,
+            "course_name": COURSES[course_type]["name"],
+            "current_level": progress.get("current_level", 1),
+            "consecutive_passes": progress.get("consecutive_passes", 0),
+            "total_sessions": progress.get("total_sessions", 0),
+            "best_scores": progress.get("best_scores", {}),
+            "sessions": sessions,
+        }
+
+    except HTTPException:
+        raise
+    except Exception as exc:
+        logger.error(f"Learn progress detail error: {exc}", exc_info=True)
+        raise HTTPException(status_code=500, detail=str(exc))
