@@ -93,6 +93,28 @@ export async function getSessions(): Promise<SessionSummary[]> {
   return apiFetch<SessionSummary[]>("/sessions");
 }
 
+/** GET /sessions?date=YYYY-MM-DD */
+export async function getSessionsByDate(date: string): Promise<SessionSummary[]> {
+  return apiFetch<SessionSummary[]>(`/sessions?date=${encodeURIComponent(date)}`);
+}
+
+/** GET /sessions?week_start=YYYY-MM-DD */
+export async function getSessionsByWeek(weekStart: string): Promise<SessionSummary[]> {
+  return apiFetch<SessionSummary[]>(`/sessions?week_start=${encodeURIComponent(weekStart)}`);
+}
+
+/** GET /sessions/stats */
+export async function getSessionStats(): Promise<{
+  total_sessions: number;
+  avg_score: number;
+  best_score: number;
+  total_practice_time_sec: number;
+  severity_counts: Record<string, number>;
+  sessions_by_day: Record<string, { count: number; avg_score: number }>;
+}> {
+  return apiFetch("/sessions/stats");
+}
+
 /** GET /sessions/:id */
 export async function getSession(sessionId: string): Promise<AnalysisResult> {
   return apiFetch<AnalysisResult>(`/sessions/${sessionId}`);

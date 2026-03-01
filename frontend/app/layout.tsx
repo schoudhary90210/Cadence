@@ -18,7 +18,7 @@ function NavLink({ href, children }: { href: string; children: React.ReactNode }
   return (
     <Link
       href={href}
-      className="relative py-1 text-gray-500 hover:text-gray-900 transition-colors rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600 after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-0 after:bg-blue-600 after:transition-all hover:after:w-full"
+      className="relative py-1 text-[16px] text-gray-500 hover:text-gray-900 transition-colors rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600 after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-0 after:bg-[#2563EB] after:transition-all hover:after:w-full"
     >
       {children}
     </Link>
@@ -32,6 +32,15 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+        {/* Instrument Serif for display headings */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap"
+          rel="stylesheet"
+        />
+      </head>
       <body className={inter.className}>
         <ErrorBoundary>
           <AccessibilityProvider>
@@ -45,17 +54,17 @@ export default function RootLayout({
             </a>
 
             {/* ── Navbar ──────────────────────────────────────────────────── */}
-            <header className="fixed top-0 left-0 right-0 z-50 border-b border-gray-200 bg-white">
-              <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-3">
+            <header className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-xl border-b border-gray-100">
+              <div className="mx-auto flex max-w-5xl items-center justify-between px-5 h-16">
                 <Link
                   href="/"
-                  className="font-bold text-gray-900 text-lg rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600 focus-visible:outline-offset-2"
+                  className="serif italic text-[22px] text-gray-900 rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600 focus-visible:outline-offset-2"
                   aria-label="Cadence — go to home page"
                 >
                   Cadence
                 </Link>
                 <nav
-                  className="flex items-center gap-6 text-sm font-medium"
+                  className="flex items-center gap-7 font-medium"
                   aria-label="Main navigation"
                 >
                   <NavLink href="/analyze">Analyze</NavLink>
@@ -69,7 +78,7 @@ export default function RootLayout({
             {/* ── Page content ─────────────────────────────────────────────── */}
             <main
               id="main-content"
-              className="mx-auto max-w-5xl px-4 pt-20 pb-8"
+              className="mx-auto max-w-5xl px-5 pt-24 pb-12"
               tabIndex={-1}
             >
               {children}
@@ -77,10 +86,10 @@ export default function RootLayout({
 
             {/* ── Footer ──────────────────────────────────────────────────── */}
             <footer
-              className="mt-16 border-t border-gray-100 py-8 text-center text-xs text-gray-400 space-y-1"
+              className="mt-20 border-t border-gray-100 py-10 text-center text-[13px] text-gray-400 space-y-1.5"
               aria-label="Site footer"
             >
-              <p className="font-medium text-gray-500">Cadence</p>
+              <p className="serif italic text-[15px] text-gray-500">Cadence</p>
               <p>
                 Audio is processed on-server and deleted after analysis.
               </p>

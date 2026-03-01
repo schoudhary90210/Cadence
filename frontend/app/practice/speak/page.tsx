@@ -36,24 +36,24 @@ export default function ConversationPracticePage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-2xl font-extrabold tracking-tight text-slate-900 flex items-center gap-2">
-          <MessageSquare className="h-6 w-6 text-emerald-600" aria-hidden="true" />
+        <h1 className="serif italic text-[36px] text-gray-900 flex items-center gap-3">
+          <MessageSquare className="h-7 w-7 text-gray-400" aria-hidden="true" />
           Conversation Practice
         </h1>
-        <p className="mt-1 text-sm text-slate-500">
+        <p className="mt-2 text-[15px] text-gray-500">
           Answer a random prompt aloud. Results focus on fillers, speaking rate, and pace.
         </p>
       </div>
 
       {loading && (
-        <div className="space-y-4 animate-pulse" role="status" aria-label="Loading prompt">
-          <div className="h-24 rounded-xl bg-emerald-50 border border-emerald-100" />
-          <div className="h-48 rounded-xl bg-slate-100" />
+        <div className="space-y-4" role="status" aria-label="Loading prompt">
+          <div className="h-24 skeleton border-l-4 border-blue-600" />
+          <div className="h-48 skeleton" />
         </div>
       )}
 
       {error && (
-        <p role="alert" className="text-sm text-red-600">{error}</p>
+        <p role="alert" className="text-[14px] text-red-600">{error}</p>
       )}
 
       {!loading && !error && prompt && (

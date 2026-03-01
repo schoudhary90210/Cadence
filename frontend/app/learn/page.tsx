@@ -10,7 +10,6 @@ import {
   Repeat,
   Pause,
   ArrowRight,
-  Mic,
   RotateCcw,
 } from "lucide-react";
 
@@ -55,7 +54,7 @@ function ImpedimentBar({ label, count, max }: { label: string; count: number; ma
   const pct = max > 0 ? Math.min((count / max) * 100, 100) : 0;
   return (
     <div className="space-y-1">
-      <div className="flex items-center justify-between text-sm">
+      <div className="flex items-center justify-between text-[14px]">
         <span className="text-gray-700">{label}</span>
         <span className="font-medium text-gray-900 tabular-nums">{count}</span>
       </div>
@@ -117,45 +116,43 @@ function CourseCard({
   return (
     <Link
       href={`/learn/${course.course_type}`}
-      className={`block rounded-xl border p-5 transition-all hover:shadow-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600 ${
-        started
-          ? "border-gray-200 bg-white"
-          : recommended
-            ? "border-gray-200 bg-white"
-            : "border-gray-100 bg-gray-50 opacity-60"
+      className={`block glass p-5 transition-all hover:shadow-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600 ${
+        !started && !recommended ? "opacity-60" : ""
       }`}
       aria-label={`${course.name} — Level ${level} of ${course.total_levels}`}
     >
       <div className="flex items-start justify-between mb-3">
         <div className="flex items-center gap-3">
-          <Icon className="h-5 w-5 text-gray-400 flex-shrink-0" aria-hidden="true" />
+          <div className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center flex-shrink-0">
+            <Icon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+          </div>
           <div>
-            <h3 className="font-semibold text-gray-900">{course.name}</h3>
-            <p className="text-xs text-gray-500 mt-0.5">{course.description}</p>
+            <h3 className="font-semibold text-[17px] text-gray-900">{course.name}</h3>
+            <p className="text-[13px] text-gray-500 mt-0.5">{course.description}</p>
           </div>
         </div>
       </div>
 
       {started ? (
         <div className="space-y-2">
-          <div className="flex items-center justify-between text-sm">
+          <div className="flex items-center justify-between text-[14px]">
             <span className="text-gray-600">Level {level} / {course.total_levels}</span>
             <ProgressDots filled={progress?.consecutive_passes ?? 0} />
           </div>
           <div className="h-1.5 w-full rounded-full bg-gray-100">
             <div
-              className="h-1.5 rounded-full bg-blue-500 transition-all"
+              className="h-1.5 rounded-full bg-[#2563EB] transition-all"
               style={{ width: `${pct}%` }}
             />
           </div>
-          <p className="text-xs text-gray-400">{progress?.total_sessions ?? 0} sessions</p>
+          <p className="text-[13px] text-gray-400">{progress?.total_sessions ?? 0} sessions</p>
         </div>
       ) : (
         <div className="flex items-center justify-between mt-3">
-          <span className="text-sm text-gray-500">
+          <span className="text-[14px] text-gray-500">
             {recommended ? "Recommended" : "Not started"}
           </span>
-          <span className="text-sm font-medium text-gray-900 flex items-center gap-1">
+          <span className="text-[14px] font-medium text-gray-900 flex items-center gap-1">
             Start <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
           </span>
         </div>
@@ -182,7 +179,6 @@ export default function LearnPage() {
   const [courses, setCourses] = useState<CourseInfo[]>([]);
   const [progressList, setProgressList] = useState<CourseProgress[]>([]);
 
-  // Determine initial view
   useEffect(() => {
     const uid = getUserId();
     setUserId(uid);
@@ -192,7 +188,6 @@ export default function LearnPage() {
       loadOverview(uid);
     } else {
       setStatus("diagnostic");
-      // Also preload courses for diagnostic results
       getCourses().then(setCourses).catch(() => {});
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -211,12 +206,10 @@ export default function LearnPage() {
     }
   }, []);
 
-  // Recording complete — save blob
   function handleRecording(b: Blob) {
     setBlob(b);
   }
 
-  // Run diagnostic
   async function handleDiagnostic() {
     if (!blob) return;
     setAnalyzing(true);
@@ -226,7 +219,6 @@ export default function LearnPage() {
       const file = new File([blob], `diagnostic-${Date.now()}.webm`, { type: blob.type });
       const { diagnostic: diag } = await getDiagnostic(file, userId);
       setDiagnostic(diag);
-      // Preload courses for result cards
       const c = await getCourses();
       setCourses(c);
     } catch (e: unknown) {
@@ -237,13 +229,11 @@ export default function LearnPage() {
     }
   }
 
-  // Start a course from diagnostic results
   function handleStartCourse(courseType: string) {
     localStorage.setItem("diagnostic_complete", "true");
     router.push(`/learn/${courseType}`);
   }
 
-  // Reset diagnostic
   function handleResetDiagnostic() {
     localStorage.removeItem("diagnostic_complete");
     setDiagnostic(null);
@@ -251,7 +241,6 @@ export default function LearnPage() {
     setStatus("diagnostic");
   }
 
-  // Switch to overview
   function handleNewDiagnostic() {
     localStorage.removeItem("diagnostic_complete");
     setDiagnostic(null);
@@ -266,10 +255,10 @@ export default function LearnPage() {
 
   if (status === "loading") {
     return (
-      <div className="space-y-4 animate-pulse" role="status" aria-label="Loading">
-        <div className="h-8 w-48 rounded bg-gray-100" />
-        <div className="h-4 w-72 rounded bg-gray-100" />
-        <div className="h-48 rounded-xl bg-gray-100" />
+      <div className="space-y-4" role="status" aria-label="Loading">
+        <div className="h-8 w-48 skeleton" />
+        <div className="h-4 w-72 skeleton" />
+        <div className="h-48 skeleton" />
       </div>
     );
   }
@@ -281,58 +270,52 @@ export default function LearnPage() {
   if (status === "diagnostic" && !diagnostic) {
     return (
       <div className="space-y-8">
-        {/* Header */}
         <div>
-          <h1 className="text-2xl font-extrabold tracking-tight text-gray-900 flex items-center gap-2">
-            <GraduationCap className="h-6 w-6 text-gray-400" aria-hidden="true" />
+          <h1 className="serif italic text-[36px] text-gray-900 flex items-center gap-3">
+            <GraduationCap className="h-7 w-7 text-gray-400" aria-hidden="true" />
             Let&apos;s understand your speech
           </h1>
-          <p className="mt-1 text-sm text-gray-500">
-            Record yourself speaking naturally for 15–30 seconds. We&apos;ll analyze your patterns and build a personalized practice plan.
+          <p className="mt-2 text-[15px] text-gray-500">
+            Record yourself speaking naturally for 15\u201330 seconds. We&apos;ll analyze your patterns and build a personalized practice plan.
           </p>
         </div>
 
-        {/* Recorder */}
-        <div className="rounded-xl border border-gray-200 bg-white p-6 space-y-4">
+        <div className="glass p-6 space-y-4">
           <AudioRecorder
             onRecordingComplete={handleRecording}
             disabled={analyzing}
           />
         </div>
 
-        {/* Ready state */}
         {blob && !analyzing && (
           <button
             onClick={handleDiagnostic}
-            className="w-full rounded-lg bg-gray-900 px-6 py-3 text-base font-semibold text-white hover:bg-gray-800 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
+            className="w-full rounded-full bg-gray-900 px-6 py-3.5 text-[16px] font-semibold text-white hover:bg-gray-800 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
             aria-label="Run diagnostic analysis"
           >
             Run Diagnostic
           </button>
         )}
 
-        {/* Analyzing */}
         {analyzing && (
           <div className="flex flex-col items-center gap-3 py-8">
             <div
               className="h-8 w-8 rounded-full border-4 border-gray-200 border-t-blue-600 animate-spin"
               aria-hidden="true"
             />
-            <p role="status" aria-live="polite" className="text-sm text-gray-600">
+            <p role="status" aria-live="polite" className="text-[14px] text-gray-600">
               {analyzeStage ?? "Analyzing..."}
             </p>
           </div>
         )}
 
-        {/* Error */}
         {error && (
-          <div role="alert" className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600">
+          <div role="alert" className="glass px-5 py-3 text-[14px] text-red-600" style={{ borderColor: "rgba(239, 68, 68, 0.2)" }}>
             {error}
           </div>
         )}
 
-        {/* Skip link */}
-        <p className="text-center text-sm text-gray-400">
+        <p className="text-center text-[14px] text-gray-400">
           Already know what to practice?{" "}
           <button
             onClick={() => {
@@ -366,19 +349,18 @@ export default function LearnPage() {
     return (
       <div className="space-y-8">
         <div>
-          <h1 className="text-2xl font-extrabold tracking-tight text-gray-900 flex items-center gap-2">
-            <GraduationCap className="h-6 w-6 text-gray-400" aria-hidden="true" />
+          <h1 className="serif italic text-[36px] text-gray-900 flex items-center gap-3">
+            <GraduationCap className="h-7 w-7 text-gray-400" aria-hidden="true" />
             Your Diagnostic Results
           </h1>
-          <p className="mt-1 text-sm text-gray-500">
+          <p className="mt-2 text-[15px] text-gray-500">
             {diagnostic.report_text}
           </p>
         </div>
 
-        {/* Impediment profile */}
         {nonZero.length > 0 && (
-          <div className="rounded-xl border border-gray-200 bg-white p-5 space-y-3">
-            <h2 className="text-sm font-semibold text-gray-900">Speech Pattern Analysis</h2>
+          <div className="glass p-6 space-y-3">
+            <h2 className="text-[15px] font-semibold text-gray-900">Speech Pattern Analysis</h2>
             {nonZero.map(([key, count]) => (
               <ImpedimentBar
                 key={key}
@@ -390,9 +372,8 @@ export default function LearnPage() {
           </div>
         )}
 
-        {/* Recommended courses */}
         <div className="space-y-3">
-          <h2 className="text-sm font-semibold text-gray-900">Recommended Courses</h2>
+          <h2 className="text-[15px] font-semibold text-gray-900">Recommended Courses</h2>
           <div className="grid gap-4 sm:grid-cols-2">
             {courses
               .filter((c) => recommendedSet.has(c.course_type))
@@ -402,15 +383,17 @@ export default function LearnPage() {
                   <button
                     key={course.course_type}
                     onClick={() => handleStartCourse(course.course_type)}
-                    className="rounded-xl border border-gray-200 bg-white p-5 text-left hover:shadow-md transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
+                    className="glass p-5 text-left hover:shadow-md transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
                     aria-label={`Start ${course.name}`}
                   >
                     <div className="flex items-center gap-3 mb-2">
-                      <Icon className="h-5 w-5 text-gray-400" aria-hidden="true" />
-                      <h3 className="font-semibold text-gray-900">{course.name}</h3>
+                      <div className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center">
+                        <Icon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+                      </div>
+                      <h3 className="font-semibold text-[17px] text-gray-900">{course.name}</h3>
                     </div>
-                    <p className="text-sm text-gray-500 mb-3">{course.description}</p>
-                    <span className="text-sm font-medium text-gray-900 flex items-center gap-1">
+                    <p className="text-[15px] text-gray-500 mb-3">{course.description}</p>
+                    <span className="text-[14px] font-medium text-gray-900 flex items-center gap-1">
                       Start Course <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
                     </span>
                   </button>
@@ -419,8 +402,7 @@ export default function LearnPage() {
           </div>
         </div>
 
-        {/* Browse all */}
-        <p className="text-center text-sm text-gray-400">
+        <p className="text-center text-[14px] text-gray-400">
           <button
             onClick={() => {
               localStorage.setItem("diagnostic_complete", "true");
@@ -447,20 +429,19 @@ export default function LearnPage() {
 
   return (
     <div className="space-y-8">
-      {/* Header */}
       <div className="flex items-center justify-between flex-wrap gap-4">
         <div>
-          <h1 className="text-2xl font-extrabold tracking-tight text-gray-900 flex items-center gap-2">
-            <GraduationCap className="h-6 w-6 text-gray-400" aria-hidden="true" />
+          <h1 className="serif italic text-[36px] text-gray-900 flex items-center gap-3">
+            <GraduationCap className="h-7 w-7 text-gray-400" aria-hidden="true" />
             Learn
           </h1>
-          <p className="mt-1 text-sm text-gray-500">
+          <p className="mt-2 text-[15px] text-gray-500">
             Practice exercises to improve your fluency.
           </p>
         </div>
         <button
           onClick={handleNewDiagnostic}
-          className="flex items-center gap-2 rounded-lg border border-gray-200 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
+          className="flex items-center gap-2 rounded-full border border-gray-200 px-5 py-2.5 text-[14px] font-medium text-gray-700 hover:bg-gray-50 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
           aria-label="Run a new diagnostic"
         >
           <RotateCcw className="h-3.5 w-3.5" aria-hidden="true" />
@@ -468,10 +449,9 @@ export default function LearnPage() {
         </button>
       </div>
 
-      {/* Active courses */}
       {progressList.length > 0 && (
         <div className="space-y-3">
-          <h2 className="text-sm font-semibold text-gray-900">Your Courses</h2>
+          <h2 className="text-[15px] font-semibold text-gray-900">Your Courses</h2>
           <div className="grid gap-4 sm:grid-cols-2">
             {courses
               .filter((c) => progressMap.has(c.course_type))
@@ -487,9 +467,8 @@ export default function LearnPage() {
         </div>
       )}
 
-      {/* All courses */}
       <div className="space-y-3">
-        <h2 className="text-sm font-semibold text-gray-900">All Courses</h2>
+        <h2 className="text-[15px] font-semibold text-gray-900">All Courses</h2>
         <div className="grid gap-4 sm:grid-cols-2">
           {courses.map((course) => (
             <CourseCard
@@ -502,9 +481,8 @@ export default function LearnPage() {
         </div>
       </div>
 
-      {/* Error */}
       {error && (
-        <div role="alert" className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600">
+        <div role="alert" className="glass px-5 py-3 text-[14px] text-red-600" style={{ borderColor: "rgba(239, 68, 68, 0.2)" }}>
           {error}
         </div>
       )}

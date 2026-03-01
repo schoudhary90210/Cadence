@@ -21,9 +21,9 @@ export interface SeverityBadgeProps {
 // ---------------------------------------------------------------------------
 
 const SIZE_CLASSES: Record<NonNullable<SeverityBadgeProps["size"]>, string> = {
-  sm: "px-2 py-0.5 text-xs",
-  md: "px-3 py-1 text-sm",
-  lg: "px-4 py-1.5 text-base",
+  sm: "px-2.5 py-0.5 text-[13px]",
+  md: "px-3 py-1 text-[14px]",
+  lg: "px-4 py-1.5 text-[15px]",
 };
 
 // ---------------------------------------------------------------------------

@@ -7,7 +7,7 @@
  */
 
 // ---------------------------------------------------------------------------
-// Props interface (exported for Figma handoff)
+// Props interface
 // ---------------------------------------------------------------------------
 
 export interface FluencyGaugeProps {
@@ -35,7 +35,6 @@ function gaugeColor(score: number): string {
 
 export function FluencyGauge({ score, severity }: FluencyGaugeProps) {
   const clampedScore = Math.max(0, Math.min(100, score));
-  // strokeDashoffset: CIRCUMFERENCE = 0%, 0 = 100% filled
   const targetOffset = CIRCUMFERENCE * (1 - clampedScore / 100);
   const color = gaugeColor(clampedScore);
 
@@ -48,13 +47,9 @@ export function FluencyGauge({ score, severity }: FluencyGaugeProps) {
 
       {/* SVG gauge */}
       <div className="relative inline-flex items-center justify-center" aria-hidden="true">
-        {/*
-          Rotate -90° so arc starts at 12 o'clock.
-          The CSS animation animates strokeDashoffset from CIRCUMFERENCE → targetOffset.
-        */}
         <svg
           viewBox="0 0 120 120"
-          className="w-40 h-40 -rotate-90"
+          className="w-48 h-48 -rotate-90"
           xmlns="http://www.w3.org/2000/svg"
         >
           {/* Background track */}
@@ -63,7 +58,7 @@ export function FluencyGauge({ score, severity }: FluencyGaugeProps) {
             cy="60"
             r={RADIUS}
             fill="none"
-            stroke="#e2e8f0"
+            stroke="#f3f4f6"
             strokeWidth="10"
           />
           {/* Progress arc — animated via Tailwind keyframe */}
@@ -85,21 +80,21 @@ export function FluencyGauge({ score, severity }: FluencyGaugeProps) {
           />
         </svg>
 
-        {/* Score number — centred over SVG, counter-rotated to read normally */}
+        {/* Score number — centred over SVG */}
         <div className="absolute inset-0 flex flex-col items-center justify-center">
           <span
-            className="text-4xl font-extrabold tabular-nums leading-none"
+            className="serif italic text-[56px] font-normal tabular-nums leading-none"
             style={{ color }}
           >
             {clampedScore.toFixed(0)}
           </span>
-          <span className="text-xs text-slate-400 mt-0.5">/ 100</span>
+          <span className="text-[13px] text-gray-400 mt-1">/ 100</span>
         </div>
       </div>
 
       {/* Severity label below gauge */}
-      <p className="text-sm font-semibold capitalize" style={{ color }}>
-        {severity.replace("-", "–")}
+      <p className="text-[15px] font-semibold capitalize" style={{ color }}>
+        {severity.replace("-", "\u2013")}
       </p>
     </div>
   );

@@ -6,6 +6,7 @@ import Link from "next/link";
 import { Mic, BookOpen, Clock, PlayCircle, GraduationCap } from "lucide-react";
 import { motion, useInView } from "framer-motion";
 
+import { WaveformBg } from "@/components/WaveformBg";
 import { analyzeDemoSample } from "@/lib/api";
 import type { DemoSample } from "@/lib/types";
 
@@ -24,14 +25,14 @@ const DEMO_SAMPLES: DemoSample[] = [
   {
     filename: "stuttered_sample.m4a",
     label: "stuttered",
-    description: "Intentional blocks, repetitions, prolongations. Expected score ~60–70.",
+    description: "Intentional blocks, repetitions, prolongations. Expected score ~60\u201370.",
     duration: 30,
     cached: true,
   },
   {
     filename: "mixed_sample.m4a",
     label: "mixed",
-    description: "Mostly fluent with a few fillers and repetitions. Expected score ~75–80.",
+    description: "Mostly fluent with a few fillers and repetitions. Expected score ~75\u201380.",
     duration: 30,
     cached: true,
   },
@@ -87,7 +88,6 @@ function useCountUp(target: number, duration = 1500) {
     function tick(now: number) {
       const elapsed = now - start;
       const progress = Math.min(elapsed / duration, 1);
-      // ease-out
       const eased = 1 - Math.pow(1 - progress, 3);
       setCount(Math.round(eased * target));
       if (progress < 1) rafId = requestAnimationFrame(tick);
@@ -101,20 +101,20 @@ function useCountUp(target: number, duration = 1500) {
 }
 
 // ---------------------------------------------------------------------------
-// Stat item (hook must be at component level, not in a map callback)
+// Stat item
 // ---------------------------------------------------------------------------
 
 function StatItem({ target, suffix, label }: { target: number; suffix: string; label: string }) {
   const { count, ref } = useCountUp(target);
   return (
-    <div>
+    <div className="text-center">
       <span
         ref={ref}
-        className="text-5xl font-extrabold text-gray-900 tabular-nums"
+        className="serif italic text-5xl font-normal text-gray-900 tabular-nums"
       >
         {count}{suffix}
       </span>
-      <p className="text-sm text-gray-500 mt-2">{label}</p>
+      <p className="text-[14px] text-gray-500 mt-2">{label}</p>
     </div>
   );
 }
@@ -132,7 +132,7 @@ export default function LandingPage() {
 
   async function handleDemo(sample: DemoSample) {
     setError(null);
-    setStage(sample.cached ? `Loading cached result for ${sample.label}…` : `Analyzing ${sample.filename}…`);
+    setStage(sample.cached ? `Loading cached result for ${sample.label}\u2026` : `Analyzing ${sample.filename}\u2026`);
     try {
       const result = await analyzeDemoSample(sample.filename);
       router.push(`/results/${result.id}`);
@@ -145,54 +145,61 @@ export default function LandingPage() {
   const titleChars = "Cadence".split("");
 
   return (
-    <div className="space-y-24">
+    <div className="space-y-28">
 
       {/* ── Hero ─────────────────────────────────────────────────────────── */}
       <section
-        className="pt-12 text-center space-y-8"
+        className="relative pt-16 pb-4 text-center"
         aria-labelledby="hero-heading"
       >
-        <h1 id="hero-heading" className="text-6xl sm:text-7xl font-extrabold tracking-tight text-gray-900">
-          {titleChars.map((char, i) => (
-            <motion.span
-              key={i}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: i * 0.03 }}
-              className="inline-block"
-            >
-              {char}
-            </motion.span>
-          ))}
-        </h1>
+        <WaveformBg />
 
-        <motion.p
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.25 }}
-          className="text-xl text-gray-500 max-w-lg mx-auto"
-        >
-          Speech fluency analytics for everyone.
-        </motion.p>
-
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.4 }}
-        >
-          <Link
-            href="/analyze"
-            className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-8 py-3 text-base font-semibold text-white shadow-sm hover:bg-blue-700 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
+        <div className="relative z-10 space-y-8">
+          <h1
+            id="hero-heading"
+            className="serif italic text-[80px] sm:text-[96px] leading-[0.95] tracking-tight text-gray-900"
           >
-            Start Analysis
-          </Link>
-        </motion.div>
+            {titleChars.map((char, i) => (
+              <motion.span
+                key={i}
+                initial={{ opacity: 0, y: 24 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: i * 0.04 }}
+                className="inline-block"
+              >
+                {char}
+              </motion.span>
+            ))}
+          </h1>
+
+          <motion.p
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.35 }}
+            className="text-[19px] text-gray-500 max-w-md mx-auto leading-relaxed"
+          >
+            Speech fluency analytics for everyone.
+          </motion.p>
+
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.5 }}
+          >
+            <Link
+              href="/analyze"
+              className="inline-flex items-center gap-2 rounded-full bg-[#2563EB] px-8 py-3.5 text-[16px] font-semibold text-white shadow-sm hover:bg-[#1d4ed8] transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
+            >
+              Start Analysis
+            </Link>
+          </motion.div>
+        </div>
       </section>
 
       {/* ── Features ─────────────────────────────────────────────────────── */}
       <section aria-labelledby="features-heading">
         <h2 id="features-heading" className="sr-only">Features</h2>
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {FEATURES.map((f, i) => {
             const Icon = f.icon;
             return (
@@ -200,16 +207,18 @@ export default function LandingPage() {
                 key={f.href}
                 initial={{ opacity: 0, y: 24 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-50px" }}
+                viewport={{ once: true, margin: "-40px" }}
                 transition={{ duration: 0.4, delay: i * 0.08 }}
               >
                 <Link
                   href={f.href}
-                  className="block rounded-xl border border-gray-200 bg-white p-6 hover:shadow-md transition-shadow focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
+                  className="glass block p-6 hover:shadow-md transition-shadow focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
                 >
-                  <Icon className="h-6 w-6 text-gray-400 mb-4" aria-hidden="true" />
-                  <h3 className="font-semibold text-gray-900 mb-1">{f.title}</h3>
-                  <p className="text-sm text-gray-500 leading-relaxed">{f.description}</p>
+                  <div className="w-11 h-11 rounded-full bg-gray-50 flex items-center justify-center mb-4">
+                    <Icon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+                  </div>
+                  <h3 className="font-semibold text-[17px] text-gray-900 mb-1">{f.title}</h3>
+                  <p className="text-[15px] text-gray-500 leading-relaxed">{f.description}</p>
                 </Link>
               </motion.div>
             );
@@ -218,19 +227,23 @@ export default function LandingPage() {
       </section>
 
       {/* ── Stats ────────────────────────────────────────────────────────── */}
-      <section aria-label="Key statistics" className="grid gap-8 sm:grid-cols-3 text-center">
-        {STATS.map((stat) => (
-          <StatItem key={stat.label} target={stat.target} suffix={stat.suffix} label={stat.label} />
-        ))}
+      <section aria-label="Key statistics">
+        <div className="glass px-8 py-10">
+          <div className="grid sm:grid-cols-3 gap-8 divide-y sm:divide-y-0 sm:divide-x divide-gray-100">
+            {STATS.map((stat) => (
+              <StatItem key={stat.label} target={stat.target} suffix={stat.suffix} label={stat.label} />
+            ))}
+          </div>
+        </div>
       </section>
 
       {/* ── Demo samples ──────────────────────────────────────────────────── */}
       <section aria-labelledby="demo-heading" className="space-y-6">
         <div className="text-center">
-          <h2 id="demo-heading" className="text-2xl font-bold text-gray-900">
+          <h2 id="demo-heading" className="serif italic text-[32px] text-gray-900">
             Try a Demo
           </h2>
-          <p className="mt-1 text-sm text-gray-500">
+          <p className="mt-2 text-[15px] text-gray-500">
             Pre-computed results — instant, no pipeline delay.
           </p>
         </div>
@@ -243,20 +256,20 @@ export default function LandingPage() {
               disabled={inProgress}
               aria-label={`Analyze ${sample.label} sample: ${sample.description}`}
               className="
-                rounded-xl border border-gray-200 bg-white p-5 text-left transition-all
-                hover:shadow-md hover:border-gray-300
+                glass p-6 text-left transition-all
+                hover:shadow-md
                 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600
                 disabled:opacity-50 disabled:cursor-not-allowed
               "
             >
               <div className="flex items-center gap-2 mb-2">
                 <PlayCircle className="h-4 w-4 text-gray-400" aria-hidden="true" />
-                <span className="text-xs font-bold uppercase tracking-widest text-gray-500">
+                <span className="text-[13px] font-bold uppercase tracking-widest text-gray-500">
                   {sample.label}
                 </span>
               </div>
-              <p className="text-sm text-gray-700 leading-snug">{sample.description}</p>
-              <p className="mt-2 text-xs text-gray-400">{sample.duration}s</p>
+              <p className="text-[15px] text-gray-700 leading-snug">{sample.description}</p>
+              <p className="mt-2 text-[13px] text-gray-400">{sample.duration}s</p>
             </button>
           ))}
         </div>
@@ -267,13 +280,13 @@ export default function LandingPage() {
             role="status"
             aria-live="polite"
             aria-atomic="true"
-            className="text-sm text-blue-600 font-medium animate-pulse text-center"
+            className="text-[14px] text-blue-600 font-medium animate-pulse text-center"
           >
             {stage}
           </p>
         )}
         {error && (
-          <p role="alert" className="text-sm text-red-600 text-center">
+          <p role="alert" className="text-[14px] text-red-600 text-center">
             {error}
           </p>
         )}

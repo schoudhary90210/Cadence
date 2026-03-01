@@ -8,7 +8,7 @@
 import type { AnalysisMetrics } from "@/lib/types";
 
 // ---------------------------------------------------------------------------
-// Props interface (exported for Figma handoff)
+// Props interface
 // ---------------------------------------------------------------------------
 
 export interface SpeakingRateCardProps {
@@ -41,14 +41,14 @@ interface MetricRowProps {
 
 function MetricRow({ label, value, note, badge }: MetricRowProps) {
   return (
-    <div className="flex items-baseline justify-between gap-2 py-2 border-b border-slate-100 last:border-0">
-      <span className="text-sm text-slate-600 shrink-0">{label}</span>
+    <div className="flex items-baseline justify-between gap-2 py-2.5 border-b border-gray-100 last:border-0">
+      <span className="text-[15px] text-gray-600 shrink-0">{label}</span>
       <div className="flex items-center gap-2 flex-wrap justify-end">
         {badge && (
-          <span className={`text-xs font-semibold ${badge.color}`}>{badge.text}</span>
+          <span className={`text-[13px] font-semibold ${badge.color}`}>{badge.text}</span>
         )}
-        <span className="font-mono text-sm font-semibold text-slate-800">{value}</span>
-        {note && <span className="text-xs text-slate-400">{note}</span>}
+        <span className="font-mono text-[15px] font-semibold text-gray-800">{value}</span>
+        {note && <span className="text-[13px] text-gray-400">{note}</span>}
       </div>
     </div>
   );
@@ -65,7 +65,7 @@ export function SpeakingRateCard({ metrics }: SpeakingRateCardProps) {
   return (
     <section aria-labelledby="rate-heading">
       <h2 id="rate-heading" className="sr-only">Speaking Rate</h2>
-      <div className="divide-y divide-slate-100">
+      <div className="divide-y divide-gray-100">
         <MetricRow
           label="Speaking rate"
           value={`${speaking_rate_syl_sec.toFixed(2)} syl/s`}
@@ -79,12 +79,12 @@ export function SpeakingRateCard({ metrics }: SpeakingRateCardProps) {
         />
         <MetricRow
           label="Pace variability"
-          value={`±${pace_variability.toFixed(2)} syl/s`}
+          value={`\u00B1${pace_variability.toFixed(2)} syl/s`}
           note="std dev, 3s windows"
         />
         <div className="pt-2">
-          <p className="text-xs text-slate-400">
-            Normal range: {NORMAL_RATE_MIN}–{NORMAL_RATE_MAX} syl/s
+          <p className="text-[13px] text-gray-400">
+            Normal range: {NORMAL_RATE_MIN}\u2013{NORMAL_RATE_MAX} syl/s
           </p>
         </div>
       </div>

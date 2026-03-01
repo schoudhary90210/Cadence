@@ -90,17 +90,17 @@ export function AccessibilityProvider({ children }: { children: ReactNode }) {
             role="dialog"
             aria-modal="true"
             aria-label="Accessibility settings"
-            className="w-72 rounded-xl border border-slate-200 bg-white p-5 shadow-xl space-y-4"
+            className="w-72 glass p-5 shadow-xl space-y-4"
           >
             {/* Header */}
             <div className="flex items-center justify-between">
-              <h2 className="text-sm font-semibold text-slate-900">
+              <h2 className="text-[15px] font-semibold text-gray-900">
                 Accessibility settings
               </h2>
               <button
                 onClick={handleClose}
                 aria-label="Close accessibility settings"
-                className="rounded text-slate-400 hover:text-slate-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-sky-600"
+                className="rounded text-gray-400 hover:text-gray-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
               >
                 <X className="h-4 w-4" aria-hidden="true" />
               </button>
@@ -110,7 +110,7 @@ export function AccessibilityProvider({ children }: { children: ReactNode }) {
             <HighContrastToggle checked={highContrast} onChange={setHighContrast} />
             <LargeTextToggle   checked={largeText}    onChange={setLargeText} />
 
-            <p className="text-xs text-slate-400 border-t border-slate-100 pt-3">
+            <p className="text-[13px] text-gray-400 border-t border-gray-100 pt-3">
               Preferences are saved in your browser and applied automatically.
             </p>
           </div>
@@ -125,9 +125,9 @@ export function AccessibilityProvider({ children }: { children: ReactNode }) {
           aria-label={open ? "Close accessibility settings" : "Open accessibility settings"}
           className="
             flex h-12 w-12 items-center justify-center rounded-full
-            bg-slate-800 text-white shadow-lg
-            hover:bg-slate-700 transition-colors
-            focus-visible:outline focus-visible:outline-2 focus-visible:outline-sky-600 focus-visible:outline-offset-2
+            bg-gray-900 text-white shadow-lg
+            hover:bg-gray-800 transition-colors
+            focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600 focus-visible:outline-offset-2
           "
         >
           <Accessibility className="h-5 w-5" aria-hidden="true" />

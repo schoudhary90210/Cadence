@@ -36,36 +36,34 @@ export default function ReadingPracticePage() {
       .finally(() => setLoading(false));
   }, []);
 
-  // ── Sub-page: selected passage ──────────────────────────────────────────
   if (selected) {
     return (
       <ReadingPractice passage={selected} onBack={() => setSelected(null)} />
     );
   }
 
-  // ── Passage list ────────────────────────────────────────────────────────
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-2xl font-extrabold tracking-tight text-slate-900 flex items-center gap-2">
-          <BookOpen className="h-6 w-6 text-violet-600" aria-hidden="true" />
+        <h1 className="serif italic text-[36px] text-gray-900 flex items-center gap-3">
+          <BookOpen className="h-7 w-7 text-gray-400" aria-hidden="true" />
           Reading Practice
         </h1>
-        <p className="mt-1 text-sm text-slate-500">
+        <p className="mt-2 text-[15px] text-gray-500">
           Choose a passage, read it aloud, and see instant word-level feedback.
         </p>
       </div>
 
       {loading && (
-        <div className="space-y-3 animate-pulse" role="status" aria-label="Loading passages">
+        <div className="space-y-3" role="status" aria-label="Loading passages">
           {[0, 1, 2, 3].map((i) => (
-            <div key={i} className="h-20 rounded-xl bg-slate-100" />
+            <div key={i} className="h-20 skeleton" />
           ))}
         </div>
       )}
 
       {error && (
-        <p role="alert" className="text-sm text-red-600">{error}</p>
+        <p role="alert" className="text-[14px] text-red-600">{error}</p>
       )}
 
       {!loading && !error && (
@@ -76,21 +74,21 @@ export default function ReadingPracticePage() {
               role="listitem"
               onClick={() => setSelected(p)}
               className="
-                w-full text-left rounded-xl border border-slate-200 bg-white px-5 py-4
-                hover:border-violet-300 hover:bg-violet-50 transition-all
-                focus-visible:outline focus-visible:outline-2 focus-visible:outline-violet-600
+                w-full text-left glass px-5 py-4
+                hover:shadow-md transition-all
+                focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600
               "
               aria-label={`Start reading: ${p.title} — ${p.difficulty} difficulty`}
             >
               <div className="flex items-center gap-3 mb-1">
-                <span className="font-semibold text-slate-900">{p.title}</span>
+                <span className="font-semibold text-[17px] text-gray-900">{p.title}</span>
                 <span
-                  className={`rounded-full px-2 py-0.5 text-xs font-medium capitalize ${DIFFICULTY_CLASS[p.difficulty]}`}
+                  className={`rounded-full px-2.5 py-0.5 text-[13px] font-medium capitalize ${DIFFICULTY_CLASS[p.difficulty]}`}
                 >
                   {p.difficulty}
                 </span>
               </div>
-              <p className="text-sm text-slate-500 line-clamp-2">{p.text}</p>
+              <p className="text-[15px] text-gray-500 line-clamp-2">{p.text}</p>
             </button>
           ))}
         </div>

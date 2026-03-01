@@ -47,19 +47,17 @@ function LevelTimeline({ currentLevel, totalLevels = 5 }: { currentLevel: number
 
         return (
           <div key={level} className="flex items-center">
-            {/* Circle */}
             <div
               className={`
-                w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold border-2 transition-all
+                w-10 h-10 rounded-full flex items-center justify-center text-[14px] font-bold border-2 transition-all
                 ${isCompleted ? "bg-green-500 border-green-500 text-white" : ""}
-                ${isCurrent ? "bg-blue-500 border-blue-500 text-white animate-pulse" : ""}
+                ${isCurrent ? "bg-[#2563EB] border-[#2563EB] text-white animate-pulse" : ""}
                 ${isFuture ? "bg-white border-gray-300 text-gray-400" : ""}
               `}
               aria-label={`Level ${level}${isCompleted ? " completed" : isCurrent ? " current" : ""}`}
             >
               {level}
             </div>
-            {/* Connecting line */}
             {i < totalLevels - 1 && (
               <div
                 className={`w-8 sm:w-12 h-0.5 ${
@@ -86,7 +84,6 @@ interface ChartPoint {
 }
 
 function ScoreChart({ sessions }: { sessions: LearnSession[] }) {
-  // Oldest first for chart
   const data: ChartPoint[] = [...sessions].reverse().map((s, i) => ({
     label: `#${i + 1}`,
     score: Math.round(s.score),
@@ -95,7 +92,7 @@ function ScoreChart({ sessions }: { sessions: LearnSession[] }) {
 
   if (data.length === 0) {
     return (
-      <div className="h-48 flex items-center justify-center text-sm text-gray-400">
+      <div className="h-48 flex items-center justify-center text-[14px] text-gray-400">
         No sessions yet
       </div>
     );
@@ -114,17 +111,17 @@ function ScoreChart({ sessions }: { sessions: LearnSession[] }) {
             y={80}
             stroke="#d1d5db"
             strokeDasharray="4 4"
-            label={{ value: "Pass", position: "right", fontSize: 10, fill: "#9ca3af" }}
+            label={{ value: "Pass", position: "right", fontSize: 12, fill: "#9ca3af" }}
           />
           <XAxis
             dataKey="label"
-            tick={{ fontSize: 11, fill: "#9ca3af" }}
+            tick={{ fontSize: 12, fill: "#9ca3af" }}
             axisLine={false}
             tickLine={false}
           />
           <YAxis
             domain={[0, 100]}
-            tick={{ fontSize: 11, fill: "#9ca3af" }}
+            tick={{ fontSize: 12, fill: "#9ca3af" }}
             axisLine={false}
             tickLine={false}
           />
@@ -135,8 +132,8 @@ function ScoreChart({ sessions }: { sessions: LearnSession[] }) {
               const score = payload[0]?.value as number;
               const point = data.find((d) => d.label === label);
               return (
-                <div className="rounded-lg border border-gray-200 bg-white px-3 py-2 shadow-lg text-sm">
-                  <p className="text-xs text-gray-500 mb-0.5">Session {label}</p>
+                <div className="glass px-3 py-2 text-[14px]">
+                  <p className="text-[12px] text-gray-500 mb-0.5">Session {label}</p>
                   <p className={`font-bold ${point?.passed ? "text-green-600" : "text-red-500"}`}>
                     {score} / 100
                   </p>
@@ -199,10 +196,10 @@ export default function ProgressPage() {
 
   if (loading) {
     return (
-      <div className="space-y-4 animate-pulse" role="status" aria-label="Loading progress">
-        <div className="h-6 w-40 rounded bg-gray-100" />
-        <div className="h-16 rounded-xl bg-gray-100" />
-        <div className="h-52 rounded-xl bg-gray-100" />
+      <div className="space-y-4" role="status" aria-label="Loading progress">
+        <div className="h-6 w-40 skeleton" />
+        <div className="h-16 skeleton" />
+        <div className="h-52 skeleton" />
       </div>
     );
   }
@@ -212,12 +209,12 @@ export default function ProgressPage() {
       <div className="space-y-6">
         <Link
           href={`/learn/${courseType}`}
-          className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-gray-900"
+          className="inline-flex items-center gap-1 text-[14px] text-gray-500 hover:text-gray-900"
         >
           <ArrowLeft className="h-4 w-4" aria-hidden="true" />
           Back to Practice
         </Link>
-        <div role="alert" className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600">
+        <div role="alert" className="glass px-5 py-3 text-[14px] text-red-600" style={{ borderColor: "rgba(239, 68, 68, 0.2)" }}>
           {error}
         </div>
       </div>
@@ -230,7 +227,6 @@ export default function ProgressPage() {
     ? Math.max(...Object.values(data.best_scores))
     : 0;
 
-  // Current streak: count consecutive passed sessions from most recent
   let streak = 0;
   for (const s of data.sessions) {
     if (s.passed) streak++;
@@ -239,62 +235,56 @@ export default function ProgressPage() {
 
   return (
     <div className="space-y-8">
-      {/* Back link */}
       <Link
         href={`/learn/${courseType}`}
-        className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-gray-900"
+        className="inline-flex items-center gap-1 text-[14px] text-gray-500 hover:text-gray-900"
       >
         <ArrowLeft className="h-4 w-4" aria-hidden="true" />
         Back to Practice
       </Link>
 
-      {/* Header */}
       <div>
-        <h1 className="text-2xl font-extrabold tracking-tight text-gray-900">
+        <h1 className="serif italic text-[32px] text-gray-900">
           {data.course_name}
         </h1>
-        <p className="mt-1 text-sm text-gray-500">Your progress</p>
+        <p className="mt-1 text-[15px] text-gray-500">Your progress</p>
       </div>
 
-      {/* Level timeline */}
-      <div className="rounded-xl border border-gray-200 bg-white p-6">
-        <h2 className="text-sm font-semibold text-gray-900 mb-4 text-center">Level Progress</h2>
+      <div className="glass p-6">
+        <h2 className="text-[15px] font-semibold text-gray-900 mb-4 text-center">Level Progress</h2>
         <LevelTimeline currentLevel={data.current_level} />
       </div>
 
-      {/* Stats row */}
       <div className="grid gap-3 sm:grid-cols-3 text-center">
-        <div className="rounded-lg border border-gray-200 bg-white p-4">
+        <div className="glass p-4">
           <Target className="h-5 w-5 text-gray-400 mx-auto mb-1" aria-hidden="true" />
-          <p className="text-2xl font-extrabold text-gray-900 tabular-nums">{data.total_sessions}</p>
-          <p className="text-xs text-gray-500 mt-1">Total Sessions</p>
+          <p className="serif italic text-[28px] text-gray-900 tabular-nums">{data.total_sessions}</p>
+          <p className="text-[13px] text-gray-500 mt-1">Total Sessions</p>
         </div>
-        <div className="rounded-lg border border-gray-200 bg-white p-4">
+        <div className="glass p-4">
           <Trophy className="h-5 w-5 text-gray-400 mx-auto mb-1" aria-hidden="true" />
-          <p className="text-2xl font-extrabold text-gray-900 tabular-nums">{bestScore.toFixed(0)}</p>
-          <p className="text-xs text-gray-500 mt-1">Best Score</p>
+          <p className="serif italic text-[28px] text-gray-900 tabular-nums">{bestScore.toFixed(0)}</p>
+          <p className="text-[13px] text-gray-500 mt-1">Best Score</p>
         </div>
-        <div className="rounded-lg border border-gray-200 bg-white p-4">
+        <div className="glass p-4">
           <Flame className="h-5 w-5 text-gray-400 mx-auto mb-1" aria-hidden="true" />
-          <p className="text-2xl font-extrabold text-gray-900 tabular-nums">{streak}</p>
-          <p className="text-xs text-gray-500 mt-1">Current Streak</p>
+          <p className="serif italic text-[28px] text-gray-900 tabular-nums">{streak}</p>
+          <p className="text-[13px] text-gray-500 mt-1">Current Streak</p>
         </div>
       </div>
 
-      {/* Score trend chart */}
-      <div className="rounded-xl border border-gray-200 bg-white p-5">
-        <h2 className="text-sm font-semibold text-gray-900 mb-2">Score Trend</h2>
-        <p className="text-xs text-gray-500 mb-3">
+      <div className="glass p-5">
+        <h2 className="text-[15px] font-semibold text-gray-900 mb-2">Score Trend</h2>
+        <p className="text-[13px] text-gray-500 mb-3">
           Last {data.sessions.length} sessions. Dashed line = pass threshold (80).
         </p>
         <ScoreChart sessions={data.sessions} />
       </div>
 
-      {/* Back to practice */}
       <div className="text-center">
         <Link
           href={`/learn/${courseType}`}
-          className="inline-flex items-center gap-2 rounded-lg bg-gray-900 px-5 py-2.5 text-sm font-medium text-white hover:bg-gray-800 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
+          className="inline-flex items-center gap-2 rounded-full bg-gray-900 px-6 py-2.5 text-[15px] font-medium text-white hover:bg-gray-800 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
         >
           Back to Practice
         </Link>

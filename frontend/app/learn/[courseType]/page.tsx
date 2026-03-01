@@ -73,14 +73,12 @@ export default function CoursePracticePage() {
   const [courseName, setCourseName] = useState("");
   const advanceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // Cleanup timer on unmount
   useEffect(() => {
     return () => {
       if (advanceTimerRef.current) clearTimeout(advanceTimerRef.current);
     };
   }, []);
 
-  // Load exercise at a specific level
   const loadExercise = useCallback(async (uid: string, level: number) => {
     try {
       const ex = await getExercise(courseType, level);
@@ -96,7 +94,6 @@ export default function CoursePracticePage() {
     }
   }, [courseType]);
 
-  // On mount: fetch progress to get current_level, then load exercise
   useEffect(() => {
     const uid = getUserId();
     setUserId(uid);
@@ -111,12 +108,10 @@ export default function CoursePracticePage() {
       });
   }, [courseType, loadExercise]);
 
-  // Recording complete
   function handleRecording(b: Blob) {
     setBlob(b);
   }
 
-  // Submit recording
   async function handleSubmit() {
     if (!blob || !exercise) return;
     setStatus("submitting");
@@ -129,11 +124,9 @@ export default function CoursePracticePage() {
       );
       const res = await submitLearnSession(file, courseType, userId, currentLevel);
       setResult(res);
-      // Update level from response (may have advanced)
       setCurrentLevel(res.current_level);
       setStatus("result");
 
-      // If ADVANCE: auto-load new exercise at new level after 2 seconds
       if (res.next_action === "ADVANCE") {
         advanceTimerRef.current = setTimeout(() => {
           loadExercise(userId, res.current_level);
@@ -145,7 +138,6 @@ export default function CoursePracticePage() {
     }
   }
 
-  // Try again — fetch a new exercise at current level
   function handleTryAgain() {
     if (advanceTimerRef.current) {
       clearTimeout(advanceTimerRef.current);
@@ -161,11 +153,11 @@ export default function CoursePracticePage() {
 
   if (status === "loading") {
     return (
-      <div className="space-y-4 animate-pulse" role="status" aria-label="Loading exercise">
-        <div className="h-6 w-40 rounded bg-gray-100" />
-        <div className="h-4 w-64 rounded bg-gray-100" />
-        <div className="h-32 rounded-xl bg-gray-100" />
-        <div className="h-48 rounded-xl bg-gray-100" />
+      <div className="space-y-4" role="status" aria-label="Loading exercise">
+        <div className="h-6 w-40 skeleton" />
+        <div className="h-4 w-64 skeleton" />
+        <div className="h-32 skeleton" />
+        <div className="h-48 skeleton" />
       </div>
     );
   }
@@ -179,17 +171,17 @@ export default function CoursePracticePage() {
       <div className="space-y-6">
         <Link
           href="/learn"
-          className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-gray-900"
+          className="inline-flex items-center gap-1 text-[14px] text-gray-500 hover:text-gray-900"
         >
           <ArrowLeft className="h-4 w-4" aria-hidden="true" />
           Back to Learn
         </Link>
-        <div role="alert" className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600">
+        <div role="alert" className="glass px-5 py-3 text-[14px] text-red-600" style={{ borderColor: "rgba(239, 68, 68, 0.2)" }}>
           {error}
         </div>
         <button
           onClick={handleTryAgain}
-          className="rounded-lg border border-gray-200 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+          className="rounded-full border border-gray-200 px-5 py-2.5 text-[14px] font-medium text-gray-700 hover:bg-gray-50"
         >
           Try again
         </button>
@@ -207,145 +199,131 @@ export default function CoursePracticePage() {
 
     return (
       <div className="space-y-6">
-        {/* Back link */}
         <Link
           href="/learn"
-          className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-gray-900"
+          className="inline-flex items-center gap-1 text-[14px] text-gray-500 hover:text-gray-900"
         >
           <ArrowLeft className="h-4 w-4" aria-hidden="true" />
           Back to Learn
         </Link>
 
-        {/* Course + Level — uses currentLevel from state (updated after response) */}
         <div className="flex items-center gap-3">
-          <h1 className="text-xl font-bold text-gray-900">
+          <h1 className="serif italic text-[28px] text-gray-900">
             {courseName}
           </h1>
-          <span className="rounded-full bg-gray-100 px-3 py-0.5 text-xs font-medium text-gray-600">
+          <span className="glass px-3 py-1 text-[13px] font-medium text-gray-600">
             Level {exercise?.level}
           </span>
         </div>
 
         {/* Score */}
         <div className="flex flex-col items-center gap-4 py-8">
-          <p className="text-6xl font-extrabold tabular-nums text-gray-900">
+          <p className="serif italic text-[72px] leading-none tabular-nums text-gray-900">
             {result.score.toFixed(0)}
           </p>
 
-          {/* Pass / Fail indicator */}
           {result.passed ? (
             <div className="flex items-center gap-2 text-green-600">
               <CheckCircle2 className="h-6 w-6" aria-hidden="true" />
-              <span className="text-lg font-semibold">Passed!</span>
+              <span className="text-[17px] font-semibold">Passed!</span>
             </div>
           ) : (
             <div className="flex items-center gap-2 text-red-500">
               <XCircle className="h-6 w-6" aria-hidden="true" />
-              <span className="text-lg font-semibold">Try again</span>
+              <span className="text-[17px] font-semibold">Try again</span>
             </div>
           )}
 
-          {/* Progress dots */}
           <ProgressDots filled={result.consecutive_passes} />
         </div>
 
         {/* ADVANCE banner */}
         {isAdvance && (
-          <div
-            className="rounded-xl border border-green-200 bg-green-50 px-5 py-4 text-center"
-            role="status"
-          >
+          <div className="glass px-5 py-4 text-center" role="status" style={{ borderColor: "rgba(34, 197, 94, 0.2)" }}>
             <div className="flex items-center justify-center gap-2 text-green-700">
               <ChevronUp className="h-5 w-5" aria-hidden="true" />
-              <span className="font-semibold text-lg">
+              <span className="font-semibold text-[17px]">
                 Level Up! &rarr; Level {result.current_level}
               </span>
             </div>
-            <p className="text-sm text-green-600 mt-1">Loading next level...</p>
+            <p className="text-[14px] text-green-600 mt-1">Loading next level...</p>
           </div>
         )}
 
         {/* COMPLETE banner */}
         {isComplete && (
-          <div
-            className="rounded-xl border border-yellow-200 bg-yellow-50 px-5 py-4 text-center"
-            role="status"
-          >
+          <div className="glass px-5 py-4 text-center" role="status" style={{ borderColor: "rgba(234, 179, 8, 0.2)" }}>
             <div className="flex items-center justify-center gap-2 text-yellow-700">
               <Trophy className="h-5 w-5" aria-hidden="true" />
-              <span className="font-semibold text-lg">Course Complete!</span>
+              <span className="font-semibold text-[17px]">Course Complete!</span>
             </div>
-            <p className="text-sm text-yellow-600 mt-1">
+            <p className="text-[14px] text-yellow-600 mt-1">
               You&apos;ve mastered all 5 levels. Amazing work!
             </p>
           </div>
         )}
 
-        {/* RETRY passed — need more consecutive */}
+        {/* RETRY passed */}
         {result.next_action === "RETRY" && result.passed && (
-          <p className="text-center text-sm text-blue-600 font-medium">
+          <p className="text-center text-[14px] text-blue-600 font-medium">
             Good! {result.consecutive_passes}/3 consecutive passes
           </p>
         )}
 
         {/* RETRY failed */}
         {result.next_action === "RETRY" && !result.passed && (
-          <p className="text-center text-sm text-gray-500">
+          <p className="text-center text-[14px] text-gray-500">
             Score 80+ to pass. Keep practicing!
           </p>
         )}
 
         {/* Stats */}
         <div className="grid gap-3 sm:grid-cols-2 text-center">
-          <div className="rounded-lg border border-gray-200 bg-white p-4">
-            <p className="text-2xl font-extrabold text-gray-900 tabular-nums">
+          <div className="glass p-4">
+            <p className="serif italic text-[28px] text-gray-900 tabular-nums">
               {result.total_disfluencies}
             </p>
-            <p className="text-xs text-gray-500 mt-1">Disfluencies</p>
+            <p className="text-[13px] text-gray-500 mt-1">Disfluencies</p>
           </div>
-          <div className="rounded-lg border border-gray-200 bg-white p-4">
-            <p className="text-2xl font-extrabold text-gray-900 tabular-nums">
+          <div className="glass p-4">
+            <p className="serif italic text-[28px] text-gray-900 tabular-nums">
               {result.events.length}
             </p>
-            <p className="text-xs text-gray-500 mt-1">Events detected</p>
+            <p className="text-[13px] text-gray-500 mt-1">Events detected</p>
           </div>
         </div>
 
         {/* Actions */}
         <div className="flex gap-3 justify-center pt-2">
-          {/* Try Again — only when not complete and not auto-advancing */}
           {!isComplete && !isAdvance && (
             <button
               onClick={handleTryAgain}
-              className="rounded-lg border border-gray-200 px-5 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600 flex items-center gap-2"
+              className="rounded-full border border-gray-200 px-5 py-2.5 text-[15px] font-medium text-gray-700 hover:bg-gray-50 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600 flex items-center gap-2"
             >
               <RotateCcw className="h-4 w-4" aria-hidden="true" />
               Try Again
             </button>
           )}
-          {/* Skip auto-advance and go now */}
           {isAdvance && (
             <button
               onClick={handleTryAgain}
-              className="rounded-lg bg-green-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-green-700 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600 flex items-center gap-2"
+              className="rounded-full bg-green-600 px-5 py-2.5 text-[15px] font-medium text-white hover:bg-green-700 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600 flex items-center gap-2"
             >
               <ChevronUp className="h-4 w-4" aria-hidden="true" />
               Go to Level {result.current_level}
             </button>
           )}
-          {/* Complete — back to learn */}
           {isComplete && (
             <Link
               href="/learn"
-              className="rounded-lg bg-gray-900 px-5 py-2.5 text-sm font-medium text-white hover:bg-gray-800 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
+              className="rounded-full bg-gray-900 px-5 py-2.5 text-[15px] font-medium text-white hover:bg-gray-800 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
             >
               Back to Learn
             </Link>
           )}
-          {/* View progress — always available */}
           <Link
             href={`/learn/${courseType}/progress`}
-            className="rounded-lg border border-gray-200 px-5 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600 flex items-center gap-2"
+            className="rounded-full border border-gray-200 px-5 py-2.5 text-[15px] font-medium text-gray-700 hover:bg-gray-50 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600 flex items-center gap-2"
           >
             <BarChart3 className="h-4 w-4" aria-hidden="true" />
             View Progress
@@ -361,67 +339,60 @@ export default function CoursePracticePage() {
 
   return (
     <div className="space-y-6">
-      {/* Back link */}
       <Link
         href="/learn"
-        className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-gray-900"
+        className="inline-flex items-center gap-1 text-[14px] text-gray-500 hover:text-gray-900"
       >
         <ArrowLeft className="h-4 w-4" aria-hidden="true" />
         Back to Learn
       </Link>
 
-      {/* Course name + level badge — always shows currentLevel from state */}
       <div className="flex items-center gap-3">
-        <h1 className="text-xl font-bold text-gray-900">
+        <h1 className="serif italic text-[28px] text-gray-900">
           {courseName}
         </h1>
-        <span className="rounded-full bg-gray-100 px-3 py-0.5 text-xs font-medium text-gray-600">
+        <span className="glass px-3 py-1 text-[13px] font-medium text-gray-600">
           Level {currentLevel}
         </span>
       </div>
 
-      {/* Instruction */}
-      <p className="text-sm text-gray-500">{exercise?.instruction}</p>
+      <p className="text-[15px] text-gray-500">{exercise?.instruction}</p>
 
-      {/* Exercise text */}
-      <div className="rounded-xl border border-gray-200 bg-white p-8 text-center">
-        <p className="text-xl sm:text-2xl font-medium text-gray-900 leading-relaxed">
+      <div className="glass p-8 text-center">
+        <p className="text-[22px] sm:text-[26px] font-medium text-gray-900 leading-relaxed">
           {exercise?.exercise_text}
         </p>
         {exercise?.level_type === "speak" && (
-          <p className="mt-3 text-xs text-gray-400">
+          <p className="mt-3 text-[13px] text-gray-400">
             Speak naturally — there&apos;s no single right answer.
           </p>
         )}
       </div>
 
-      {/* Audio recorder */}
-      <div className="rounded-xl border border-gray-200 bg-white p-6">
+      <div className="glass p-6">
         <AudioRecorder
           onRecordingComplete={handleRecording}
           disabled={status === "submitting"}
         />
       </div>
 
-      {/* Submit button */}
       {blob && status === "ready" && (
         <button
           onClick={handleSubmit}
-          className="w-full rounded-lg bg-gray-900 px-6 py-3 text-base font-semibold text-white hover:bg-gray-800 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
+          className="w-full rounded-full bg-gray-900 px-6 py-3.5 text-[16px] font-semibold text-white hover:bg-gray-800 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
           aria-label="Submit recording for analysis"
         >
           Submit Recording
         </button>
       )}
 
-      {/* Submitting */}
       {status === "submitting" && (
         <div className="flex flex-col items-center gap-3 py-6">
           <div
             className="h-8 w-8 rounded-full border-4 border-gray-200 border-t-blue-600 animate-spin"
             aria-hidden="true"
           />
-          <p role="status" aria-live="polite" className="text-sm text-gray-600">
+          <p role="status" aria-live="polite" className="text-[14px] text-gray-600">
             Analyzing your recording...
           </p>
         </div>

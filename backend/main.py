@@ -239,9 +239,18 @@ async def analyze(
 
 
 @app.get("/sessions", response_model=List[SessionSummary], tags=["sessions"])
-async def list_sessions(db: Session = Depends(get_db)):
-    """List all past analysis sessions as lightweight summaries, newest first."""
-    if FIRESTORE_ENABLED:
+async def list_sessions(
+    date: Optional[str] = None,
+    week_start: Optional[str] = None,
+    db: Session = Depends(get_db),
+):
+    """List past analysis sessions as lightweight summaries, newest first.
+
+    Optional query params:
+    - date: ISO date (YYYY-MM-DD) — sessions on that day only
+    - week_start: ISO date — sessions in the 7-day window starting there
+    """
+    if FIRESTORE_ENABLED and not date and not week_start:
         try:
             from db.firestore_db import get_sessions_firestore
             sessions = get_sessions_firestore()
@@ -249,7 +258,13 @@ async def list_sessions(db: Session = Depends(get_db)):
                 return sessions
         except Exception:
             pass
-    return crud.list_sessions(db)
+    return crud.list_sessions(db, date=date, week_start=week_start)
+
+
+@app.get("/sessions/stats", tags=["sessions"])
+async def session_stats(db: Session = Depends(get_db)):
+    """Return aggregate statistics across all analysis sessions."""
+    return crud.get_session_stats(db)
 
 
 @app.get("/sessions/{session_id}", response_model=AnalysisResult, tags=["sessions"])
