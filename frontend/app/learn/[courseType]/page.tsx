@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 
 import { AudioRecorder } from "@/components/recording/AudioRecorder";
+import { Confetti } from "@/components/Confetti";
 import { getExercise, submitLearnSession, getCourseProgress } from "@/lib/api";
 import type { CourseExercise, SessionResult } from "@/lib/types";
 
@@ -199,6 +200,9 @@ export default function CoursePracticePage() {
 
     return (
       <div className="space-y-6">
+        {/* Confetti on pass */}
+        {result.passed && <Confetti />}
+
         <Link
           href="/learn"
           className="inline-flex items-center gap-1 text-[14px] text-gray-500 hover:text-gray-900"
@@ -243,7 +247,7 @@ export default function CoursePracticePage() {
             <div className="flex items-center justify-center gap-2 text-green-700">
               <ChevronUp className="h-5 w-5" aria-hidden="true" />
               <span className="font-semibold text-[17px]">
-                Level Up! &rarr; Level {result.current_level}
+                Level Up! {"\u2192"} Level {result.current_level}
               </span>
             </div>
             <p className="text-[14px] text-green-600 mt-1">Loading next level...</p>

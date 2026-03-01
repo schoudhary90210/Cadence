@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 
 import { AudioRecorder } from "@/components/recording/AudioRecorder";
-import { getDiagnostic, getCourses, getProgress } from "@/lib/api";
+import { getDiagnostic, getCourses, getProgress, resetProgress } from "@/lib/api";
 import type { CourseInfo, CourseProgress, DiagnosticReport } from "@/lib/types";
 
 // ---------------------------------------------------------------------------
@@ -175,6 +175,7 @@ export default function LearnPage() {
   const [analyzing, setAnalyzing] = useState(false);
   const [analyzeStage, setAnalyzeStage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [resetting, setResetting] = useState(false);
   const [diagnostic, setDiagnostic] = useState<DiagnosticReport | null>(null);
   const [courses, setCourses] = useState<CourseInfo[]>([]);
   const [progressList, setProgressList] = useState<CourseProgress[]>([]);
@@ -241,12 +242,33 @@ export default function LearnPage() {
     setStatus("diagnostic");
   }
 
-  function handleNewDiagnostic() {
+  async function handleNewDiagnostic() {
     localStorage.removeItem("diagnostic_complete");
     setDiagnostic(null);
     setBlob(null);
     setProgressList([]);
     setStatus("diagnostic");
+    // Also reset backend progress
+    if (userId) {
+      try { await resetProgress(userId); } catch {}
+    }
+  }
+
+  async function handleResetAll() {
+    if (!userId) return;
+    setResetting(true);
+    try {
+      await resetProgress(userId);
+      localStorage.removeItem("diagnostic_complete");
+      setDiagnostic(null);
+      setBlob(null);
+      setProgressList([]);
+      setStatus("diagnostic");
+    } catch (e: unknown) {
+      setError(e instanceof Error ? e.message : "Failed to reset progress.");
+    } finally {
+      setResetting(false);
+    }
   }
 
   // ---------------------------------------------------------------------------
@@ -276,7 +298,7 @@ export default function LearnPage() {
             Let&apos;s understand your speech
           </h1>
           <p className="mt-2 text-[15px] text-gray-500">
-            Record yourself speaking naturally for 15\u201330 seconds. We&apos;ll analyze your patterns and build a personalized practice plan.
+            Record yourself speaking naturally for 15–30 seconds. We&apos;ll analyze your patterns and build a personalized practice plan.
           </p>
         </div>
 
@@ -439,14 +461,25 @@ export default function LearnPage() {
             Practice exercises to improve your fluency.
           </p>
         </div>
-        <button
-          onClick={handleNewDiagnostic}
-          className="flex items-center gap-2 rounded-full border border-gray-200 px-5 py-2.5 text-[14px] font-medium text-gray-700 hover:bg-gray-50 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
-          aria-label="Run a new diagnostic"
-        >
-          <RotateCcw className="h-3.5 w-3.5" aria-hidden="true" />
-          New Diagnostic
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={handleNewDiagnostic}
+            className="flex items-center gap-2 rounded-full border border-gray-200 px-5 py-2.5 text-[14px] font-medium text-gray-700 hover:bg-gray-50 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
+            aria-label="Run a new diagnostic"
+          >
+            <RotateCcw className="h-3.5 w-3.5" aria-hidden="true" />
+            New Diagnostic
+          </button>
+          <button
+            onClick={handleResetAll}
+            disabled={resetting}
+            className="flex items-center gap-2 rounded-full border border-red-200 px-5 py-2.5 text-[14px] font-medium text-red-600 hover:bg-red-50 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-red-500 disabled:opacity-50"
+            aria-label="Reset all course progress"
+          >
+            <RotateCcw className="h-3.5 w-3.5" aria-hidden="true" />
+            {resetting ? "Resetting..." : "Reset Progress"}
+          </button>
+        </div>
       </div>
 
       {progressList.length > 0 && (

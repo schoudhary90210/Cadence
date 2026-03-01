@@ -4,9 +4,9 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
+    --background: 40 33% 98%;
     --foreground: 0 0% 7%;
-    --card: 0 0% 100%;
+    --card: 40 33% 99%;
     --card-foreground: 0 0% 7%;
     --popover: 0 0% 100%;
     --popover-foreground: 0 0% 7%;
@@ -31,33 +31,113 @@
     --glass-blur: 20px;
     --glass-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 4px 24px rgba(0, 0, 0, 0.03);
   }
-}
 
-@layer base {
   body {
-    @apply bg-white text-[#111] antialiased;
+    @apply bg-[#FAF9F6] text-[#111] antialiased;
     font-size: 15px;
     line-height: 1.6;
   }
 
-  /* High contrast mode — toggled by AccessibilityProvider */
-  .high-contrast body,
+  /* ── High Contrast Mode ──────────────────────────────────────────────── */
   .high-contrast {
+    --glass-bg: rgba(30, 30, 30, 0.85);
+    --glass-border: rgba(255, 255, 255, 0.15);
+    --glass-shadow: 0 1px 3px rgba(0, 0, 0, 0.3), 0 4px 24px rgba(0, 0, 0, 0.2);
+  }
+
+  .high-contrast body {
     @apply bg-black text-white;
   }
 
-  /* Large text mode */
-  .large-text body,
+  .high-contrast .bg-white,
+  .high-contrast .bg-white\/80 {
+    background-color: #000 !important;
+  }
+
+  .high-contrast .text-gray-900,
+  .high-contrast .text-gray-800,
+  .high-contrast .text-gray-700 {
+    color: #fff !important;
+  }
+
+  .high-contrast .text-gray-600,
+  .high-contrast .text-gray-500,
+  .high-contrast .text-gray-400 {
+    color: #ccc !important;
+  }
+
+  .high-contrast .border-gray-100,
+  .high-contrast .border-gray-200,
+  .high-contrast .border-gray-200\/60 {
+    border-color: rgba(255, 255, 255, 0.2) !important;
+  }
+
+  .high-contrast .bg-gray-50,
+  .high-contrast .bg-gray-100 {
+    background-color: #1a1a1a !important;
+  }
+
+  .high-contrast .hover\:bg-gray-50:hover {
+    background-color: #222 !important;
+  }
+
+  .high-contrast .shadow-sm,
+  .high-contrast .shadow-lg {
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4) !important;
+  }
+
+  .high-contrast .skeleton {
+    background: linear-gradient(90deg, #222 25%, #333 50%, #222 75%) !important;
+    background-size: 200% 100%;
+  }
+
+  .high-contrast .card,
+  .high-contrast [class*="CardContent"],
+  .high-contrast [class*="rounded-2xl"] {
+    background-color: #111 !important;
+    border-color: rgba(255, 255, 255, 0.15) !important;
+  }
+
+  /* ── Large Text Mode ─────────────────────────────────────────────────── */
   .large-text {
     font-size: 120%;
   }
 
-  /* Respect prefers-reduced-motion */
+  /* ── Reduce Motion Mode ──────────────────────────────────────────────── */
+  .reduce-motion *,
+  .reduce-motion *::before,
+  .reduce-motion *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  /* Also respect system preference */
   @media (prefers-reduced-motion: reduce) {
-    * {
+    *,
+    *::before,
+    *::after {
       animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
       transition-duration: 0.01ms !important;
     }
+  }
+
+  /* ── Text Spacing — Relaxed ──────────────────────────────────────────── */
+  .text-spacing-relaxed {
+    letter-spacing: 0.05em;
+    word-spacing: 0.12em;
+    line-height: 1.85;
+  }
+
+  .text-spacing-relaxed p,
+  .text-spacing-relaxed span,
+  .text-spacing-relaxed li,
+  .text-spacing-relaxed td {
+    letter-spacing: 0.05em;
+    word-spacing: 0.12em;
+    line-height: 1.85;
   }
 }
 

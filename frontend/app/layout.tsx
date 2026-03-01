@@ -18,7 +18,7 @@ function NavLink({ href, children }: { href: string; children: React.ReactNode }
   return (
     <Link
       href={href}
-      className="relative py-1 text-[16px] text-gray-500 hover:text-gray-900 transition-colors rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600 after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-0 after:bg-[#2563EB] after:transition-all hover:after:w-full"
+      className="relative py-1 text-[18px] font-extrabold text-gray-900 hover:text-black transition-colors rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600 after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-0 after:bg-[#2563EB] after:transition-all hover:after:w-full"
     >
       {children}
     </Link>
@@ -54,15 +54,9 @@ export default function RootLayout({
             </a>
 
             {/* ── Navbar ──────────────────────────────────────────────────── */}
-            <header className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-xl border-b border-gray-100">
+            <header className="fixed top-0 left-0 right-0 z-50 bg-[#FAF9F6]/80 backdrop-blur-xl border-b border-gray-100">
               <div className="mx-auto flex max-w-5xl items-center justify-between px-5 h-16">
-                <Link
-                  href="/"
-                  className="serif italic text-[22px] text-gray-900 rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600 focus-visible:outline-offset-2"
-                  aria-label="Cadence — go to home page"
-                >
-                  Cadence
-                </Link>
+                <div className="-ml-16"><NavLink href="/">Home</NavLink></div>
                 <nav
                   className="flex items-center gap-7 font-medium"
                   aria-label="Main navigation"

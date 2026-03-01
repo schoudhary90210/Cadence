@@ -289,7 +289,7 @@ export default function AnalyzePage() {
             aria-label={`Run fluency analysis on ${pendingFile.name}`}
             className="bg-[#2563EB] hover:bg-[#1d4ed8] focus-visible:ring-blue-500 min-w-[180px] rounded-full text-[16px]"
           >
-            Analyze Speech \u2192
+            Analyze Speech
           </Button>
           <p className="text-[13px] text-gray-400 text-center max-w-xs">
             Audio is sent to the local server, analyzed, then deleted. No recordings are stored without consent.
@@ -303,7 +303,7 @@ export default function AnalyzePage() {
           href="/"
           className="text-[14px] text-gray-400 hover:text-gray-600 rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
         >
-          \u2190 Back to home
+{"\u2190"} Back to home
         </Link>
       </div>
     </div>

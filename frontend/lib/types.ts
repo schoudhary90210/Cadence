@@ -167,7 +167,7 @@ export interface ApiError {
 // Practice mode
 // ---------------------------------------------------------------------------
 
-export type PassageDifficulty = "easy" | "medium" | "hard";
+export type PassageDifficulty = "easy" | "medium" | "hard" | "ultra_hard" | "progress_test";
 export type PromptCategory = "casual" | "interview" | "storytelling";
 
 export interface ReadingPassage {

@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Mic, BookOpen, Clock, PlayCircle, GraduationCap } from "lucide-react";
+import { Mic, BookOpen, Clock, PlayCircle, GraduationCap, AlertTriangle } from "lucide-react";
 import { motion, useInView } from "framer-motion";
 
 import { WaveformBg } from "@/components/WaveformBg";
@@ -66,7 +66,7 @@ const FEATURES = [
 ];
 
 const STATS = [
-  { target: 70, suffix: "M+", label: "People who stutter worldwide" },
+  { target: 80, suffix: "M+", label: "Speech impediments worldwide" },
   { target: 6, suffix: "", label: "Pipeline stages" },
   { target: 100, suffix: "", label: "Fluency score scale" },
 ];
@@ -154,17 +154,34 @@ export default function LandingPage() {
       >
         <WaveformBg />
 
-        <div className="relative z-10 space-y-8">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="relative glass px-8 py-6 sm:px-12 sm:py-7 space-y-4"
+        >
+          {/* Eyebrow */}
+          <motion.p
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.1 }}
+            className="text-[12px] font-semibold tracking-[0.25em] text-gray-400 uppercase"
+            style={{ fontFamily: "Arial, Helvetica, sans-serif" }}
+          >
+            SPEECH FLUENCY ANALYTICS
+          </motion.p>
+
+          {/* Title */}
           <h1
             id="hero-heading"
-            className="serif italic text-[80px] sm:text-[96px] leading-[0.95] tracking-tight text-gray-900"
+            className="serif italic text-[88px] sm:text-[108px] leading-[0.95] tracking-[0.04em] text-gray-900"
           >
             {titleChars.map((char, i) => (
               <motion.span
                 key={i}
                 initial={{ opacity: 0, y: 24 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: i * 0.04 }}
+                transition={{ duration: 0.5, delay: 0.15 + i * 0.04 }}
                 className="inline-block"
               >
                 {char}
@@ -172,19 +189,45 @@ export default function LandingPage() {
             ))}
           </h1>
 
+          {/* Subtitle */}
           <motion.p
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.35 }}
-            className="text-[19px] text-gray-500 max-w-md mx-auto leading-relaxed"
+            transition={{ duration: 0.5, delay: 0.45 }}
+            className="text-[17px] text-gray-500 max-w-lg mx-auto leading-relaxed"
           >
-            Speech fluency analytics for everyone.
+            Browser-first speech practice with instant fluency scoring and progress history.
           </motion.p>
 
+          {/* Phonetic */}
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.55 }}
+            className="text-[13px] text-gray-400"
+            style={{ fontFamily: "Arial, Helvetica, sans-serif" }}
+          >
+            /kuh-MYOO-ni-KAY-shuhn/
+          </motion.p>
+
+          {/* Disclaimer */}
           <motion.div
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.5 }}
+            transition={{ duration: 0.4, delay: 0.6 }}
+            className="inline-flex items-center gap-2 rounded-full border border-gray-200 bg-gray-50/60 px-5 py-2.5"
+          >
+            <span className="text-[15px]" aria-hidden="true">{"\u26A0\uFE0F"}</span>
+            <span className="text-[13px] text-gray-500 font-medium">
+              Prototype tool {"\u2014"} not for medical diagnosis
+            </span>
+          </motion.div>
+
+          {/* CTA */}
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.7 }}
           >
             <Link
               href="/analyze"
@@ -193,18 +236,36 @@ export default function LandingPage() {
               Start Analysis
             </Link>
           </motion.div>
-        </div>
+        </motion.div>
       </section>
 
-      {/* ── Features ─────────────────────────────────────────────────────── */}
+      {/* ── Core Features Header + Cards ───────────────────────────────── */}
       <section aria-labelledby="features-heading">
-        <h2 id="features-heading" className="sr-only">Features</h2>
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-40px" }}
+          transition={{ duration: 0.4 }}
+          className="text-center mb-10"
+        >
+          <h2
+            id="features-heading"
+            className="serif italic text-[32px] text-gray-900"
+          >
+            Core Features
+          </h2>
+          <p className="mt-2 text-[15px] text-gray-400">
+            Everything you need for speech fluency practice.
+          </p>
+        </motion.div>
+
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {FEATURES.map((f, i) => {
             const Icon = f.icon;
             return (
               <motion.div
                 key={f.href}
+                className="h-full"
                 initial={{ opacity: 0, y: 24 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-40px" }}
@@ -212,7 +273,7 @@ export default function LandingPage() {
               >
                 <Link
                   href={f.href}
-                  className="glass block p-6 hover:shadow-md transition-shadow focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
+                  className="glass block p-6 h-full hover:shadow-md transition-shadow focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
                 >
                   <div className="w-11 h-11 rounded-full bg-gray-50 flex items-center justify-center mb-4">
                     <Icon className="h-5 w-5 text-gray-400" aria-hidden="true" />
@@ -244,7 +305,7 @@ export default function LandingPage() {
             Try a Demo
           </h2>
           <p className="mt-2 text-[15px] text-gray-500">
-            Pre-computed results — instant, no pipeline delay.
+            Pre-computed results &mdash; instant, no pipeline delay.
           </p>
         </div>
 

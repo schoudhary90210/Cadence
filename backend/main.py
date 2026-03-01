@@ -762,3 +762,15 @@ async def learn_progress_detail(user_id: str, course_type: str):
     except Exception as exc:
         logger.error(f"Learn progress detail error: {exc}", exc_info=True)
         raise HTTPException(status_code=500, detail=str(exc))
+
+
+@app.delete("/learn/progress/{user_id}", tags=["learn"])
+async def learn_reset_progress(user_id: str):
+    """Reset all course progress and session history for a user."""
+    try:
+        from learn.progress import reset_progress
+        reset_progress(user_id)
+        return {"status": "ok", "message": "All progress has been reset."}
+    except Exception as exc:
+        logger.error(f"Learn reset progress error: {exc}", exc_info=True)
+        raise HTTPException(status_code=500, detail=str(exc))

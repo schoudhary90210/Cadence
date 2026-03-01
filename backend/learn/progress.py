@@ -293,6 +293,41 @@ def evaluate_and_advance(
 
 
 # ---------------------------------------------------------------------------
+# reset_progress
+# ---------------------------------------------------------------------------
+
+def reset_progress(user_id: str) -> None:
+    """Delete all progress and session records for a user."""
+    if FIRESTORE_ENABLED:
+        try:
+            db = _get_firestore()
+            if db:
+                # Delete progress docs
+                query = db.collection("learn_progress").where("userId", "==", user_id)
+                for doc in query.stream():
+                    doc.reference.delete()
+                # Delete session docs
+                query = db.collection("learn_sessions").where("userId", "==", user_id)
+                for doc in query.stream():
+                    doc.reference.delete()
+                logger.info(f"Firestore: reset all progress for {user_id}")
+                return
+        except Exception as exc:
+            logger.warning(f"Firestore reset_progress failed, using JSON: {exc}")
+
+    data = _load_json()
+    data["progress"] = {
+        k: v for k, v in data["progress"].items()
+        if v.get("userId") != user_id
+    }
+    data["sessions"] = [
+        s for s in data["sessions"]
+        if s.get("userId") != user_id
+    ]
+    _save_json(data)
+
+
+# ---------------------------------------------------------------------------
 # get_session_history
 # ---------------------------------------------------------------------------
 

@@ -8,12 +8,12 @@ import { motion } from "framer-motion";
  */
 export function WaveformBg() {
   return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
+    <div className="absolute inset-0 overflow-hidden pointer-events-none z-10" aria-hidden="true">
       <svg
         viewBox="0 0 1200 400"
         fill="none"
         preserveAspectRatio="none"
-        className="absolute inset-0 w-full h-full opacity-[0.035]"
+        className="absolute inset-0 w-full h-full opacity-[0.09]"
       >
         <motion.path
           d="M0 200 Q150 120 300 200 T600 200 T900 200 T1200 200"

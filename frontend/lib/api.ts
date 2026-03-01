@@ -219,6 +219,13 @@ export async function getCourseProgress(
   );
 }
 
+/** DELETE /learn/progress/:userId — reset all course progress */
+export async function resetProgress(userId: string): Promise<void> {
+  await apiFetch(`/learn/progress/${encodeURIComponent(userId)}`, {
+    method: "DELETE",
+  });
+}
+
 /** GET /metrics/latest */
 export async function getLatestMetrics(): Promise<{
   id: string;

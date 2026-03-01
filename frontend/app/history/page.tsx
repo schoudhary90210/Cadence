@@ -14,13 +14,14 @@ import {
   Trophy,
 } from "lucide-react";
 import {
-  BarChart,
-  Bar,
+  LineChart,
+  Line,
   XAxis,
   YAxis,
+  CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-  Cell,
+  ReferenceLine,
 } from "recharts";
 
 import { SessionList } from "@/components/history/SessionList";
@@ -47,7 +48,7 @@ function formatWeekRange(start: Date): string {
   const end = new Date(start);
   end.setDate(end.getDate() + 6);
   const opts: Intl.DateTimeFormatOptions = { month: "short", day: "numeric" };
-  return `${start.toLocaleDateString(undefined, opts)} \u2013 ${end.toLocaleDateString(undefined, opts)}`;
+  return `${start.toLocaleDateString(undefined, opts)} ${"\u2013"} ${end.toLocaleDateString(undefined, opts)}`;
 }
 
 function getMonday(d: Date): Date {
@@ -79,17 +80,9 @@ function formatDuration(sec: number): string {
 
 type ViewMode = "day" | "week";
 
-interface HourlyData {
-  hour: string;
+interface ChartPoint {
+  label: string;
   score: number;
-  count: number;
-}
-
-interface DailyData {
-  day: string;
-  dayShort: string;
-  score: number;
-  count: number;
 }
 
 interface Stats {
@@ -102,113 +95,206 @@ interface Stats {
 }
 
 // ---------------------------------------------------------------------------
-// Day view chart
+// Score trend line chart
 // ---------------------------------------------------------------------------
 
-function HourlyChart({ data }: { data: HourlyData[] }) {
-  if (data.every((d) => d.count === 0)) {
-    return (
-      <div className="h-48 flex items-center justify-center text-[14px] text-gray-400">
-        No sessions this day
-      </div>
-    );
-  }
+function ScoreChart({ sessions, mode = "all" }: { sessions: SessionSummary[]; mode?: "all" | "day" | "week" }) {
+  const data: ChartPoint[] = [...sessions].reverse().map((s) => {
+    const d = new Date(s.created_at);
+    let label: string;
+    if (mode === "day") {
+      label = d.toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" });
+    } else if (mode === "week") {
+      label = d.toLocaleDateString(undefined, { weekday: "short" });
+    } else {
+      label = d.toLocaleDateString(undefined, { month: "short", day: "numeric" });
+    }
+    return { label, score: Math.round(s.score_value) };
+  });
+
+  const latest = data[data.length - 1]?.score ?? 0;
 
   return (
-    <div className="h-48" role="img" aria-label="Hourly score chart">
-      <ResponsiveContainer width="100%" height="100%">
-        <BarChart data={data} margin={{ top: 4, right: 4, left: -28, bottom: 0 }}>
-          <XAxis
-            dataKey="hour"
-            tick={{ fontSize: 12, fill: "#9ca3af" }}
-            axisLine={false}
-            tickLine={false}
-          />
-          <YAxis
-            domain={[0, 100]}
-            tick={{ fontSize: 12, fill: "#9ca3af" }}
-            axisLine={false}
-            tickLine={false}
-          />
-          <Tooltip
-            cursor={{ fill: "rgba(0,0,0,0.03)" }}
-            content={({ active, payload, label }) => {
-              if (!active || !payload?.length) return null;
-              const d = payload[0]?.payload as HourlyData;
-              if (d.count === 0) return null;
-              return (
-                <div className="glass px-3 py-2 text-[14px]">
-                  <p className="text-[12px] text-gray-500">{label}</p>
-                  <p className="font-bold" style={{ color: scoreToColor(d.score) }}>
-                    {d.score} avg \u00B7 {d.count} session{d.count !== 1 ? "s" : ""}
-                  </p>
-                </div>
-              );
-            }}
-          />
-          <Bar dataKey="score" radius={[4, 4, 0, 0]} maxBarSize={24}>
-            {data.map((entry, index) => (
-              <Cell key={index} fill={entry.count > 0 ? scoreToColor(entry.score) : "#f3f4f6"} />
-            ))}
-          </Bar>
-        </BarChart>
-      </ResponsiveContainer>
+    <div className="glass p-5">
+      <div className="mb-3">
+        <h2 className="text-[15px] font-semibold text-gray-900 flex items-center gap-2">
+          <TrendingUp className="h-4 w-4 text-gray-400" aria-hidden="true" />
+          Fluency Score Over Time
+        </h2>
+        <p className="text-[13px] text-gray-500 mt-0.5">
+          0{"\u2013"}100 scale {"\u00B7"} higher is better {"\u00B7"} dashed lines show severity thresholds
+        </p>
+      </div>
+      <div
+        className="h-52"
+        role="img"
+        aria-label={`Line chart showing fluency scores over ${data.length} sessions. Most recent score: ${latest} out of 100.`}
+      >
+        <ResponsiveContainer width="100%" height="100%">
+          <LineChart data={data} margin={{ top: 8, right: 48, left: -24, bottom: 0 }}>
+            <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
+
+            {/* Severity threshold reference lines */}
+            <ReferenceLine
+              y={80}
+              stroke="#22c55e"
+              strokeDasharray="4 4"
+              label={{ value: "Mild", position: "right", fontSize: 10, fill: "#22c55e" }}
+            />
+            <ReferenceLine
+              y={60}
+              stroke="#eab308"
+              strokeDasharray="4 4"
+              label={{ value: "Moderate", position: "right", fontSize: 10, fill: "#ca8a04" }}
+            />
+            <ReferenceLine
+              y={40}
+              stroke="#f97316"
+              strokeDasharray="4 4"
+              label={{ value: "Mod\u2013Sev", position: "right", fontSize: 10, fill: "#ea580c" }}
+            />
+
+            <XAxis
+              dataKey="label"
+              tick={{ fontSize: 11, fill: "#9ca3af" }}
+              axisLine={false}
+              tickLine={false}
+            />
+            <YAxis
+              domain={[0, 100]}
+              tick={{ fontSize: 11, fill: "#9ca3af" }}
+              axisLine={false}
+              tickLine={false}
+            />
+
+            <Tooltip
+              cursor={{ stroke: "#d1d5db", strokeWidth: 1 }}
+              content={({ active, payload, label }) => {
+                if (!active || !payload?.length) return null;
+                const score = payload[0]?.value as number;
+                return (
+                  <div className="glass px-3 py-2 text-[14px]">
+                    <p className="text-[12px] text-gray-500">{label}</p>
+                    <p className="font-bold text-[#2563EB]">{score} / 100</p>
+                  </div>
+                );
+              }}
+            />
+
+            <Line
+              type="monotone"
+              dataKey="score"
+              stroke="#2563EB"
+              strokeWidth={2}
+              dot={{ fill: "#2563EB", r: 4, strokeWidth: 0 }}
+              activeDot={{ r: 6, fill: "#1d4ed8", strokeWidth: 0 }}
+            />
+          </LineChart>
+        </ResponsiveContainer>
+      </div>
     </div>
   );
 }
 
 // ---------------------------------------------------------------------------
-// Week view chart
+// Progress Test trend chart (reads from localStorage)
 // ---------------------------------------------------------------------------
 
-function DailyChart({ data }: { data: DailyData[] }) {
-  if (data.every((d) => d.count === 0)) {
-    return (
-      <div className="h-48 flex items-center justify-center text-[14px] text-gray-400">
-        No sessions this week
-      </div>
-    );
-  }
+interface ProgressHistoryEntry {
+  timestamp: string;
+  score: number;
+}
+
+function ProgressTestChart() {
+  const [data, setData] = useState<ChartPoint[]>([]);
+
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem("cadence_progress_test_history");
+      const history: ProgressHistoryEntry[] = raw ? JSON.parse(raw) : [];
+      const pts = history.map((e) => {
+        const d = new Date(e.timestamp);
+        return {
+          label: d.toLocaleDateString(undefined, { month: "short", day: "numeric" }) +
+            " " + d.toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" }),
+          score: e.score,
+        };
+      });
+      setData(pts);
+    } catch {
+      setData([]);
+    }
+  }, []);
+
+  if (data.length < 1) return null;
+
+  const latest = data[data.length - 1]?.score ?? 0;
 
   return (
-    <div className="h-48" role="img" aria-label="Daily score chart for the week">
-      <ResponsiveContainer width="100%" height="100%">
-        <BarChart data={data} margin={{ top: 4, right: 4, left: -28, bottom: 0 }}>
-          <XAxis
-            dataKey="dayShort"
-            tick={{ fontSize: 12, fill: "#9ca3af" }}
-            axisLine={false}
-            tickLine={false}
-          />
-          <YAxis
-            domain={[0, 100]}
-            tick={{ fontSize: 12, fill: "#9ca3af" }}
-            axisLine={false}
-            tickLine={false}
-          />
-          <Tooltip
-            cursor={{ fill: "rgba(0,0,0,0.03)" }}
-            content={({ active, payload }) => {
-              if (!active || !payload?.length) return null;
-              const d = payload[0]?.payload as DailyData;
-              if (d.count === 0) return null;
-              return (
-                <div className="glass px-3 py-2 text-[14px]">
-                  <p className="text-[12px] text-gray-500">{d.day}</p>
-                  <p className="font-bold" style={{ color: scoreToColor(d.score) }}>
-                    {d.score} avg \u00B7 {d.count} session{d.count !== 1 ? "s" : ""}
-                  </p>
-                </div>
-              );
-            }}
-          />
-          <Bar dataKey="score" radius={[6, 6, 0, 0]} maxBarSize={40}>
-            {data.map((entry, index) => (
-              <Cell key={index} fill={entry.count > 0 ? scoreToColor(entry.score) : "#f3f4f6"} />
-            ))}
-          </Bar>
-        </BarChart>
-      </ResponsiveContainer>
+    <div className="glass p-5">
+      <div className="mb-3">
+        <h2 className="text-[15px] font-semibold text-gray-900 flex items-center gap-2">
+          <TrendingUp className="h-4 w-4 text-blue-500" aria-hidden="true" />
+          Fixed Progress Test Accuracy
+        </h2>
+        <p className="text-[13px] text-gray-500 mt-0.5">
+          Word accuracy from reading practice progress tests {"\u00B7"} 80%+ is passing
+        </p>
+      </div>
+      <div
+        className="h-52"
+        role="img"
+        aria-label={`Line chart showing progress test accuracy over ${data.length} attempts. Most recent: ${latest}%.`}
+      >
+        <ResponsiveContainer width="100%" height="100%">
+          <LineChart data={data} margin={{ top: 8, right: 16, left: -24, bottom: 0 }}>
+            <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
+
+            <ReferenceLine
+              y={80}
+              stroke="#22c55e"
+              strokeDasharray="4 4"
+              label={{ value: "Pass", position: "right", fontSize: 10, fill: "#22c55e" }}
+            />
+
+            <XAxis
+              dataKey="label"
+              tick={{ fontSize: 10, fill: "#9ca3af" }}
+              axisLine={false}
+              tickLine={false}
+            />
+            <YAxis
+              domain={[0, 100]}
+              tick={{ fontSize: 11, fill: "#9ca3af" }}
+              axisLine={false}
+              tickLine={false}
+            />
+
+            <Tooltip
+              cursor={{ stroke: "#d1d5db", strokeWidth: 1 }}
+              content={({ active, payload, label }) => {
+                if (!active || !payload?.length) return null;
+                const score = payload[0]?.value as number;
+                return (
+                  <div className="glass px-3 py-2 text-[14px]">
+                    <p className="text-[12px] text-gray-500">{label}</p>
+                    <p className="font-bold text-[#2563EB]">{score}%</p>
+                  </div>
+                );
+              }}
+            />
+
+            <Line
+              type="monotone"
+              dataKey="score"
+              stroke="#2563EB"
+              strokeWidth={2}
+              dot={{ fill: "#2563EB", r: 4, strokeWidth: 0 }}
+              activeDot={{ r: 6, fill: "#1d4ed8", strokeWidth: 0 }}
+            />
+          </LineChart>
+        </ResponsiveContainer>
+      </div>
     </div>
   );
 }
@@ -299,46 +385,6 @@ export default function HistoryPage() {
 
   const isToday = formatDate(currentDate) === formatDate(new Date());
   const isCurrentWeek = formatDate(weekStart) === formatDate(getMonday(new Date()));
-
-  // Build hourly chart data for the day
-  const hourlyData: HourlyData[] = Array.from({ length: 24 }, (_, i) => {
-    const hour = i;
-    const hourSessions = daySessions.filter((s) => {
-      const h = new Date(s.created_at).getHours();
-      return h === hour;
-    });
-    const avgScore =
-      hourSessions.length > 0
-        ? Math.round(
-            hourSessions.reduce((sum, s) => sum + s.score_value, 0) / hourSessions.length,
-          )
-        : 0;
-    return {
-      hour: i % 6 === 0 ? `${i}:00` : "",
-      score: avgScore,
-      count: hourSessions.length,
-    };
-  });
-
-  // Build daily chart data for the week
-  const dailyData: DailyData[] = Array.from({ length: 7 }, (_, i) => {
-    const d = new Date(weekStart);
-    d.setDate(d.getDate() + i);
-    const dateStr = formatDate(d);
-    const daySess = weekSessions.filter(
-      (s) => formatDate(new Date(s.created_at)) === dateStr,
-    );
-    const avgScore =
-      daySess.length > 0
-        ? Math.round(daySess.reduce((sum, s) => sum + s.score_value, 0) / daySess.length)
-        : 0;
-    return {
-      day: d.toLocaleDateString(undefined, { weekday: "long", month: "short", day: "numeric" }),
-      dayShort: d.toLocaleDateString(undefined, { weekday: "short" }),
-      score: avgScore,
-      count: daySess.length,
-    };
-  });
 
   // Day summary
   const dayAvg =
@@ -481,13 +527,8 @@ export default function HistoryPage() {
                 </button>
               </div>
 
-              {/* Hourly chart */}
-              <div className="glass p-5">
-                <h2 className="text-[15px] font-semibold text-gray-900 mb-3">
-                  Fluency by Hour
-                </h2>
-                <HourlyChart data={hourlyData} />
-              </div>
+              {/* Day chart */}
+              {daySessions.length >= 2 && <ScoreChart sessions={daySessions} mode="day" />}
 
               {/* Daily summary */}
               {daySessions.length > 0 && (
@@ -517,10 +558,14 @@ export default function HistoryPage() {
               )}
 
               {/* Session list for this day */}
-              {daySessions.length > 0 && (
+              {daySessions.length > 0 ? (
                 <div>
                   <h2 className="text-[15px] font-semibold text-gray-900 mb-3">Sessions</h2>
                   <SessionList sessions={daySessions} />
+                </div>
+              ) : (
+                <div className="text-center py-10 text-[14px] text-gray-400">
+                  No sessions this day
                 </div>
               )}
             </div>
@@ -558,13 +603,8 @@ export default function HistoryPage() {
                 </button>
               </div>
 
-              {/* Daily chart */}
-              <div className="glass p-5">
-                <h2 className="text-[15px] font-semibold text-gray-900 mb-3">
-                  Daily Average Scores
-                </h2>
-                <DailyChart data={dailyData} />
-              </div>
+              {/* Week chart */}
+              {weekSessions.length >= 2 && <ScoreChart sessions={weekSessions} mode="week" />}
 
               {/* Weekly summary */}
               {weekSessions.length > 0 && (
@@ -594,14 +634,21 @@ export default function HistoryPage() {
               )}
 
               {/* Session list for this week */}
-              {weekSessions.length > 0 && (
+              {weekSessions.length > 0 ? (
                 <div>
                   <h2 className="text-[15px] font-semibold text-gray-900 mb-3">Sessions</h2>
                   <SessionList sessions={weekSessions} />
                 </div>
+              ) : (
+                <div className="text-center py-10 text-[14px] text-gray-400">
+                  No sessions this week
+                </div>
               )}
             </div>
           )}
+
+          {/* Progress Test trend chart */}
+          <ProgressTestChart />
 
           {/* Overall stats */}
           {stats && stats.total_sessions > 0 && (

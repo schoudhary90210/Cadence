@@ -4,6 +4,7 @@ import { useState } from "react";
 import { ArrowLeft, CheckCircle2, XCircle, AlertCircle, RotateCcw } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { Confetti } from "@/components/Confetti";
 import { AudioRecorder } from "@/components/recording/AudioRecorder";
 import { analyzeAudio } from "@/lib/api";
 import type { AnalysisResult, DisfluencyEvent, ReadingPassage, WordTimestamp } from "@/lib/types";
@@ -15,6 +16,7 @@ import type { AnalysisResult, DisfluencyEvent, ReadingPassage, WordTimestamp } f
 export interface ReadingPracticeProps {
   passage: ReadingPassage;
   onBack: () => void;
+  onScore?: (passageId: string, accuracy: number) => void;
 }
 
 // ---------------------------------------------------------------------------
@@ -134,7 +136,7 @@ const WORD_CLASS: Record<WordStatus, string> = {
 
 type PracticeStatus = "idle" | "analyzing" | "done" | "error";
 
-export function ReadingPractice({ passage, onBack }: ReadingPracticeProps) {
+export function ReadingPractice({ passage, onBack, onScore }: ReadingPracticeProps) {
   const [status, setStatus]         = useState<PracticeStatus>("idle");
   const [stage, setStage]           = useState<string | null>(null);
   const [error, setError]           = useState<string | null>(null);
@@ -156,6 +158,12 @@ export function ReadingPractice({ passage, onBack }: ReadingPracticeProps) {
       setRawResult(result);
       setStatus("done");
       setStage(null);
+
+      // Save score
+      const m = words.filter((w) => w.status === "matched").length;
+      const t = words.length;
+      const acc = t > 0 ? Math.round((m / t) * 100) : 0;
+      onScore?.(passage.id, acc);
     } catch (e: unknown) {
       setError(e instanceof Error ? e.message : "Analysis failed. Try again.");
       setStatus("error");
@@ -175,8 +183,12 @@ export function ReadingPractice({ passage, onBack }: ReadingPracticeProps) {
   const total    = wordResults?.length ?? 0;
   const accuracy = total > 0 ? Math.round((matched / total) * 100) : 0;
 
+  const passed = status === "done" && accuracy >= 80;
+
   return (
     <div className="space-y-6">
+      {passed && <Confetti />}
+
       {/* Header */}
       <div className="flex items-center gap-3">
         <Button
