@@ -9,11 +9,17 @@ from db.database import SessionRecord
 from models.schemas import AnalysisResult, SessionSummary
 
 
-def save_session(db: Session, result: AnalysisResult, audio_filename: str) -> None:
+def save_session(
+    db: Session,
+    result: AnalysisResult,
+    audio_filename: str,
+    audio_file_path: Optional[str] = None,
+) -> None:
     """Persist a completed AnalysisResult to the database."""
     record = SessionRecord(
         id=result.id,
         audio_filename=audio_filename,
+        audio_file_path=audio_file_path,
         created_at=result.created_at,
         mode=result.mode.value,
         score_value=str(result.score.value),
@@ -30,6 +36,14 @@ def get_session(db: Session, session_id: str) -> Optional[AnalysisResult]:
     if not record:
         return None
     return AnalysisResult.model_validate_json(record.result_json)
+
+
+def get_session_audio_path(db: Session, session_id: str) -> Optional[str]:
+    """Return the stored audio file path for a session, or None if unavailable."""
+    record = db.query(SessionRecord).filter(SessionRecord.id == session_id).first()
+    if not record:
+        return None
+    return record.audio_file_path
 
 
 def list_sessions(db: Session, limit: int = 50) -> List[SessionSummary]:

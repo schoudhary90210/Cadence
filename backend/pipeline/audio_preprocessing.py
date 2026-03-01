@@ -105,7 +105,7 @@ def preprocess_audio(file_path: str) -> str:
     # -------------------------------------------------------------------------
     # Write to a named temp file
     # -------------------------------------------------------------------------
-    tmp_fd, tmp_path = tempfile.mkstemp(suffix=".wav", prefix="fluencylens_")
+    tmp_fd, tmp_path = tempfile.mkstemp(suffix=".wav", prefix="cadence_")
     os.close(tmp_fd)  # pydub opens the file itself; close the OS descriptor
 
     try:

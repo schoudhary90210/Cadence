@@ -1,5 +1,5 @@
 """
-FluencyLens pipeline orchestrator.
+Cadence pipeline orchestrator.
 Routes audio through Tier 1 (RULES_ONLY) and optionally Tier 2 (HYBRID_ML).
 
 Fallback rules:
@@ -27,7 +27,7 @@ from models.schemas import (
     Transcript,
 )
 
-logger = logging.getLogger("fluencylens.orchestrator")
+logger = logging.getLogger("cadence.orchestrator")
 
 
 # ---------------------------------------------------------------------------
@@ -39,7 +39,7 @@ def analyze_audio(
     mode: str = "RULES_ONLY",
 ) -> AnalysisResult:
     """
-    Run the full FluencyLens pipeline on an audio file.
+    Run the full Cadence pipeline on an audio file.
 
     Tier 1 (always runs):
         preprocess → transcribe → VAD → repetition → filler →

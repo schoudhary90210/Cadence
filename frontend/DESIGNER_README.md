@@ -1,4 +1,4 @@
-# FluencyLens — UI Designer Guide
+# Cadence — UI Designer Guide
 
 ## How to Run the Full Stack
 
@@ -317,7 +317,7 @@ const EVENT_COLORS = {
 
 The app must show this on all results and recording pages:
 
-> "FluencyLens is a prototype fluency analytics tool — not a medical diagnostic device. Results are clinical-inspired estimates using heuristic thresholds. Consult a speech-language pathologist for clinical assessment."
+> "Cadence is a prototype fluency analytics tool — not a medical diagnostic device. Results are clinical-inspired estimates using heuristic thresholds. Consult a speech-language pathologist for clinical assessment."
 
 The `MedicalDisclaimer` component in `components/layout/MedicalDisclaimer.tsx` handles this. You can restyle it but the text must remain unchanged.
 

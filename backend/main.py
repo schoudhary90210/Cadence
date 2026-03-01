@@ -1,12 +1,12 @@
 """
-FluencyLens — FastAPI application entry point.
+Cadence — FastAPI application entry point.
 
 Run with:
     uvicorn main:app --reload --port 8000
 
 Environment variables (see .env.example):
     ANALYSIS_MODE    RULES_ONLY (default) | HYBRID_ML
-    DATABASE_URL     sqlite:///./fluencylens.db (default)
+    DATABASE_URL     sqlite:///./cadence.db (default)
     WHISPER_MODEL    base.en (default)
     CORS_ORIGINS     http://localhost:3000 (default)
     LOG_LEVEL        INFO (default)
@@ -14,7 +14,10 @@ Environment variables (see .env.example):
 
 import asyncio
 import logging
+import mimetypes
 import os
+import random
+import shutil
 import tempfile
 import time
 import uuid
@@ -24,11 +27,13 @@ from typing import List, Optional
 
 from fastapi import Depends, FastAPI, File, Form, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
 
 import config
 from config import (
     ANALYSIS_MODE,
+    AUDIO_UPLOADS_DIR,
     CORS_ORIGINS,
     DEMO_CACHED_RESULTS_DIR,
     DEMO_SAMPLES_DIR,
@@ -42,6 +47,7 @@ from models.schemas import (
     AnalysisMetrics,
     AnalysisMode,
     AnalysisResult,
+    ConversationPrompt,
     DemoSample,
     DisfluencyEvent,
     ErrorResponse,
@@ -51,6 +57,7 @@ from models.schemas import (
     FluencyScore,
     HealthResponse,
     PipelineLatency,
+    ReadingPassage,
     ScoreBreakdown,
     SessionSummary,
     Severity,
@@ -64,7 +71,7 @@ from models.schemas import (
 # Logging
 # ---------------------------------------------------------------------------
 logging.basicConfig(level=getattr(logging, LOG_LEVEL, logging.INFO))
-logger = logging.getLogger("fluencylens")
+logger = logging.getLogger("cadence")
 
 # ---------------------------------------------------------------------------
 # App setup
@@ -72,7 +79,7 @@ logger = logging.getLogger("fluencylens")
 _start_time = time.time()
 
 app = FastAPI(
-    title="FluencyLens API",
+    title="Cadence API",
     version="1.0.0",
     description=(
         "Prototype speech fluency analytics — clinical-inspired metrics. "
@@ -92,7 +99,7 @@ app.add_middleware(
 @app.on_event("startup")
 async def startup():
     create_tables()
-    logger.info(f"FluencyLens started — mode: {ANALYSIS_MODE}")
+    logger.info(f"Cadence started — mode: {ANALYSIS_MODE}")
     # Pre-warm librosa/numba JIT so the first real request isn't slow (~20s cold-start)
     def _warm():
         try:
@@ -148,6 +155,7 @@ async def analyze(
     # Fast path: return pre-computed result for demo samples
     # ------------------------------------------------------------------
     stem = Path(display_name).stem
+    suffix = Path(display_name).suffix or ".m4a"
     cached_path = Path(DEMO_CACHED_RESULTS_DIR) / f"{stem}.json"
     if cached_path.exists():
         result = AnalysisResult.model_validate_json(cached_path.read_text())
@@ -155,16 +163,20 @@ async def analyze(
         result = result.model_copy(
             update={"id": str(uuid.uuid4()), "created_at": datetime.utcnow()}
         )
-        crud.save_session(db, result, display_name)
+        # Point audio at the existing demo sample file if present
+        demo_audio = Path(DEMO_SAMPLES_DIR) / f"{stem}.m4a"
+        audio_path: Optional[str] = str(demo_audio) if demo_audio.exists() else None
+        crud.save_session(db, result, display_name, audio_file_path=audio_path)
         logger.info(f"[CACHED] {display_name} — score {result.score.value}")
         return result
 
     # ------------------------------------------------------------------
-    # Full pipeline path
+    # Full pipeline path — save audio permanently for playback
     # ------------------------------------------------------------------
-    suffix = Path(display_name).suffix or ".m4a"
-    tmp_fd, tmp_path = tempfile.mkstemp(suffix=suffix, prefix="fluencylens_upload_")
+    os.makedirs(AUDIO_UPLOADS_DIR, exist_ok=True)
+    tmp_fd, tmp_path = tempfile.mkstemp(suffix=suffix, prefix="cadence_upload_")
     os.close(tmp_fd)
+    audio_file_path: Optional[str] = None
 
     try:
         with open(tmp_path, "wb") as f:
@@ -174,16 +186,24 @@ async def analyze(
         result = await asyncio.get_event_loop().run_in_executor(
             None, lambda: analyze_audio(tmp_path, mode=ANALYSIS_MODE)
         )
+
+        # Move temp file to persistent store keyed by session ID
+        final_path = os.path.join(AUDIO_UPLOADS_DIR, f"{result.id}{suffix}")
+        shutil.move(tmp_path, final_path)
+        audio_file_path = final_path
+        tmp_path = None  # Signal: already moved, don't delete in finally
+
     except Exception as exc:
         logger.error(f"Pipeline error for {display_name}: {exc}", exc_info=True)
         raise HTTPException(status_code=500, detail=str(exc))
     finally:
-        try:
-            os.unlink(tmp_path)
-        except OSError:
-            pass
+        if tmp_path and os.path.exists(tmp_path):
+            try:
+                os.unlink(tmp_path)
+            except OSError:
+                pass
 
-    crud.save_session(db, result, display_name)
+    crud.save_session(db, result, display_name, audio_file_path=audio_file_path)
     logger.info(f"Analyzed {display_name} — score {result.score.value}")
     return result
 
@@ -261,7 +281,11 @@ async def analyze_demo(filename: str, db: Session = Depends(get_db)):
         result = result.model_copy(
             update={"id": str(uuid.uuid4()), "created_at": datetime.utcnow()}
         )
-        crud.save_session(db, result, filename)
+        demo_audio_path = str(Path(DEMO_SAMPLES_DIR) / filename)
+        crud.save_session(
+            db, result, filename,
+            audio_file_path=demo_audio_path if Path(demo_audio_path).exists() else None,
+        )
         logger.info(f"Returning cached result for {filename}")
         return result
 
@@ -278,8 +302,55 @@ async def analyze_demo(filename: str, db: Session = Depends(get_db)):
     except Exception as exc:
         raise HTTPException(status_code=500, detail=str(exc))
 
-    crud.save_session(db, result, filename)
+    crud.save_session(db, result, filename, audio_file_path=str(src))
     return result
+
+
+@app.get("/sessions/{session_id}/audio", tags=["sessions"])
+async def get_session_audio(session_id: str, db: Session = Depends(get_db)):
+    """
+    Stream the original audio file for a session.
+    Returns 404 if the session has no stored audio (e.g. older sessions before audio retention was added).
+    """
+    audio_path = crud.get_session_audio_path(db, session_id)
+    if not audio_path:
+        raise HTTPException(status_code=404, detail="Session not found")
+    if not os.path.exists(audio_path):
+        raise HTTPException(status_code=404, detail="Audio file not available for this session")
+
+    ext = Path(audio_path).suffix.lower()
+    _AUDIO_MIME = {
+        ".m4a":  "audio/mp4",
+        ".mp4":  "audio/mp4",
+        ".mp3":  "audio/mpeg",
+        ".wav":  "audio/wav",
+        ".webm": "audio/webm",
+    }
+    media_type = _AUDIO_MIME.get(ext) or mimetypes.guess_type(audio_path)[0] or "audio/mpeg"
+    return FileResponse(audio_path, media_type=media_type)
+
+
+@app.get("/practice/passages", response_model=List[ReadingPassage], tags=["practice"])
+async def list_passages():
+    """Return all reading passages grouped by difficulty for reading practice mode."""
+    return [ReadingPassage(**p) for p in config.READING_PASSAGES]
+
+
+@app.get("/practice/prompts", response_model=ConversationPrompt, tags=["practice"])
+async def get_prompt(category: Optional[str] = None):
+    """
+    Return a random conversation prompt.
+    Pass ?category=casual|interview|storytelling to filter.
+    """
+    prompts = config.CONVERSATION_PROMPTS
+    if category:
+        prompts = [p for p in prompts if p["category"] == category]
+    if not prompts:
+        raise HTTPException(
+            status_code=404,
+            detail=f"No prompts found for category '{category}'. Valid values: casual, interview, storytelling.",
+        )
+    return ConversationPrompt(**random.choice(prompts))
 
 
 @app.get("/metrics/latest", tags=["metrics"])

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# FluencyLens — one-command setup for backend + frontend
+# Cadence — one-command setup for backend + frontend
 # Usage: bash scripts/setup.sh
 set -e
 
@@ -8,7 +8,7 @@ BACKEND="$ROOT/backend"
 FRONTEND="$ROOT/frontend"
 
 echo "=================================================="
-echo " FluencyLens Setup"
+echo " Cadence Setup"
 echo "=================================================="
 
 # ---------------------------------------------------------------------------

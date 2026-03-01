@@ -1,5 +1,5 @@
 """
-FluencyLens Pydantic schemas — single source of truth for all API data shapes.
+Cadence Pydantic schemas — single source of truth for all API data shapes.
 TypeScript counterparts live in frontend/lib/types.ts — keep in sync.
 
 IMPORTANT:
@@ -196,3 +196,20 @@ class DemoSample(BaseModel):
 class ErrorResponse(BaseModel):
     error: str
     detail: Optional[str] = None
+
+
+# ---------------------------------------------------------------------------
+# Practice mode
+# ---------------------------------------------------------------------------
+
+class ReadingPassage(BaseModel):
+    id: str
+    title: str
+    text: str
+    difficulty: str  # "easy" | "medium" | "hard"
+
+
+class ConversationPrompt(BaseModel):
+    id: str
+    prompt: str
+    category: str  # "casual" | "interview" | "storytelling"

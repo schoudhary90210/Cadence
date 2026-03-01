@@ -1,13 +1,15 @@
 /**
- * FluencyLens API client.
+ * Cadence API client.
  * All functions are typed, all errors are thrown as Error instances.
  * No business logic here — just typed fetch wrappers.
  */
 
 import type {
   AnalysisResult,
+  ConversationPrompt,
   DemoSample,
   HealthResponse,
+  ReadingPassage,
   SessionSummary,
 } from "./types";
 
@@ -49,10 +51,12 @@ export async function getHealth(): Promise<HealthResponse> {
  * POST /analyze
  * Uploads an audio file and runs the full pipeline.
  * onProgress is called with human-readable stage labels.
+ * signal — optional AbortSignal for timeout / cancellation.
  */
 export async function analyzeAudio(
   file: File,
   onProgress?: (stage: string) => void,
+  signal?: AbortSignal,
 ): Promise<AnalysisResult> {
   onProgress?.("Uploading audio…");
   const form = new FormData();
@@ -62,6 +66,7 @@ export async function analyzeAudio(
   const result = await apiFetch<AnalysisResult>("/analyze", {
     method: "POST",
     body: form,
+    signal,
   });
 
   onProgress?.("Complete");
@@ -90,6 +95,27 @@ export async function getSession(sessionId: string): Promise<AnalysisResult> {
 /** GET /demo-samples */
 export async function getDemoSamples(): Promise<DemoSample[]> {
   return apiFetch<DemoSample[]>("/demo-samples");
+}
+
+/**
+ * Returns the URL for streaming a session's original audio file.
+ * The URL may 404 if the session predates audio retention (added in Phase 4).
+ */
+export function getSessionAudioUrl(sessionId: string): string {
+  return `${BASE_URL}/sessions/${sessionId}/audio`;
+}
+
+/** GET /practice/passages */
+export async function getPassages(): Promise<ReadingPassage[]> {
+  return apiFetch<ReadingPassage[]>("/practice/passages");
+}
+
+/** GET /practice/prompts?category= */
+export async function getPrompt(category?: string): Promise<ConversationPrompt> {
+  const path = category
+    ? `/practice/prompts?category=${encodeURIComponent(category)}`
+    : "/practice/prompts";
+  return apiFetch<ConversationPrompt>(path);
 }
 
 /** GET /metrics/latest */

@@ -1,5 +1,5 @@
 """
-FluencyLens — all tunable constants and feature flags.
+Cadence — all tunable constants and feature flags.
 Import from this module; never hardcode magic numbers in pipeline code.
 """
 
@@ -94,6 +94,11 @@ DEMO_SAMPLES_DIR = "demo_samples"
 DEMO_CACHED_RESULTS_DIR = "demo_samples/cached_results"
 
 # ---------------------------------------------------------------------------
+# Audio file storage
+# ---------------------------------------------------------------------------
+AUDIO_UPLOADS_DIR = os.getenv("AUDIO_UPLOADS_DIR", "audio_uploads")
+
+# ---------------------------------------------------------------------------
 # Logging
 # ---------------------------------------------------------------------------
 LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO")
@@ -102,6 +107,64 @@ LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO")
 # CORS
 # ---------------------------------------------------------------------------
 CORS_ORIGINS = os.getenv("CORS_ORIGINS", "http://localhost:3000").split(",")
+
+# ---------------------------------------------------------------------------
+# Practice mode — reading passages and conversation prompts
+# ---------------------------------------------------------------------------
+
+READING_PASSAGES = [
+    {
+        "id": "easy_1",
+        "title": "The Fox",
+        "difficulty": "easy",
+        "text": (
+            "The quick brown fox jumps over the lazy dog. "
+            "This sentence contains every letter of the alphabet "
+            "and is commonly used for typing practice."
+        ),
+    },
+    {
+        "id": "easy_2",
+        "title": "Weather",
+        "difficulty": "easy",
+        "text": (
+            "Today is a beautiful sunny day. "
+            "The sky is clear and blue with a few white clouds floating by."
+        ),
+    },
+    {
+        "id": "med_1",
+        "title": "Technology",
+        "difficulty": "medium",
+        "text": (
+            "Artificial intelligence has transformed how we interact with technology. "
+            "From voice assistants to recommendation systems, machine learning algorithms "
+            "process vast amounts of data to provide personalized experiences "
+            "for millions of users worldwide."
+        ),
+    },
+    {
+        "id": "hard_1",
+        "title": "Neuroscience",
+        "difficulty": "hard",
+        "text": (
+            "Neuroplasticity demonstrates the brain's remarkable capacity for reorganization "
+            "throughout an individual's lifespan. Synaptic connections strengthen through "
+            "repeated activation, while underutilized pathways gradually diminish, "
+            "illustrating the principle that neurons which fire together wire together."
+        ),
+    },
+]
+
+CONVERSATION_PROMPTS = [
+    {"id": "casual_1",    "prompt": "How was your day today?",                          "category": "casual"},
+    {"id": "casual_2",    "prompt": "What did you have for breakfast this morning?",    "category": "casual"},
+    {"id": "casual_3",    "prompt": "Describe your favorite hobby.",                    "category": "casual"},
+    {"id": "interview_1", "prompt": "Tell me about yourself and what you do.",          "category": "interview"},
+    {"id": "interview_2", "prompt": "What is your greatest strength?",                  "category": "interview"},
+    {"id": "story_1",     "prompt": "Tell me about a memorable trip you took.",         "category": "storytelling"},
+    {"id": "story_2",     "prompt": "Describe a challenge you overcame recently.",      "category": "storytelling"},
+]
 
 # ---------------------------------------------------------------------------
 # Prototype disclaimer (injected into every AnalysisResult)

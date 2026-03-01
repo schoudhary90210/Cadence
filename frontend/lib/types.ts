@@ -161,6 +161,26 @@ export interface ApiError {
 }
 
 // ---------------------------------------------------------------------------
+// Practice mode
+// ---------------------------------------------------------------------------
+
+export type PassageDifficulty = "easy" | "medium" | "hard";
+export type PromptCategory = "casual" | "interview" | "storytelling";
+
+export interface ReadingPassage {
+  id: string;
+  title: string;
+  text: string;
+  difficulty: PassageDifficulty;
+}
+
+export interface ConversationPrompt {
+  id: string;
+  prompt: string;
+  category: PromptCategory;
+}
+
+// ---------------------------------------------------------------------------
 // UI-only helpers
 // ---------------------------------------------------------------------------
 
@@ -194,6 +214,6 @@ export const SOURCE_LABELS: Record<EventSource, string> = {
 };
 
 export const DISCLAIMER =
-  "FluencyLens is a prototype fluency analytics tool — not a medical diagnostic device. " +
+  "Cadence is a prototype fluency analytics tool — not a medical diagnostic device. " +
   "Results are clinical-inspired estimates using heuristic thresholds. " +
   "Consult a speech-language pathologist for clinical assessment.";

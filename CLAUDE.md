@@ -1,7 +1,7 @@
-# CLAUDE.md — FluencyLens Project Configuration
+# CLAUDE.md — Cadence Project Configuration
 
 ## Project Overview
-FluencyLens is a browser-based speech fluency analytics platform for CheesHacks 2026 (Health & Lifestyle theme). It analyzes speech disfluencies using custom signal processing + ML, NOT LLM/chatbot wrapping.
+Cadence is a browser-based speech fluency analytics platform for CheesHacks 2026 (Health & Lifestyle theme). It analyzes speech disfluencies using custom signal processing + ML, NOT LLM/chatbot wrapping.
 
 **This is a practice/progress-tracking tool, NOT a diagnostic medical device.**
 Use wording: "clinical-inspired metrics", "prototype fluency analytics", "not medical diagnosis".
@@ -9,7 +9,7 @@ NEVER claim "clinical-grade" without validation evidence.
 
 ## Repository Structure
 ```
-fluencylens/
+cadence/
 ├── CLAUDE.md                    # This file
 ├── README.md                    # Setup + demo instructions
 ├── DEMO_SCRIPT.md              # 5-minute demo talking points
@@ -235,7 +235,7 @@ ANALYSIS_MODE=RULES_ONLY        # or HYBRID_ML
 WHISPER_MODEL=base.en           # faster-whisper model size
 WAV2VEC_CLASSIFIER_PATH=ml_cache/classifier.pkl
 WAV2VEC_EMBEDDINGS_PATH=ml_cache/sep28k_embeddings.npy
-DATABASE_URL=sqlite:///./fluencylens.db
+DATABASE_URL=sqlite:///./cadence.db
 CORS_ORIGINS=http://localhost:3000
 LOG_LEVEL=INFO
 ```
@@ -358,8 +358,8 @@ CONVERSATION_PROMPTS = [
 ### GCP Environment Variables (add to .env.example)
 ```
 GOOGLE_APPLICATION_CREDENTIALS=path/to/service-account.json
-CLOUD_RUN_URL=https://fluencylens-xxxx-uc.a.run.app
-FIREBASE_PROJECT_ID=fluencylens-2026
+CLOUD_RUN_URL=https://cadence-xxxx-uc.a.run.app
+FIREBASE_PROJECT_ID=cadence-2026
 ```
 
 ## What NOT to Do
