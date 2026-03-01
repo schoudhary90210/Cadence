@@ -117,11 +117,11 @@ flowchart TD
 
 Install these **before** cloning:
 
-| Dependency | Install | Verify |
-|:-----------|:--------|:-------|
-| **Python 3.9+** | [python.org](https://python.org) | `python3 --version` |
-| **Node.js 18+** | [nodejs.org](https://nodejs.org) | `node --version` |
-| **ffmpeg** | `brew install ffmpeg` (macOS) / `sudo apt install ffmpeg` (Linux) | `ffmpeg -version` |
+| Dependency | macOS | Linux | Windows | Verify |
+|:-----------|:------|:------|:--------|:-------|
+| **Python 3.9+** | [python.org](https://python.org) | `sudo apt install python3 python3-venv` | [python.org](https://python.org) (check "Add to PATH") | `python3 --version` |
+| **Node.js 18+** | [nodejs.org](https://nodejs.org) | [nodejs.org](https://nodejs.org) | [nodejs.org](https://nodejs.org) | `node --version` |
+| **ffmpeg** | `brew install ffmpeg` | `sudo apt install ffmpeg` | [ffmpeg.org/download](https://ffmpeg.org/download.html) (add to PATH) | `ffmpeg -version` |
 
 > ffmpeg is **required** — audio analysis will fail without it.
 
@@ -137,7 +137,8 @@ cd Cadence
 ```bash
 cd backend
 python3 -m venv venv
-source venv/bin/activate
+source venv/bin/activate        # macOS / Linux
+# Windows: venv\Scripts\activate
 pip install --upgrade pip
 pip install -r requirements.txt
 uvicorn main:app --host 0.0.0.0 --port 8000
