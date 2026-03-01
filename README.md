@@ -65,29 +65,16 @@ Cadence is a browser-based platform that analyzes speech disfluencies using a cu
 
 ## Architecture
 
-```
-                    ┌───────────────────────────────────┐
-                    │         Next.js Frontend           │
-                    │    React 18 + Tailwind + Framer    │
-                    └────────────────┬──────────────────┘
-                                     │ REST API
-                    ┌────────────────▼──────────────────┐
-                    │         FastAPI Backend            │
-                    │          Python 3.11               │
-                    └────────────────┬──────────────────┘
-                                     │
-           ┌─────────────────────────┼─────────────────────────┐
-           │                         │                         │
-┌──────────▼──────────┐  ┌──────────▼──────────┐  ┌──────────▼──────────┐
-│   Tier 1: Rules     │  │    Tier 2: ML       │  │  Cloud (optional)   │
-│                      │  │                      │  │                      │
-│ ● Whisper STT        │  │ ● Wav2Vec2 + RF     │  │ ● Cloud Speech-to-  │
-│ ● Energy-based VAD   │  │   disfluency clf.   │  │   Text (dual STT)   │
-│ ● Levenshtein reps   │  │ ● CTC phonetic      │  │ ● Cloud Storage     │
-│ ● Filler detection   │  │   (wav2vec2-960h)   │  │ ● Firestore         │
-│ ● Syllable rate      │  │ ● Ensemble merge    │  │ ● Cloud Run deploy  │
-│ ● Scoring engine     │  │   with confidence   │  │   (Docker + 4GB)    │
-└──────────────────────┘  └──────────────────────┘  └──────────────────────┘
+```mermaid
+flowchart TD
+    A["<b>Next.js Frontend</b><br/>React 18 + Tailwind + Framer Motion"]
+    B["<b>FastAPI Backend</b><br/>Python 3.11"]
+
+    A -- "REST API" --> B
+
+    B --> C["<b>Tier 1: Rules</b><br/>Whisper STT<br/>Energy-based VAD<br/>Levenshtein reps<br/>Filler detection<br/>Syllable rate<br/>Scoring engine"]
+    B --> D["<b>Tier 2: ML</b><br/>Wav2Vec2 + RF classifier<br/>CTC phonetic transcription<br/>Ensemble merge"]
+    B --> E["<b>Cloud (optional)</b><br/>Cloud Speech-to-Text<br/>Cloud Storage<br/>Firestore<br/>Cloud Run deploy"]
 ```
 
 | Layer | Technology |
