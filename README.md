@@ -44,6 +44,10 @@ Cadence analyzes speech in real time to detect stuttering patterns including **b
 - **Python 3.11+**
 - **Node.js 18+** (tested on v24)
 - **npm** (comes with Node.js)
+- **ffmpeg** (required for audio processing)
+  - macOS: `brew install ffmpeg`
+  - Ubuntu/Debian: `sudo apt install ffmpeg`
+  - Windows: Download from [ffmpeg.org](https://ffmpeg.org/download.html) and add to PATH
 - ~2 GB disk space (ML models download on first run)
 
 ### 1. Clone the Repository
@@ -281,6 +285,7 @@ These return cached results instantly — no processing delay during demos.
 | Issue | Solution |
 |-------|---------|
 | `ModuleNotFoundError` on backend start | Make sure you activated the venv: `source venv/bin/activate` |
+| "Analysis failed" when recording/uploading | **Install ffmpeg** — it's required to decode browser audio (WebM/M4A). Run `brew install ffmpeg` (macOS) or `sudo apt install ffmpeg` (Linux) |
 | Models downloading slowly | First request downloads ~500MB of models. Subsequent requests are instant. |
 | Port already in use | Kill existing processes: `lsof -ti:8000 \| xargs kill -9` |
 | Frontend build fails | Delete `.next` and `node_modules`, then `npm install && npx next build` |
