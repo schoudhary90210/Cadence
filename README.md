@@ -115,10 +115,15 @@ flowchart TD
 
 ### Prerequisites
 
-- **Python 3.11+**
-- **Node.js 18+**
-- **ffmpeg** — `brew install ffmpeg` (macOS) or `sudo apt install ffmpeg` (Linux)
-- ~2 GB disk space for ML models
+Install these **before** cloning:
+
+| Dependency | Install | Verify |
+|:-----------|:--------|:-------|
+| **Python 3.9+** | [python.org](https://python.org) | `python3 --version` |
+| **Node.js 18+** | [nodejs.org](https://nodejs.org) | `node --version` |
+| **ffmpeg** | `brew install ffmpeg` (macOS) / `sudo apt install ffmpeg` (Linux) | `ffmpeg -version` |
+
+> ffmpeg is **required** — audio analysis will fail without it.
 
 ### 1. Clone
 
@@ -132,27 +137,30 @@ cd Cadence
 ```bash
 cd backend
 python3 -m venv venv
-source venv/bin/activate        # macOS / Linux
+source venv/bin/activate
+pip install --upgrade pip
 pip install -r requirements.txt
 uvicorn main:app --host 0.0.0.0 --port 8000
 ```
 
-> NLTK data and Whisper/Wav2Vec2 models auto-download on first startup (~1-2 min).
+> First startup downloads ML models (~500 MB) and NLTK data. This takes 1-2 minutes — subsequent runs are instant.
 
-**Verify:** `http://localhost:8000/health` should return `{"status": "ok", "mode": "HYBRID_ML"}`
+**Verify:** Open `http://localhost:8000/health` — should return `{"status": "ok", "mode": "HYBRID_ML"}`
 
 ### 3. Frontend
 
-In a **new terminal**:
+Open a **second terminal**:
 
 ```bash
-cd frontend
+cd Cadence/frontend
 npm install
 npx next build
 npx next start -p 3000
 ```
 
-**Verify:** Open `http://localhost:3000`
+**Verify:** Open `http://localhost:3000` — you should see the Cadence home page.
+
+> Both terminals must stay open. Backend on port 8000, frontend on port 3000.
 
 ---
 
@@ -242,9 +250,10 @@ Cadence/
 | Issue | Fix |
 |:------|:----|
 | `ModuleNotFoundError` | Activate the venv: `source venv/bin/activate` |
-| "Analysis failed" on record/upload | Install ffmpeg: `brew install ffmpeg` |
-| Models downloading slowly | First run downloads ~500MB. Subsequent runs are instant. |
-| Port already in use | `lsof -ti:8000 \| xargs kill -9` |
+| "Analysis failed" on record/upload | Install ffmpeg: `brew install ffmpeg` (macOS) or `sudo apt install ffmpeg` (Linux) |
+| Models downloading slowly | First run downloads ~500 MB. Subsequent runs are instant. |
+| Port already in use | `lsof -ti:8000 \| xargs kill -9` then restart backend |
+| Frontend can't reach backend | Make sure backend is running on port 8000 in a separate terminal |
 | Frontend build fails | `rm -rf .next node_modules && npm install && npx next build` |
 | CORS errors | Backend must be on port 8000, frontend on 3000 |
 | Google Cloud errors | Optional — app works fully without GCP credentials |
