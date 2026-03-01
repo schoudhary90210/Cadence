@@ -266,12 +266,7 @@ export default function ResultsPage() {
       <Separator />
 
       {/* ── Judge Mode ─────────────────────────────────────────────────── */}
-      <JudgeMode
-        mode={mode}
-        latency={latency}
-        limitations={limitations}
-        events={events}
-      />
+      <JudgeMode result={result} />
 
     </div>
   );
