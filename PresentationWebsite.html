@@ -50,16 +50,16 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--c4d); fo
 .counter {
   position:fixed; top:22px; right:36px; z-index:9999;
   font-family:'Barlow Condensed',sans-serif;
-  font-size:10px; letter-spacing:.2em; color:var(--c3);
+  font-size:12px; letter-spacing:.2em; color:var(--c3);
 }
 
 /* Fullscreen button */
 .fs-btn {
   position:fixed; top:18px; left:36px; z-index:9999;
   background:none; border:1px solid #5A786340; border-radius:4px;
-  padding:4px 12px; cursor:pointer;
+  padding:6px 14px; cursor:pointer;
   font-family:'Barlow Condensed',sans-serif;
-  font-size:10px; letter-spacing:.15em; text-transform:uppercase;
+  font-size:12px; letter-spacing:.15em; text-transform:uppercase;
   color:var(--c3); transition:all .2s;
 }
 .fs-btn:hover { color:var(--c2); border-color:var(--c2); }
@@ -114,19 +114,19 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--c4d); fo
 .nav-sep { width:1px; height:18px; background:#5A786340; }
 .nav-label {
   font-family:'Barlow Condensed',sans-serif;
-  font-size:10px; letter-spacing:.18em; text-transform:uppercase;
+  font-size:12px; letter-spacing:.18em; text-transform:uppercase;
   color:var(--c3); min-width:110px; text-align:center;
 }
 .nav-timing {
   font-family:'JetBrains Mono',monospace;
-  font-size:9px; color:#3B495380; letter-spacing:.08em;
+  font-size:11px; color:#3B495380; letter-spacing:.08em;
 }
 
 /* Hint */
 .hint {
   position:fixed; bottom:85px; right:36px; z-index:9999;
   font-family:'Barlow Condensed',sans-serif;
-  font-size:10px; letter-spacing:.12em; text-transform:uppercase;
+  font-size:12px; letter-spacing:.12em; text-transform:uppercase;
   color:#3B495360; animation:hintFade 3s ease 4s forwards;
 }
 @keyframes hintFade { to { opacity:0; } }
@@ -148,7 +148,7 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--c4d); fo
 .slide-corner {
   position:absolute;
   font-family:'Barlow Condensed',sans-serif;
-  font-size:10px; letter-spacing:.15em; text-transform:uppercase;
+  font-size:12px; letter-spacing:.15em; text-transform:uppercase;
   color:var(--c3); z-index:20;
 }
 .slide-corner.tl {
@@ -379,7 +379,7 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--c4d); fo
 .s2-header-left { display:flex; flex-direction:column; gap:6px; }
 .s2-eyebrow {
   font-family:'Barlow Condensed',sans-serif;
-  font-size:11px; letter-spacing:.22em; text-transform:uppercase;
+  font-size:12px; letter-spacing:.22em; text-transform:uppercase;
   color:var(--c3);
 }
 .s2-heading {
@@ -389,7 +389,7 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--c4d); fo
 }
 .s2-instruction {
   font-family:'Barlow',sans-serif;
-  font-weight:300; font-size:13px;
+  font-weight:300; font-size:15px;
   color:var(--c2); font-style:italic;
   text-align:right; max-width:280px; line-height:1.5;
 }
@@ -430,7 +430,7 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--c4d); fo
 
 .s2-demo-sublabel {
   font-family:'Barlow',sans-serif;
-  font-weight:300; font-size:14px; color:var(--c2);
+  font-weight:300; font-size:16px; color:var(--c2);
   opacity:.7; text-align:center; line-height:1.5;
   max-width:340px;
 }
@@ -438,7 +438,7 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--c4d); fo
 .s2-demo-badge {
   position:absolute; top:20px; right:20px;
   font-family:'Barlow Condensed',sans-serif;
-  font-size:10px; font-weight:700; letter-spacing:.14em; text-transform:uppercase;
+  font-size:11px; font-weight:700; letter-spacing:.14em; text-transform:uppercase;
   background:var(--c2); color:var(--c4d);
   padding:5px 14px; border-radius:3px;
 }
@@ -452,7 +452,7 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--c4d); fo
 
 .s2-side-title {
   font-family:'Barlow Condensed',sans-serif;
-  font-size:11px; letter-spacing:.2em; text-transform:uppercase;
+  font-size:12px; letter-spacing:.2em; text-transform:uppercase;
   color:var(--c3); margin-bottom:4px;
 }
 
@@ -469,13 +469,13 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--c4d); fo
 
 .s2-side-card-title {
   font-family:'Barlow Condensed',sans-serif;
-  font-weight:700; font-size:14px; color:var(--c1);
+  font-weight:700; font-size:16px; color:var(--c1);
   letter-spacing:.02em; line-height:1.2;
 }
 
 .s2-side-card-desc {
   font-family:'Barlow',sans-serif;
-  font-weight:300; font-size:12px; color:var(--c2);
+  font-weight:300; font-size:14px; color:var(--c2);
   line-height:1.55;
 }
 
@@ -498,7 +498,7 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--c4d); fo
 .s2-bottom-text {
   font-family:'Playfair Display',serif;
   font-style:italic; font-weight:400;
-  font-size:clamp(13px,1.4vw,16px);
+  font-size:clamp(15px,1.6vw,18px);
   color:var(--c1); line-height:1.5;
 }
 .s2-bottom-text em { font-style:normal; color:var(--c2); }
@@ -529,17 +529,17 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--c4d); fo
 .s3-left-header { opacity:0; animation:up .6s ease .1s forwards; }
 .s3-eyebrow {
   font-family:'Barlow Condensed',sans-serif;
-  font-size:11px; letter-spacing:.22em; text-transform:uppercase;
+  font-size:12px; letter-spacing:.22em; text-transform:uppercase;
   color:var(--c3); margin-bottom:6px;
 }
 .s3-heading {
   font-family:'Playfair Display',serif;
-  font-weight:700; font-size:clamp(22px,2.5vw,30px);
+  font-weight:700; font-size:clamp(26px,2.9vw,36px);
   color:var(--c1); letter-spacing:-.015em; line-height:1.1;
 }
 .s3-subhead {
   font-family:'Barlow',sans-serif;
-  font-weight:300; font-size:13px;
+  font-weight:300; font-size:17px;
   color:var(--c2); margin-top:6px; line-height:1.5;
 }
 
@@ -580,11 +580,11 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--c4d); fo
 }
 .s3-card-name {
   font-family:'Barlow Condensed',sans-serif;
-  font-weight:600; font-size:12px; letter-spacing:.03em; line-height:1.2;
+  font-weight:600; font-size:15px; letter-spacing:.03em; line-height:1.2;
 }
 .s3-card-detail {
   font-family:'JetBrains Mono',monospace;
-  font-size:9px; color:var(--c2); margin-top:2px; line-height:1.45; opacity:.8;
+  font-size:12px; color:var(--c2); margin-top:2px; line-height:1.45; opacity:.8;
 }
 
 /* Tier colors */
@@ -610,7 +610,7 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--c4d); fo
 .s3-tier-div:nth-of-type(2) { animation:fadeIn .4s ease .8s forwards; }
 .s3-tier-pill {
   font-family:'Barlow Condensed',sans-serif;
-  font-size:9px; font-weight:700; letter-spacing:.14em; text-transform:uppercase;
+  font-size:10px; font-weight:700; letter-spacing:.14em; text-transform:uppercase;
   padding:2px 8px; border-radius:2px;
 }
 .s3-tier-pill.t1 { background:#5A786340; color:var(--c2); }
@@ -626,12 +626,12 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--c4d); fo
 .s3-right-header { opacity:0; animation:up .6s ease .2s forwards; }
 .s3-right-heading {
   font-family:'Playfair Display',serif;
-  font-weight:700; font-size:clamp(18px,2vw,24px);
+  font-weight:700; font-size:clamp(22px,2.4vw,30px);
   color:var(--c1); letter-spacing:-.01em; margin-bottom:3px;
 }
 .s3-right-sub {
   font-family:'Barlow',sans-serif;
-  font-weight:300; font-size:12px; color:var(--c2);
+  font-weight:300; font-size:16px; color:var(--c2);
 }
 
 .s3-algo-grid {
@@ -664,26 +664,26 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--c4d); fo
 
 .s3-algo-num {
   font-family:'JetBrains Mono',monospace;
-  font-size:9px; color:var(--c3); letter-spacing:.1em;
+  font-size:10px; color:var(--c3); letter-spacing:.1em;
 }
 .s3-algo.ml .s3-algo-num { color:var(--purple); }
 
 .s3-algo-title {
   font-family:'Barlow Condensed',sans-serif;
-  font-weight:700; font-size:13px; letter-spacing:.02em;
+  font-weight:700; font-size:17px; letter-spacing:.02em;
   color:var(--c1); line-height:1.2;
 }
 
 .s3-algo-desc {
   font-family:'JetBrains Mono',monospace;
-  font-size:9px; color:var(--c2); line-height:1.5; opacity:.85;
+  font-size:12px; color:var(--c2); line-height:1.5; opacity:.85;
 }
 .s3-algo.ml .s3-algo-desc { color:#c4b5fd; }
 
 .s3-algo-tag {
   display:inline-block;
   font-family:'Barlow Condensed',sans-serif;
-  font-size:8px; font-weight:700; letter-spacing:.14em; text-transform:uppercase;
+  font-size:9px; font-weight:700; letter-spacing:.14em; text-transform:uppercase;
   padding:2px 6px; border-radius:2px; margin-top:auto; align-self:flex-start;
 }
 .s3-algo.dsp .s3-algo-tag { background:#5A786335; color:var(--c2); }
@@ -698,13 +698,13 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--c4d); fo
 }
 .s3-zero-badge {
   font-family:'Barlow Condensed',sans-serif;
-  font-weight:700; font-size:11px; letter-spacing:.15em; text-transform:uppercase;
+  font-weight:700; font-size:12px; letter-spacing:.15em; text-transform:uppercase;
   color:var(--c4d); background:var(--c2);
   padding:4px 10px; border-radius:2px; flex-shrink:0;
 }
 .s3-zero-text {
   font-family:'Barlow',sans-serif;
-  font-weight:300; font-size:12px; color:var(--c2); line-height:1.45;
+  font-weight:300; font-size:16px; color:var(--c2); line-height:1.45;
 }
 .s3-zero-text strong { font-style:normal; color:var(--c1); font-weight:500; }
 
@@ -734,7 +734,7 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--c4d); fo
 }
 .s4-eyebrow {
   font-family:'Barlow Condensed',sans-serif;
-  font-size:11px; letter-spacing:.22em; text-transform:uppercase;
+  font-size:12px; letter-spacing:.22em; text-transform:uppercase;
   color:var(--c3); margin-bottom:6px;
 }
 .s4-heading {
@@ -744,7 +744,7 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--c4d); fo
 }
 .s4-tiebreaker {
   font-family:'Barlow Condensed',sans-serif;
-  font-size:10px; font-weight:700; letter-spacing:.18em; text-transform:uppercase;
+  font-size:11px; font-weight:700; letter-spacing:.18em; text-transform:uppercase;
   background:var(--c2); color:var(--c4d);
   padding:5px 14px; border-radius:2px;
 }
@@ -799,19 +799,19 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--c4d); fo
 .s4-card-icon { font-size:22px; line-height:1; margin-bottom:2px; }
 .s4-card-num {
   font-family:'JetBrains Mono',monospace;
-  font-size:9px; color:var(--c3); letter-spacing:.12em; text-transform:uppercase;
+  font-size:10px; color:var(--c3); letter-spacing:.12em; text-transform:uppercase;
 }
 .s4-card.vs .s4-card-num { color:#8b6b4c; }
 
 .s4-card-title {
   font-family:'Barlow Condensed',sans-serif;
-  font-weight:700; font-size:16px; letter-spacing:.02em;
+  font-weight:700; font-size:18px; letter-spacing:.02em;
   color:var(--c1); line-height:1.2;
 }
 
 .s4-card-body {
   font-family:'Barlow',sans-serif;
-  font-weight:300; font-size:12px;
+  font-weight:300; font-size:14px;
   color:var(--c2); line-height:1.6; flex:1;
 }
 .s4-card.vs .s4-card-body { color:#a07858; }
@@ -821,7 +821,7 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--c4d); fo
 .s4-card-tag {
   display:inline-block;
   font-family:'Barlow Condensed',sans-serif;
-  font-size:9px; font-weight:700; letter-spacing:.14em; text-transform:uppercase;
+  font-size:10px; font-weight:700; letter-spacing:.14em; text-transform:uppercase;
   padding:2px 8px; border-radius:2px; align-self:flex-start; margin-top:2px;
 }
 .s4-card.primary .s4-card-tag { background:#5A786340; color:var(--c2); }
@@ -842,7 +842,7 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--c4d); fo
 .s4-statement-text {
   font-family:'Playfair Display',serif;
   font-style:italic; font-weight:400;
-  font-size:clamp(13px,1.4vw,16px);
+  font-size:clamp(15px,1.6vw,18px);
   color:var(--c1); line-height:1.5; flex:1;
 }
 .s4-statement-text em { font-style:normal; color:var(--c2); }
@@ -850,7 +850,7 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--c4d); fo
 .s4-statement-stats { display:flex; flex-direction:column; gap:4px; flex-shrink:0; }
 .s4-stat-line {
   font-family:'Barlow Condensed',sans-serif;
-  font-size:11px; letter-spacing:.08em; color:var(--c2);
+  font-size:13px; letter-spacing:.08em; color:var(--c2);
 }
 .s4-stat-line strong { font-size:15px; color:var(--c1); font-weight:700; }
 
@@ -1010,12 +1010,12 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--c4d); fo
     <div class="s1-detail-strip">
       <div class="s1-detail-card">
         <div class="s1-detail-k">Cost Barrier</div>
-        <div class="s1-detail-v">$150 per hour for speech therapy</div>
+        <div class="s1-detail-v"><strong>$150 per hour</strong> for speech therapy.</div>
       </div>
 
       <div class="s1-detail-card">
         <div class="s1-detail-k">Current Gap</div>
-        <div class="s1-detail-v">0 free, objective tools to measure progress</div>
+        <div class="s1-detail-v"><strong>No free</strong> objective tools to measure progress.</div>
       </div>
 
       <div class="s1-detail-card">
@@ -1042,7 +1042,7 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--c4d); fo
         <div class="s2-eyebrow">Live Demo</div>
         <div class="s2-heading">See It Work.</div>
       </div>
-      <div class="s2-instruction">1-minute live demo — watch Cadence analyze speech in real-time</div>
+      <div class="s2-instruction">1-minute live demo — three inputs in, full fluency analysis out</div>
     </div>
 
     <!-- Demo area -->
@@ -1053,30 +1053,30 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--c4d); fo
         <div class="s2-demo-icon">🎙️</div>
         <div class="s2-demo-label">Live App Demo</div>
         <div class="s2-demo-sublabel">
-          Recording speech → Real-time analysis → Fluency score, disfluency events, and waveform visualization
+          Mic / upload audio → backend analysis API → fluency score, event timeline, waveform
         </div>
       </div>
 
       <!-- Side cards: what to watch for -->
       <div class="s2-side">
-        <div class="s2-side-title">What You'll See</div>
+        <div class="s2-side-title">Frontend Inputs</div>
 
         <div class="s2-side-card">
           <div class="s2-side-card-icon">📊</div>
-          <div class="s2-side-card-title">Fluency Score (0–100)</div>
-          <div class="s2-side-card-desc">Composite score with <strong>severity band</strong> — computed from 6 custom algorithms, not an LLM.</div>
+          <div class="s2-side-card-title">1) Audio Recorder (Web Audio API)</div>
+          <div class="s2-side-card-desc">Records directly from microphone and packages audio cleanly for robust parsing.</div>
         </div>
 
         <div class="s2-side-card">
           <div class="s2-side-card-icon">🎨</div>
-          <div class="s2-side-card-title">Color-Coded Disfluencies</div>
-          <div class="s2-side-card-desc">Each event tagged: <strong style="color:var(--red);">blocks</strong>, <strong style="color:var(--orange);">repetitions</strong>, <strong style="color:var(--green);">prolongations</strong>, <strong style="color:var(--blue);">fillers</strong>.</div>
+          <div class="s2-side-card-title">2) File Upload Component</div>
+          <div class="s2-side-card-desc">Accepts user recordings and routes them through the same normalization + detection pipeline.</div>
         </div>
 
         <div class="s2-side-card">
           <div class="s2-side-card-icon">⚡</div>
-          <div class="s2-side-card-title">Three Signal Layers</div>
-          <div class="s2-side-card-desc"><strong>Rule-based DSP</strong> + acoustic ML + phonetic CTC — fused into one pipeline. Zero LLM.</div>
+          <div class="s2-side-card-title">3) Backend Analysis Connection</div>
+          <div class="s2-side-card-desc">Sends audio for event detection + scoring, then returns timestamps, severity band, and final grade.</div>
         </div>
       </div>
     </div>
@@ -1085,7 +1085,7 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--c4d); fo
     <div class="s2-bottom">
       <div class="s2-bottom-icon">"</div>
       <div class="s2-bottom-text">
-        Every <em>colored region</em> is a disfluency our pipeline detected — three signal layers, <em>zero LLM.</em>
+        Three user inputs power one consistent pipeline: <em>record, upload, analyze.</em>
       </div>
     </div>
   </div>
@@ -1105,39 +1105,39 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--c4d); fo
       <div class="s3-left-header">
         <div class="s3-eyebrow">Architecture</div>
         <div class="s3-heading">Two-Tier Pipeline</div>
-        <div class="s3-subhead">Fail-safe by design. Always demo-ready.</div>
+        <div class="s3-subhead">Tier 1 = fast transcript metrics. Tier 2 = deeper stutter detection.</div>
       </div>
 
       <div class="s3-pipeline">
         <div class="s3-tier-div">
-          <div class="s3-tier-pill t1">Tier 1 — Always Runs</div>
+          <div class="s3-tier-pill t1">Tier 1 — Fast Transcription + DSP</div>
           <div class="s3-tier-line"></div>
         </div>
 
         <div class="s3-pipe-row s3-t1">
           <div class="s3-connector"><div class="s3-dot"></div><div class="s3-line"></div></div>
           <div class="s3-card">
-            <div class="s3-card-name">Audio Input</div>
-            <div class="s3-card-detail">mic · upload · demo sample → 16kHz mono WAV</div>
+            <div class="s3-card-name">Audio Input + Parsing</div>
+            <div class="s3-card-detail">Mic/upload/sample → 16kHz WAV</div>
           </div>
         </div>
         <div class="s3-pipe-row s3-t1">
           <div class="s3-connector"><div class="s3-dot"></div><div class="s3-line"></div></div>
           <div class="s3-card">
             <div class="s3-card-name">faster-whisper base.en</div>
-            <div class="s3-card-detail">word-level transcript + timestamps · ~2s</div>
+            <div class="s3-card-detail">Word transcript + timestamps</div>
           </div>
         </div>
         <div class="s3-pipe-row s3-t1">
           <div class="s3-connector"><div class="s3-dot"></div><div class="s3-line"></div></div>
           <div class="s3-card">
             <div class="s3-card-name">5 Custom DSP Algorithms</div>
-            <div class="s3-card-detail">VAD · blocks · repetitions · fillers · rate</div>
+            <div class="s3-card-detail">VAD, blocks, reps, rate, score</div>
           </div>
         </div>
 
         <div class="s3-tier-div">
-          <div class="s3-tier-pill t2">Tier 2 — ML Layer</div>
+          <div class="s3-tier-pill t2">Tier 2 — Deeper Acoustic + Phonetic</div>
           <div class="s3-tier-line"></div>
         </div>
 
@@ -1145,21 +1145,21 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--c4d); fo
           <div class="s3-connector"><div class="s3-dot"></div><div class="s3-line"></div></div>
           <div class="s3-card">
             <div class="s3-card-name">wav2vec2-base → RandomForest</div>
-            <div class="s3-card-detail">768-dim embeddings · SEP-28k trained</div>
+            <div class="s3-card-detail">SEP-28k trained event classifier</div>
           </div>
         </div>
         <div class="s3-pipe-row s3-t2">
           <div class="s3-connector"><div class="s3-dot"></div><div class="s3-line"></div></div>
           <div class="s3-card">
             <div class="s3-card-name">wav2vec2-base-960h ASR</div>
-            <div class="s3-card-detail">char-level CTC · catches b-b-but, ssssnake</div>
+            <div class="s3-card-detail">Char-level CTC for sound repeats</div>
           </div>
         </div>
         <div class="s3-pipe-row s3-t2">
           <div class="s3-connector"><div class="s3-dot"></div><div class="s3-line"></div></div>
           <div class="s3-card">
             <div class="s3-card-name">3-Signal Ensemble Fusion</div>
-            <div class="s3-card-detail">whisper + acoustic + phonetic → score</div>
+            <div class="s3-card-detail">Transcript + acoustic + phonetic → score</div>
           </div>
         </div>
 
@@ -1167,7 +1167,7 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--c4d); fo
           <div class="s3-connector"><div class="s3-dot"></div></div>
           <div class="s3-card">
             <div class="s3-card-name" style="color:var(--c1);">Composite Score → Dashboard</div>
-            <div class="s3-card-detail">0–100 · severity band · event timeline</div>
+            <div class="s3-card-detail">0–100 score + timeline</div>
           </div>
         </div>
       </div>
@@ -1177,52 +1177,52 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--c4d); fo
     <div class="s3-right">
       <div class="s3-right-header">
         <div class="s3-right-heading">6 Custom Algorithms</div>
-        <div class="s3-right-sub">No LLM. No API wrapper. All signal processing.</div>
+        <div class="s3-right-sub">Compact view of the six scoring modules.</div>
       </div>
 
       <div class="s3-algo-grid">
         <div class="s3-algo dsp">
           <div class="s3-algo-num">01 · DSP</div>
           <div class="s3-algo-title">Voice Activity Detection</div>
-          <div class="s3-algo-desc">RMS energy · 25ms frames · adaptive threshold</div>
+          <div class="s3-algo-desc">RMS + adaptive threshold</div>
           <div class="s3-algo-tag">librosa · scipy</div>
         </div>
         <div class="s3-algo dsp">
           <div class="s3-algo-num">02 · DSP</div>
           <div class="s3-algo-title">Block Detection</div>
-          <div class="s3-algo-desc">Silence &gt; 500ms within utterance boundary</div>
+          <div class="s3-algo-desc">In-utterance silence spikes</div>
           <div class="s3-algo-tag">custom VAD</div>
         </div>
         <div class="s3-algo dsp">
           <div class="s3-algo-num">03 · DSP</div>
           <div class="s3-algo-title">Repetition Detection</div>
-          <div class="s3-algo-desc">Sliding window n=1,2,3 · Levenshtein &gt; 0.85</div>
+          <div class="s3-algo-desc">Levenshtein-based repeat check</div>
           <div class="s3-algo-tag">transcript-based</div>
         </div>
         <div class="s3-algo dsp">
           <div class="s3-algo-num">04 · DSP</div>
           <div class="s3-algo-title">Speaking Rate</div>
-          <div class="s3-algo-desc">CMUDict syl/sec · std of rolling 3s windows</div>
+          <div class="s3-algo-desc">Rate + 3s pace variability</div>
           <div class="s3-algo-tag">nltk · custom</div>
         </div>
         <div class="s3-algo ml">
           <div class="s3-algo-num">05 · ML</div>
           <div class="s3-algo-title">Acoustic Classifier</div>
-          <div class="s3-algo-desc">wav2vec2-base → 768-dim → sklearn RF · SEP-28k</div>
+          <div class="s3-algo-desc">wav2vec2 + SEP-28k event model</div>
           <div class="s3-algo-tag">wav2vec2 · SEP-28k</div>
         </div>
         <div class="s3-algo ml">
           <div class="s3-algo-num">06 · ML</div>
           <div class="s3-algo-title">Phonetic CTC Layer</div>
-          <div class="s3-algo-desc">wav2vec2-960h · char timestamps · stutter detection</div>
+          <div class="s3-algo-desc">Char timestamps for sound-level repeats</div>
           <div class="s3-algo-tag">CTC · ASR</div>
         </div>
       </div>
 
       <div class="s3-zero-llm">
-        <div class="s3-zero-badge">Zero LLM</div>
+        <div class="s3-zero-badge">Two-Tier Design</div>
         <div class="s3-zero-text">
-          Acoustic-first: <strong>faster, interpretable, offline-capable, no API costs.</strong>
+          Fast first pass, deeper second pass, one final grade.
         </div>
       </div>
     </div>
@@ -1253,10 +1253,10 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--c4d); fo
       <div class="s4-card primary">
         <div class="s4-card-icon">🔬</div>
         <div class="s4-card-num">Differentiator 01</div>
-        <div class="s4-card-title">Zero LLM. All Custom Logic.</div>
+        <div class="s4-card-title">Custom DSP + Domain Training</div>
         <div class="s4-card-body">
-          No ChatGPT wrapper. Pure acoustic signal processing + a trained classifier.
-          <strong>Custom DSP + ML — exactly what judges reward under Innovation.</strong>
+          Built with speech-specific rules plus SEP-28k supervision.
+          <strong>Focus stays on interpretable fluency signals, not generic text generation.</strong>
         </div>
         <div class="s4-card-tag">Custom DSP · ML</div>
       </div>
@@ -1305,13 +1305,13 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--c4d); fo
     <!-- Bottom -->
     <div class="s4-statement">
       <div class="s4-statement-text">
-        "Acoustic-first means <em>faster, interpretable, and offline-capable.</em>
-        We built custom logic — not a wrapper."
+        "Stuttering has <em>genetic, neurological, and developmental</em> roots —
+        objective tracking helps users and clinicians monitor real progress."
       </div>
       <div class="s4-statement-sep"></div>
       <div class="s4-statement-stats">
-        <div class="s4-stat-line"><strong>0</strong> free browser tools do real-time fluency analysis</div>
-        <div class="s4-stat-line"><strong>70M</strong> people with no accessible measurement tool</div>
+        <div class="s4-stat-line"><strong>Next:</strong> multilingual support beyond English</div>
+        <div class="s4-stat-line"><strong>Next:</strong> side-by-side comparison of previous runs</div>
       </div>
     </div>
   </div>
