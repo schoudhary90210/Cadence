@@ -1,7 +1,7 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { useParams } from "next/navigation";
 import Link from "next/link";
 import {
   ArrowLeft,
@@ -10,6 +10,7 @@ import {
   ChevronUp,
   Trophy,
   BarChart3,
+  RotateCcw,
 } from "lucide-react";
 
 import { AudioRecorder } from "@/components/recording/AudioRecorder";
@@ -56,11 +57,10 @@ function ProgressDots({ filled, total = 3 }: { filled: number; total?: number })
 // Component
 // ---------------------------------------------------------------------------
 
-type PageStatus = "loading" | "ready" | "recording" | "submitting" | "result" | "error";
+type PageStatus = "loading" | "ready" | "submitting" | "result" | "error";
 
 export default function CoursePracticePage() {
   const params = useParams();
-  const router = useRouter();
   const courseType = params.courseType as string;
 
   const [userId, setUserId] = useState("");
@@ -70,13 +70,25 @@ export default function CoursePracticePage() {
   const [blob, setBlob] = useState<Blob | null>(null);
   const [result, setResult] = useState<SessionResult | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [courseName, setCourseName] = useState("");
+  const advanceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // Load progress + exercise
+  // Cleanup timer on unmount
+  useEffect(() => {
+    return () => {
+      if (advanceTimerRef.current) clearTimeout(advanceTimerRef.current);
+    };
+  }, []);
+
+  // Load exercise at a specific level
   const loadExercise = useCallback(async (uid: string, level: number) => {
     try {
       const ex = await getExercise(courseType, level);
       setExercise(ex);
       setCurrentLevel(level);
+      setCourseName(ex.course_name);
+      setBlob(null);
+      setResult(null);
       setStatus("ready");
     } catch (e: unknown) {
       setError(e instanceof Error ? e.message : "Failed to load exercise.");
@@ -84,18 +96,17 @@ export default function CoursePracticePage() {
     }
   }, [courseType]);
 
+  // On mount: fetch progress to get current_level, then load exercise
   useEffect(() => {
     const uid = getUserId();
     setUserId(uid);
 
-    // Get current level from progress
     getCourseProgress(uid, courseType)
       .then((prog) => {
         const level = prog.started ? prog.current_level : 1;
         loadExercise(uid, Math.max(level, 1));
       })
       .catch(() => {
-        // Not started yet — start at level 1
         loadExercise(uid, 1);
       });
   }, [courseType, loadExercise]);
@@ -118,8 +129,16 @@ export default function CoursePracticePage() {
       );
       const res = await submitLearnSession(file, courseType, userId, currentLevel);
       setResult(res);
+      // Update level from response (may have advanced)
       setCurrentLevel(res.current_level);
       setStatus("result");
+
+      // If ADVANCE: auto-load new exercise at new level after 2 seconds
+      if (res.next_action === "ADVANCE") {
+        advanceTimerRef.current = setTimeout(() => {
+          loadExercise(userId, res.current_level);
+        }, 2500);
+      }
     } catch (e: unknown) {
       setError(e instanceof Error ? e.message : "Submission failed.");
       setStatus("error");
@@ -128,8 +147,10 @@ export default function CoursePracticePage() {
 
   // Try again — fetch a new exercise at current level
   function handleTryAgain() {
-    setBlob(null);
-    setResult(null);
+    if (advanceTimerRef.current) {
+      clearTimeout(advanceTimerRef.current);
+      advanceTimerRef.current = null;
+    }
     setStatus("loading");
     loadExercise(userId, currentLevel);
   }
@@ -181,6 +202,9 @@ export default function CoursePracticePage() {
   // ---------------------------------------------------------------------------
 
   if (status === "result" && result) {
+    const isComplete = result.next_action === "COMPLETE";
+    const isAdvance = result.next_action === "ADVANCE";
+
     return (
       <div className="space-y-6">
         {/* Back link */}
@@ -192,10 +216,10 @@ export default function CoursePracticePage() {
           Back to Learn
         </Link>
 
-        {/* Course + Level */}
+        {/* Course + Level — uses currentLevel from state (updated after response) */}
         <div className="flex items-center gap-3">
           <h1 className="text-xl font-bold text-gray-900">
-            {exercise?.course_name}
+            {courseName}
           </h1>
           <span className="rounded-full bg-gray-100 px-3 py-0.5 text-xs font-medium text-gray-600">
             Level {exercise?.level}
@@ -225,8 +249,8 @@ export default function CoursePracticePage() {
           <ProgressDots filled={result.consecutive_passes} />
         </div>
 
-        {/* Advancement banners */}
-        {result.next_action === "ADVANCE" && (
+        {/* ADVANCE banner */}
+        {isAdvance && (
           <div
             className="rounded-xl border border-green-200 bg-green-50 px-5 py-4 text-center"
             role="status"
@@ -237,10 +261,12 @@ export default function CoursePracticePage() {
                 Level Up! &rarr; Level {result.current_level}
               </span>
             </div>
+            <p className="text-sm text-green-600 mt-1">Loading next level...</p>
           </div>
         )}
 
-        {result.next_action === "COMPLETE" && (
+        {/* COMPLETE banner */}
+        {isComplete && (
           <div
             className="rounded-xl border border-yellow-200 bg-yellow-50 px-5 py-4 text-center"
             role="status"
@@ -249,15 +275,20 @@ export default function CoursePracticePage() {
               <Trophy className="h-5 w-5" aria-hidden="true" />
               <span className="font-semibold text-lg">Course Complete!</span>
             </div>
+            <p className="text-sm text-yellow-600 mt-1">
+              You&apos;ve mastered all 5 levels. Amazing work!
+            </p>
           </div>
         )}
 
+        {/* RETRY passed — need more consecutive */}
         {result.next_action === "RETRY" && result.passed && (
           <p className="text-center text-sm text-blue-600 font-medium">
             Good! {result.consecutive_passes}/3 consecutive passes
           </p>
         )}
 
+        {/* RETRY failed */}
         {result.next_action === "RETRY" && !result.passed && (
           <p className="text-center text-sm text-gray-500">
             Score 80+ to pass. Keep practicing!
@@ -282,15 +313,39 @@ export default function CoursePracticePage() {
 
         {/* Actions */}
         <div className="flex gap-3 justify-center pt-2">
-          <button
-            onClick={handleTryAgain}
-            className="rounded-lg border border-gray-200 px-5 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
-          >
-            Try Again
-          </button>
+          {/* Try Again — only when not complete and not auto-advancing */}
+          {!isComplete && !isAdvance && (
+            <button
+              onClick={handleTryAgain}
+              className="rounded-lg border border-gray-200 px-5 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600 flex items-center gap-2"
+            >
+              <RotateCcw className="h-4 w-4" aria-hidden="true" />
+              Try Again
+            </button>
+          )}
+          {/* Skip auto-advance and go now */}
+          {isAdvance && (
+            <button
+              onClick={handleTryAgain}
+              className="rounded-lg bg-green-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-green-700 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600 flex items-center gap-2"
+            >
+              <ChevronUp className="h-4 w-4" aria-hidden="true" />
+              Go to Level {result.current_level}
+            </button>
+          )}
+          {/* Complete — back to learn */}
+          {isComplete && (
+            <Link
+              href="/learn"
+              className="rounded-lg bg-gray-900 px-5 py-2.5 text-sm font-medium text-white hover:bg-gray-800 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
+            >
+              Back to Learn
+            </Link>
+          )}
+          {/* View progress — always available */}
           <Link
             href={`/learn/${courseType}/progress`}
-            className="rounded-lg bg-gray-900 px-5 py-2.5 text-sm font-medium text-white hover:bg-gray-800 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600 flex items-center gap-2"
+            className="rounded-lg border border-gray-200 px-5 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600 flex items-center gap-2"
           >
             <BarChart3 className="h-4 w-4" aria-hidden="true" />
             View Progress
@@ -315,10 +370,10 @@ export default function CoursePracticePage() {
         Back to Learn
       </Link>
 
-      {/* Course name + level badge */}
+      {/* Course name + level badge — always shows currentLevel from state */}
       <div className="flex items-center gap-3">
         <h1 className="text-xl font-bold text-gray-900">
-          {exercise?.course_name}
+          {courseName}
         </h1>
         <span className="rounded-full bg-gray-100 px-3 py-0.5 text-xs font-medium text-gray-600">
           Level {currentLevel}
