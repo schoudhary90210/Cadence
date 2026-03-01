@@ -154,4 +154,4 @@ Built for **CheeseHacks 2026** — Health & Lifestyle Theme
 
 ## License
 
-This project was created for CheesHacks 2026 (hackathon). Individual dependencies retain their respective licenses as listed above.
+This project was created for CheeseHacks 2026 (hackathon). Individual dependencies retain their respective licenses as listed above.
