@@ -1,8 +1,11 @@
 <div align="center">
 
-<img src="https://readme-typing-svg.demolab.com?font=Orbitron&weight=900&size=70&duration=3000&pause=5000&color=000000&center=true&vCenter=true&repeat=true&width=700&height=90&lines=C+A+D+E+N+C+E" alt="CADENCE" />
-
-<img src="https://readme-typing-svg.demolab.com?font=JetBrains+Mono&weight=400&size=18&duration=2500&pause=4000&color=555555&center=true&vCenter=true&repeat=true&width=600&height=30&lines=Speech+Fluency+Analytics+%E2%80%A2+ML+Pipeline+%E2%80%A2+Real-Time+Analysis" alt="tagline" />
+<p align="center">
+  <img src="https://readme-typing-svg.demolab.com?font=Orbitron&weight=900&size=70&duration=3000&pause=5000&color=000000&center=true&vCenter=true&repeat=true&width=900&height=100&lines=C+A+D+E+N+C+E" alt="CADENCE" />
+</p>
+<p align="center">
+  <img src="https://readme-typing-svg.demolab.com?font=JetBrains+Mono&weight=400&size=18&duration=2500&pause=4000&color=555555&center=true&vCenter=true&repeat=true&width=900&height=30&lines=Speech+Fluency+Analytics+%E2%80%A2+ML+Pipeline+%E2%80%A2+Real-Time+Analysis" alt="tagline" />
+</p>
 
 <img src="https://img.shields.io/badge/%E2%9A%A1_POWERED_BY-WAV2VEC2_%2B_WHISPER_%2B_CLOUD_STT-00D4FF?style=for-the-badge&labelColor=0D1117" />
 
