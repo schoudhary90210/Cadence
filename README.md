@@ -1,25 +1,57 @@
 <div align="center">
 
-# ~ *Cadence* ~
+<img src="https://readme-typing-svg.demolab.com?font=Orbitron&weight=900&size=55&duration=3000&pause=1000&color=00D4FF&center=true&vCenter=true&multiline=true&repeat=true&width=600&height=70&lines=%E2%96%B6+C+A+D+E+N+C+E" alt="CADENCE" />
 
-### Speech Fluency Analytics Platform
+<img src="https://readme-typing-svg.demolab.com?font=JetBrains+Mono&weight=300&size=16&duration=2000&pause=3000&color=8B949E&center=true&vCenter=true&repeat=true&width=500&height=25&lines=Speech+Fluency+Analytics+%E2%80%A2+ML+Pipeline+%E2%80%A2+Real-Time+Analysis" alt="tagline" />
 
-[![Live Demo](https://img.shields.io/badge/LIVE_DEMO-Visit_App-blue?style=for-the-badge&logo=vercel)](https://frontend-three-rho-71.vercel.app)
-[![API Status](https://img.shields.io/badge/API-Online-brightgreen?style=for-the-badge&logo=googlecloud)](https://cadence-api-qrotwdz63a-uc.a.run.app/health)
-[![CheeseHacks](https://img.shields.io/badge/CheeseHacks-2026-orange?style=for-the-badge)]()
+<br/>
 
-**Record or upload speech. Get instant disfluency detection, fluency scoring, and personalized practice plans.**
+```
+ ██████╗ █████╗ ██████╗ ███████╗███╗   ██╗ ██████╗███████╗
+██╔════╝██╔══██╗██╔══██╗██╔════╝████╗  ██║██╔════╝██╔════╝
+██║     ███████║██║  ██║█████╗  ██╔██╗ ██║██║     █████╗
+██║     ██╔══██║██║  ██║██╔══╝  ██║╚██╗██║██║     ██╔══╝
+╚██████╗██║  ██║██████╔╝███████╗██║ ╚████║╚██████╗███████╗
+ ╚═════╝╚═╝  ╚═╝╚═════╝ ╚══════╝╚═╝  ╚═══╝ ╚═════╝╚══════╝
+```
 
-[![Python](https://img.shields.io/badge/Python-3.11+-3776AB?style=flat-square&logo=python&logoColor=white)](https://python.org)
-[![FastAPI](https://img.shields.io/badge/FastAPI-0.111-009688?style=flat-square&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
-[![Next.js](https://img.shields.io/badge/Next.js-14-black?style=flat-square&logo=next.js&logoColor=white)](https://nextjs.org)
-[![PyTorch](https://img.shields.io/badge/PyTorch-Wav2Vec2-EE4C2C?style=flat-square&logo=pytorch&logoColor=white)](https://pytorch.org)
-[![Tailwind](https://img.shields.io/badge/Tailwind_CSS-3.x-06B6D4?style=flat-square&logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
-[![GCP](https://img.shields.io/badge/Google_Cloud-Run-4285F4?style=flat-square&logo=googlecloud&logoColor=white)](https://cloud.google.com)
+<img src="https://img.shields.io/badge/%E2%9A%A1_POWERED_BY-WAV2VEC2_%2B_WHISPER_%2B_CLOUD_STT-00D4FF?style=for-the-badge&labelColor=0D1117" />
 
----
+<br/><br/>
 
-**Siddhant Choudhary** | **Christian Cortez** | **Anish Mantri** | **Benjamin Lelivelt**
+[![Live Demo](https://img.shields.io/badge/%F0%9F%94%B4_LIVE-DEMO-FF6B6B?style=for-the-badge&labelColor=0D1117)](https://frontend-three-rho-71.vercel.app)
+&nbsp;
+[![API Status](https://img.shields.io/badge/%F0%9F%9F%A2_API-ONLINE-00FF88?style=for-the-badge&labelColor=0D1117)](https://cadence-api-qrotwdz63a-uc.a.run.app/health)
+&nbsp;
+[![CheeseHacks](https://img.shields.io/badge/%F0%9F%A7%80_CHEESEHACKS-2026-FFB347?style=for-the-badge&labelColor=0D1117)](https://cheesehacks.com)
+
+<br/>
+
+> **`Record or upload speech → Instant disfluency detection → Fluency scoring → Personalized practice plans`**
+
+<br/>
+
+<img src="https://skillicons.dev/icons?i=python,fastapi,nextjs,react,typescript,tailwind,pytorch,gcp,docker,vercel&theme=dark" alt="tech stack" />
+
+<br/><br/>
+
+<table>
+<tr>
+<td align="center"><b>Siddhant Choudhary</b><br/><sub>Full-Stack + ML + Cloud</sub></td>
+<td align="center"><b>Christian Cortez</b><br/><sub>Backend + Signal Processing</sub></td>
+<td align="center"><b>Anish Mantri</b><br/><sub>Frontend + UI/UX</sub></td>
+<td align="center"><b>Benjamin Lelivelt</b><br/><sub>Frontend + Accessibility</sub></td>
+</tr>
+</table>
+
+<br/>
+
+<img src="https://img.shields.io/badge/python-3.11+-3776AB?style=flat-square&logo=python&logoColor=white" />
+<img src="https://img.shields.io/badge/FastAPI-0.111-009688?style=flat-square&logo=fastapi&logoColor=white" />
+<img src="https://img.shields.io/badge/Next.js-14-000000?style=flat-square&logo=next.js&logoColor=white" />
+<img src="https://img.shields.io/badge/PyTorch-Wav2Vec2-EE4C2C?style=flat-square&logo=pytorch&logoColor=white" />
+<img src="https://img.shields.io/badge/Tailwind-3.x-06B6D4?style=flat-square&logo=tailwindcss&logoColor=white" />
+<img src="https://img.shields.io/badge/Google_Cloud-Run-4285F4?style=flat-square&logo=googlecloud&logoColor=white" />
 
 </div>
 
