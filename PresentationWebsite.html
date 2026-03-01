@@ -246,6 +246,16 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--c4d); fo
   letter-spacing:.22em; text-transform:uppercase;
   color:var(--c3); margin-bottom:14px;
 }
+#s1-problem .s1-eyebrow {
+  font-size: clamp(18px, 2.2vw, 30px);
+  letter-spacing: .12em;
+  color: var(--c1);
+}
+#s1-solution .s1-eyebrow {
+  font-size: clamp(18px, 2.2vw, 30px);
+  letter-spacing: .12em;
+  color: var(--c1);
+}
 
 .s1-stat-num {
   font-family:'Playfair Display',serif; font-weight:900;
@@ -279,11 +289,16 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--c4d); fo
   display:grid;
   grid-template-columns:repeat(3,minmax(0,1fr));
   gap:18px;
+  align-items:stretch;
 }
 
 .s1-detail-card {
   border-radius:8px; border:1px solid #5A786338;
-  background:#5A786314; padding:18px 20px;
+  background:#5A786314; padding:18px;
+  min-height:164px;
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-start;
   opacity:0;
   transform:translateY(12px) scale(.98);
 }
@@ -299,17 +314,18 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--c4d); fo
 
 .s1-detail-k {
   font-family:'Barlow Condensed',sans-serif;
-  font-size:12px; font-weight:700; letter-spacing:.12em; text-transform:uppercase;
+  font-size:clamp(13px,1.2vw,16px); font-weight:700; letter-spacing:.09em; text-transform:uppercase;
   color:var(--c3); margin-bottom:8px;
 }
 
 .s1-detail-v {
   font-family:'Barlow',sans-serif; font-weight:300;
-  font-size:clamp(16px,1.8vw,22px); color:var(--c2);
-  letter-spacing:.01em; line-height:1.35;
+  font-size:clamp(22px,2.35vw,30px); color:var(--c2);
+  letter-spacing:.005em; line-height:1.3;
+  overflow-wrap:anywhere;
 }
 
-.s1-detail-v strong { color:var(--c1); font-weight:500; }
+.s1-detail-v strong { color:var(--c1); font-weight:600; font-size:1.06em; }
 
 @keyframes s1ProblemCenterIn {
   from { opacity:0; transform:translate(-50%, 18px); }
@@ -500,7 +516,7 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--c4d); fo
   background:rgba(255,255,255,.03);
   border:1px solid var(--c3);
   border-radius:8px;
-  display:flex; align-items:center; gap:16px;
+  display:flex; align-items:center; justify-content:center; gap:16px;
   opacity:0; animation:up .7s ease 1.4s forwards;
 }
 .s2-bottom-icon {
@@ -510,8 +526,8 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--c4d); fo
 .s2-bottom-text {
   font-family:'Playfair Display',serif;
   font-style:italic; font-weight:400;
-  font-size:clamp(15px,1.6vw,18px);
-  color:var(--c1); line-height:1.5;
+  font-size:clamp(20px,2.3vw,28px);
+  color:var(--c1); line-height:1.5; text-align:center;
 }
 .s2-bottom-text em { font-style:normal; color:var(--c2); }
 
@@ -719,6 +735,8 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--c4d); fo
   font-weight:300; font-size:18px; color:var(--c2); line-height:1.45;
 }
 .s3-zero-text strong { font-style:normal; color:var(--c1); font-weight:500; }
+
+
 /* ═══════════════════════════════════════════
    SLIDE 4: INNOVATION & CREATIVITY
    ═══════════════════════════════════════════ */
@@ -959,7 +977,7 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--c4d); fo
 
 .s5-pillars {
   margin-top:30px;
-  display:flex; align-items:center; gap:0;
+  display:flex; align-items:center; justify-content:center; gap:0;
   opacity:0;
 }
 
@@ -1025,7 +1043,7 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--c4d); fo
 <div class="deck">
 
 <!-- ════════════════════════════════════
-     SLIDE 1: THE HUMAN HOOK
+     SLIDE 1: THE PROBLEM 
      ════════════════════════════════════ -->
 <div class="slide-frame active" id="sf0">
   <div class="slide-bg"></div>
@@ -1043,8 +1061,8 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--c4d); fo
       <div class="s1-problem" id="s1-problem">
         <div class="s1-problem-inner">
           <div class="s1-eyebrow">The Problem</div>
-          <div class="s1-stat-num">70<span class="dim">M</span></div>
-          <div class="s1-stat-text">people worldwide who stutter</div>
+          <div class="s1-stat-num">80<span class="dim">M</span></div>
+          <div class="s1-stat-text">people worldwide who suffer from speech impediments</div>
         </div>
       </div>
     </div>
@@ -1052,17 +1070,17 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--c4d); fo
     <div class="s1-detail-strip">
       <div class="s1-detail-card">
         <div class="s1-detail-k">Cost Barrier</div>
-        <div class="s1-detail-v"><strong>$150/hour</strong> for speech therapy.</div>
+        <div class="s1-detail-v"><strong>$150/hour</strong> for regular speech therapy.</div>
       </div>
 
       <div class="s1-detail-card">
         <div class="s1-detail-k">Current Gap</div>
-        <div class="s1-detail-v"><strong>No free</strong> objective tools to measure progress.</div>
+        <div class="s1-detail-v"><strong>No completely free</strong> objective tools to measure progress.</div>
       </div>
 
       <div class="s1-detail-card">
-        <div class="s1-detail-k">What Changes</div>
-        <div class="s1-detail-v"><strong>Clinical-grade metrics.</strong> Free. No account required.</div>
+        <div class="s1-detail-k">Types of Speech Impediments</div>
+        <div class="s1-detail-v"><strong>Stuttering, cluttering, apraxia, dysarthria,</strong> articulation disorders.</div>
       </div>
     </div>
   </div>
@@ -1100,7 +1118,7 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--c4d); fo
 
       <!-- Side cards: what to watch for -->
       <div class="s2-side">
-        <div class="s2-side-title">Frontend Inputs</div>
+        <div class="s2-side-title">Components</div>
 
         <div class="s2-side-card">
           <div class="s2-side-card-icon">📊</div>
@@ -1110,7 +1128,7 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--c4d); fo
 
         <div class="s2-side-card">
           <div class="s2-side-card-icon">🎨</div>
-          <div class="s2-side-card-title">2) File Upload Component</div>
+          <div class="s2-side-card-title">2) Upload Files</div>
           <div class="s2-side-card-desc">Accepts user recordings and routes them through the same normalization + detection pipeline.</div>
         </div>
 
@@ -1124,9 +1142,8 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--c4d); fo
 
     <!-- Bottom quote -->
     <div class="s2-bottom">
-      <div class="s2-bottom-icon">"</div>
       <div class="s2-bottom-text">
-        Three user inputs power one consistent pipeline: <em>record, upload, analyze.</em>
+        "One consistent pipeline: record, upload, analyze"
       </div>
     </div>
   </div>
@@ -1140,7 +1157,7 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--c4d); fo
   <div class="slide-grain"></div>
   <div class="slide-corner tl">Cadence · CheeseHacks 2026</div>
 
-  <div class="slide-content" style="display:grid; grid-template-rows:auto 1fr; padding:86px 60px 36px; gap:20px; position:relative;">
+  <div class="slide-content" style="display:grid; grid-template-rows:auto 1fr; padding:40px 60px; gap:20px; position:relative;">
 
     <!-- Header -->
     <div style="display:flex; align-items:flex-end; justify-content:space-between; opacity:0; animation:up .6s ease .1s forwards;">
@@ -1154,7 +1171,7 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--c4d); fo
 
     <!-- Graph -->
     <div style="position:relative; z-index:10; width:100%; height:100%; opacity:0; animation:fadeIn .8s ease .4s forwards;">
-      <svg width="100%" height="100%" viewBox="0 0 1100 480" preserveAspectRatio="xMidYMid meet" overflow="visible" style="font-family:'Barlow Condensed',sans-serif;">
+      <svg width="100%" height="100%" viewBox="0 0 1100 480" preserveAspectRatio="xMidYMid meet" overflow="visible">
         <defs>
           <marker id="arr-green" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
             <path d="M0,0 L0,6 L8,3 z" fill="#5A7863" opacity=".6"/>
@@ -1183,17 +1200,17 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--c4d); fo
           </filter>
         </defs>
 
-        <!-- ══ TIER BACKGROUND BANDS ══ -->
+        <!-- TIER BACKGROUND BANDS -->
         <rect x="60" y="8" width="980" height="68" rx="6" fill="#5A786308" stroke="#5A786320" stroke-width="1"/>
-        <text font-family="'Barlow Condensed',sans-serif" font-size="10" letter-spacing="3" text-transform="uppercase" font-weight="700" fill="#5A7863" opacity=".6" x="72" y="24">TIER 0 — PREPROCESSING</text>
+        <text font-family="'Barlow Condensed',sans-serif" font-size="10" font-weight="700" fill="#5A7863" opacity=".6" x="72" y="24">TIER 0 — PREPROCESSING</text>
 
         <rect x="60" y="90" width="980" height="168" rx="6" fill="#5A786308" stroke="#5A786320" stroke-width="1"/>
-        <text font-family="'Barlow Condensed',sans-serif" font-size="10" letter-spacing="3" font-weight="700" fill="#90AB8B" opacity=".6" x="72" y="106">TIER 1 — RULES-BASED DSP (ALWAYS RUNS)</text>
+        <text font-family="'Barlow Condensed',sans-serif" font-size="10" font-weight="700" fill="#90AB8B" opacity=".6" x="72" y="106">TIER 1 — RULES-BASED DSP (ALWAYS RUNS)</text>
 
         <rect x="60" y="272" width="980" height="118" rx="6" fill="#a78bfa06" stroke="#a78bfa20" stroke-width="1"/>
-        <text font-family="'Barlow Condensed',sans-serif" font-size="10" letter-spacing="3" font-weight="700" fill="#a78bfa" opacity=".6" x="72" y="288">TIER 2 — HYBRID ML</text>
+        <text font-family="'Barlow Condensed',sans-serif" font-size="10" font-weight="700" fill="#a78bfa" opacity=".6" x="72" y="288">TIER 2 — HYBRID ML</text>
 
-        <!-- ══ EDGES ══ -->
+        <!-- EDGES -->
         <path fill="none" stroke="#5A7863" stroke-width="1.5" opacity=".5" d="M218,58 L290,58" marker-end="url(#arr-green)"/>
         <path fill="none" stroke="#90AB8B" stroke-width="1.5" opacity=".45" d="M448,58 L448,136" marker-end="url(#arr-c2)"/>
         <path fill="none" stroke="#90AB8B" stroke-width="1.5" opacity=".45" d="M430,76 Q390,76 300,76 L300,136" marker-end="url(#arr-c2)"/>
@@ -1211,7 +1228,7 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--c4d); fo
         <path fill="none" stroke="#a78bfa" stroke-width="1.5" opacity=".5" stroke-dasharray="5 3" d="M740,352 L610,362" marker-end="url(#arr-blue)"/>
         <path fill="none" stroke="#90AB8B" stroke-width="2" opacity=".7" d="M550,400 L550,430" marker-end="url(#arr-out)"/>
 
-        <!-- Nodes -->
+        <!-- NODES -->
         <g>
           <rect x="68" y="28" width="148" height="56" rx="8" fill="#3B4953" stroke="#5A7863" stroke-width="1.5"/>
           <text x="80" y="50" font-family="'Barlow Condensed',sans-serif" font-size="14" font-weight="600" fill="#EBF4DD">🎙 Audio Input</text>
@@ -1274,11 +1291,12 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--c4d); fo
           <text x="412" y="438" font-family="'Barlow Condensed',sans-serif" font-size="15" font-weight="700" fill="#EBF4DD">📊 Fluency Score 0–100</text>
           <text x="412" y="458" font-family="'JetBrains Mono',monospace" font-size="11" fill="#90AB8B">events · timeline · report</text>
         </g>
+
       </svg>
     </div>
+
   </div>
 </div>
-
 <!-- ════════════════════════════════════
      SLIDE 4: INNOVATION & CREATIVITY
      ════════════════════════════════════ -->
@@ -1325,14 +1343,15 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--c4d); fo
 
       <!-- Card 3 -->
       <div class="s4-card accent">
-        <div class="s4-card-icon">🎯</div>
+        <div class="s4-card-icon">🌐</div>
         <div class="s4-card-num">Differentiator 03</div>
-        <div class="s4-card-title">Adaptive Learning Loop</div>
+        <div class="s4-card-title">Free. Offline. Private.</div>
         <div class="s4-card-body">
-          Beyond detection, users train with <strong>practice mode, quizzes, and progress checks</strong>.
-          Difficulty scales by level so users can start easy, move up, and continuously improve speech over time.
+          Runs entirely in browser + local server.
+          <strong>No API costs. No data to third parties.</strong>
+          Audio processed and deleted. Privacy by design.
         </div>
-        <div class="s4-card-tag">Practice · Quiz · Progress</div>
+        <div class="s4-card-tag">Accessible · Private</div>
       </div>
     </div>
 
@@ -1344,8 +1363,8 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--c4d); fo
       </div>
       <div class="s4-statement-sep"></div>
       <div class="s4-statement-stats">
-        <div class="s4-stat-line"><strong>Learn:</strong> quizzes + guided practice levels</div>
-        <div class="s4-stat-line"><strong>Track:</strong> progress checks across sessions</div>
+        <div class="s4-stat-line"><strong>Next:</strong> multilingual support beyond English</div>
+        <div class="s4-stat-line"><strong>Next:</strong> side-by-side comparison of previous runs</div>
       </div>
     </div>
   </div>
@@ -1364,7 +1383,7 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--c4d); fo
   <div class="slide-content s5-layout">
     <div class="s5-slide-num">The Close</div>
     <div class="s5-top-rule"></div>
-    <div class="s5-for-line">For the 70 million people who stutter</div>
+    <div class="s5-for-line">For the 80 million people who have speech impediments</div>
 
     <div class="s5-main-quote">
       This is the first time they can
@@ -1377,7 +1396,6 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--c4d); fo
 
     <div class="s5-lockup">
       <div class="s5-product-name">Cadence</div>
-      <div class="s5-tagline">Browser-based · Free · No account required · Built in 22 hours</div>
     </div>
 
     <div class="s5-pillars">
@@ -1392,13 +1410,13 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--c4d); fo
       </div>
       <div class="s5-pillar-sep"></div>
       <div class="s5-pillar">
-        <div class="s5-pillar-val">70M</div>
-        <div class="s5-pillar-key">People Served</div>
+        <div class="s5-pillar-val">$0</div>
+        <div class="s5-pillar-key">Cost to User</div>
       </div>
       <div class="s5-pillar-sep"></div>
       <div class="s5-pillar">
-        <div class="s5-pillar-val">$0</div>
-        <div class="s5-pillar-key">Cost to User</div>
+        <div class="s5-pillar-val">22 hrs</div>
+        <div class="s5-pillar-key">Built In</div>
       </div>
     </div>
   </div>
@@ -1410,7 +1428,7 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--c4d); fo
 <div class="nav">
   <button class="nav-btn" id="pb" onclick="go(cur-1)" disabled>&#8592;</button>
   <div class="dots">
-    <div class="dot active" onclick="go(0)" title="The Human Hook"></div>
+    <div class="dot active" onclick="go(0)" title="The Problem"></div>
     <div class="dot" onclick="go(1)" title="Live Demo"></div>
     <div class="dot" onclick="go(2)" title="Technical Depth"></div>
     <div class="dot" onclick="go(3)" title="Innovation"></div>
@@ -1418,7 +1436,7 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--c4d); fo
   </div>
   <button class="nav-btn" id="nb" onclick="go(cur+1)">&#8594;</button>
   <div class="nav-sep"></div>
-  <div class="nav-label" id="nl">The Human Hook</div>
+  <div class="nav-label" id="nl">The Problem</div>
 </div>
 <div class="slide-timer">
   <div class="slide-timer-fill" id="stf"></div>
@@ -1426,7 +1444,7 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--c4d); fo
 
 <!-- ══════════ SCRIPTS ══════════ -->
 <script>
-const TITLES  = ['The Human Hook','Live Demo','Technical Depth','Innovation','The Close'];
+const TITLES  = ['The Problem','Live Demo','Technical Depth','Innovation','The Close'];
 const TIMINGS = ['0:00–0:30','0:30–1:30','1:30–3:00','3:00–4:30','4:30–5:00'];
 const SLIDE_SECONDS = TIMINGS.map(parseTimingWindowSec);
 let cur = 0;
@@ -1805,6 +1823,16 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--c4d); fo
   letter-spacing:.22em; text-transform:uppercase;
   color:var(--c3); margin-bottom:14px;
 }
+#s1-problem .s1-eyebrow {
+  font-size: clamp(18px, 2.2vw, 30px);
+  letter-spacing: .12em;
+  color: var(--c1);
+}
+#s1-solution .s1-eyebrow {
+  font-size: clamp(18px, 2.2vw, 30px);
+  letter-spacing: .12em;
+  color: var(--c1);
+}
 
 .s1-stat-num {
   font-family:'Playfair Display',serif; font-weight:900;
@@ -1838,11 +1866,16 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--c4d); fo
   display:grid;
   grid-template-columns:repeat(3,minmax(0,1fr));
   gap:18px;
+  align-items:stretch;
 }
 
 .s1-detail-card {
   border-radius:8px; border:1px solid #5A786338;
-  background:#5A786314; padding:18px 20px;
+  background:#5A786314; padding:18px;
+  min-height:164px;
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-start;
   opacity:0;
   transform:translateY(12px) scale(.98);
 }
@@ -1858,17 +1891,18 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--c4d); fo
 
 .s1-detail-k {
   font-family:'Barlow Condensed',sans-serif;
-  font-size:12px; font-weight:700; letter-spacing:.12em; text-transform:uppercase;
+  font-size:clamp(13px,1.2vw,16px); font-weight:700; letter-spacing:.09em; text-transform:uppercase;
   color:var(--c3); margin-bottom:8px;
 }
 
 .s1-detail-v {
   font-family:'Barlow',sans-serif; font-weight:300;
-  font-size:clamp(16px,1.8vw,22px); color:var(--c2);
-  letter-spacing:.01em; line-height:1.35;
+  font-size:clamp(22px,2.35vw,30px); color:var(--c2);
+  letter-spacing:.005em; line-height:1.3;
+  overflow-wrap:anywhere;
 }
 
-.s1-detail-v strong { color:var(--c1); font-weight:500; }
+.s1-detail-v strong { color:var(--c1); font-weight:600; font-size:1.06em; }
 
 @keyframes s1ProblemCenterIn {
   from { opacity:0; transform:translate(-50%, 18px); }
@@ -2059,7 +2093,7 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--c4d); fo
   background:rgba(255,255,255,.03);
   border:1px solid var(--c3);
   border-radius:8px;
-  display:flex; align-items:center; gap:16px;
+  display:flex; align-items:center; justify-content:center; gap:16px;
   opacity:0; animation:up .7s ease 1.4s forwards;
 }
 .s2-bottom-icon {
@@ -2069,8 +2103,8 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--c4d); fo
 .s2-bottom-text {
   font-family:'Playfair Display',serif;
   font-style:italic; font-weight:400;
-  font-size:clamp(15px,1.6vw,18px);
-  color:var(--c1); line-height:1.5;
+  font-size:clamp(20px,2.3vw,28px);
+  color:var(--c1); line-height:1.5; text-align:center;
 }
 .s2-bottom-text em { font-style:normal; color:var(--c2); }
 
@@ -2278,6 +2312,8 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--c4d); fo
   font-weight:300; font-size:18px; color:var(--c2); line-height:1.45;
 }
 .s3-zero-text strong { font-style:normal; color:var(--c1); font-weight:500; }
+
+
 /* ═══════════════════════════════════════════
    SLIDE 4: INNOVATION & CREATIVITY
    ═══════════════════════════════════════════ */
@@ -2518,7 +2554,7 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--c4d); fo
 
 .s5-pillars {
   margin-top:30px;
-  display:flex; align-items:center; gap:0;
+  display:flex; align-items:center; justify-content:center; gap:0;
   opacity:0;
 }
 
@@ -2584,7 +2620,7 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--c4d); fo
 <div class="deck">
 
 <!-- ════════════════════════════════════
-     SLIDE 1: THE HUMAN HOOK
+     SLIDE 1: THE PROBLEM 
      ════════════════════════════════════ -->
 <div class="slide-frame active" id="sf0">
   <div class="slide-bg"></div>
@@ -2602,8 +2638,8 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--c4d); fo
       <div class="s1-problem" id="s1-problem">
         <div class="s1-problem-inner">
           <div class="s1-eyebrow">The Problem</div>
-          <div class="s1-stat-num">70<span class="dim">M</span></div>
-          <div class="s1-stat-text">people worldwide who stutter</div>
+          <div class="s1-stat-num">80<span class="dim">M</span></div>
+          <div class="s1-stat-text">people worldwide who suffer from speech impediments</div>
         </div>
       </div>
     </div>
@@ -2611,17 +2647,17 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--c4d); fo
     <div class="s1-detail-strip">
       <div class="s1-detail-card">
         <div class="s1-detail-k">Cost Barrier</div>
-        <div class="s1-detail-v"><strong>$150/hour</strong> for speech therapy.</div>
+        <div class="s1-detail-v"><strong>$150/hour</strong> for regular speech therapy.</div>
       </div>
 
       <div class="s1-detail-card">
         <div class="s1-detail-k">Current Gap</div>
-        <div class="s1-detail-v"><strong>No free</strong> objective tools to measure progress.</div>
+        <div class="s1-detail-v"><strong>No completely free</strong> objective tools to measure progress.</div>
       </div>
 
       <div class="s1-detail-card">
-        <div class="s1-detail-k">What Changes</div>
-        <div class="s1-detail-v"><strong>Clinical-grade metrics.</strong> Free. No account required.</div>
+        <div class="s1-detail-k">Types of Speech Impediments</div>
+        <div class="s1-detail-v"><strong>Stuttering, cluttering, apraxia, dysarthria,</strong> articulation disorders.</div>
       </div>
     </div>
   </div>
@@ -2659,7 +2695,7 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--c4d); fo
 
       <!-- Side cards: what to watch for -->
       <div class="s2-side">
-        <div class="s2-side-title">Frontend Inputs</div>
+        <div class="s2-side-title">Components</div>
 
         <div class="s2-side-card">
           <div class="s2-side-card-icon">📊</div>
@@ -2669,7 +2705,7 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--c4d); fo
 
         <div class="s2-side-card">
           <div class="s2-side-card-icon">🎨</div>
-          <div class="s2-side-card-title">2) File Upload Component</div>
+          <div class="s2-side-card-title">2) Upload Files</div>
           <div class="s2-side-card-desc">Accepts user recordings and routes them through the same normalization + detection pipeline.</div>
         </div>
 
@@ -2683,9 +2719,8 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--c4d); fo
 
     <!-- Bottom quote -->
     <div class="s2-bottom">
-      <div class="s2-bottom-icon">"</div>
       <div class="s2-bottom-text">
-        Three user inputs power one consistent pipeline: <em>record, upload, analyze.</em>
+        "One consistent pipeline: record, upload, analyze"
       </div>
     </div>
   </div>
@@ -2699,7 +2734,7 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--c4d); fo
   <div class="slide-grain"></div>
   <div class="slide-corner tl">Cadence · CheeseHacks 2026</div>
 
-  <div class="slide-content" style="display:grid; grid-template-rows:auto 1fr; padding:86px 60px 36px; gap:20px; position:relative;">
+  <div class="slide-content" style="display:grid; grid-template-rows:auto 1fr; padding:40px 60px; gap:20px; position:relative;">
 
     <!-- Header -->
     <div style="display:flex; align-items:flex-end; justify-content:space-between; opacity:0; animation:up .6s ease .1s forwards;">
@@ -2713,7 +2748,7 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--c4d); fo
 
     <!-- Graph -->
     <div style="position:relative; z-index:10; width:100%; height:100%; opacity:0; animation:fadeIn .8s ease .4s forwards;">
-      <svg width="100%" height="100%" viewBox="0 0 1100 480" preserveAspectRatio="xMidYMid meet" overflow="visible" style="font-family:'Barlow Condensed',sans-serif;">
+      <svg width="100%" height="100%" viewBox="0 0 1100 480" preserveAspectRatio="xMidYMid meet" overflow="visible">
         <defs>
           <marker id="arr-green" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
             <path d="M0,0 L0,6 L8,3 z" fill="#5A7863" opacity=".6"/>
@@ -2742,17 +2777,17 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--c4d); fo
           </filter>
         </defs>
 
-        <!-- ══ TIER BACKGROUND BANDS ══ -->
+        <!-- TIER BACKGROUND BANDS -->
         <rect x="60" y="8" width="980" height="68" rx="6" fill="#5A786308" stroke="#5A786320" stroke-width="1"/>
-        <text font-family="'Barlow Condensed',sans-serif" font-size="10" letter-spacing="3" text-transform="uppercase" font-weight="700" fill="#5A7863" opacity=".6" x="72" y="24">TIER 0 — PREPROCESSING</text>
+        <text font-family="'Barlow Condensed',sans-serif" font-size="10" font-weight="700" fill="#5A7863" opacity=".6" x="72" y="24">TIER 0 — PREPROCESSING</text>
 
         <rect x="60" y="90" width="980" height="168" rx="6" fill="#5A786308" stroke="#5A786320" stroke-width="1"/>
-        <text font-family="'Barlow Condensed',sans-serif" font-size="10" letter-spacing="3" font-weight="700" fill="#90AB8B" opacity=".6" x="72" y="106">TIER 1 — RULES-BASED DSP (ALWAYS RUNS)</text>
+        <text font-family="'Barlow Condensed',sans-serif" font-size="10" font-weight="700" fill="#90AB8B" opacity=".6" x="72" y="106">TIER 1 — RULES-BASED DSP (ALWAYS RUNS)</text>
 
         <rect x="60" y="272" width="980" height="118" rx="6" fill="#a78bfa06" stroke="#a78bfa20" stroke-width="1"/>
-        <text font-family="'Barlow Condensed',sans-serif" font-size="10" letter-spacing="3" font-weight="700" fill="#a78bfa" opacity=".6" x="72" y="288">TIER 2 — HYBRID ML</text>
+        <text font-family="'Barlow Condensed',sans-serif" font-size="10" font-weight="700" fill="#a78bfa" opacity=".6" x="72" y="288">TIER 2 — HYBRID ML</text>
 
-        <!-- ══ EDGES ══ -->
+        <!-- EDGES -->
         <path fill="none" stroke="#5A7863" stroke-width="1.5" opacity=".5" d="M218,58 L290,58" marker-end="url(#arr-green)"/>
         <path fill="none" stroke="#90AB8B" stroke-width="1.5" opacity=".45" d="M448,58 L448,136" marker-end="url(#arr-c2)"/>
         <path fill="none" stroke="#90AB8B" stroke-width="1.5" opacity=".45" d="M430,76 Q390,76 300,76 L300,136" marker-end="url(#arr-c2)"/>
@@ -2770,7 +2805,7 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--c4d); fo
         <path fill="none" stroke="#a78bfa" stroke-width="1.5" opacity=".5" stroke-dasharray="5 3" d="M740,352 L610,362" marker-end="url(#arr-blue)"/>
         <path fill="none" stroke="#90AB8B" stroke-width="2" opacity=".7" d="M550,400 L550,430" marker-end="url(#arr-out)"/>
 
-        <!-- Nodes -->
+        <!-- NODES -->
         <g>
           <rect x="68" y="28" width="148" height="56" rx="8" fill="#3B4953" stroke="#5A7863" stroke-width="1.5"/>
           <text x="80" y="50" font-family="'Barlow Condensed',sans-serif" font-size="14" font-weight="600" fill="#EBF4DD">🎙 Audio Input</text>
@@ -2833,11 +2868,12 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--c4d); fo
           <text x="412" y="438" font-family="'Barlow Condensed',sans-serif" font-size="15" font-weight="700" fill="#EBF4DD">📊 Fluency Score 0–100</text>
           <text x="412" y="458" font-family="'JetBrains Mono',monospace" font-size="11" fill="#90AB8B">events · timeline · report</text>
         </g>
+
       </svg>
     </div>
+
   </div>
 </div>
-
 <!-- ════════════════════════════════════
      SLIDE 4: INNOVATION & CREATIVITY
      ════════════════════════════════════ -->
@@ -2884,14 +2920,15 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--c4d); fo
 
       <!-- Card 3 -->
       <div class="s4-card accent">
-        <div class="s4-card-icon">🎯</div>
+        <div class="s4-card-icon">🌐</div>
         <div class="s4-card-num">Differentiator 03</div>
-        <div class="s4-card-title">Adaptive Learning Loop</div>
+        <div class="s4-card-title">Free. Offline. Private.</div>
         <div class="s4-card-body">
-          Beyond detection, users train with <strong>practice mode, quizzes, and progress checks</strong>.
-          Difficulty scales by level so users can start easy, move up, and continuously improve speech over time.
+          Runs entirely in browser + local server.
+          <strong>No API costs. No data to third parties.</strong>
+          Audio processed and deleted. Privacy by design.
         </div>
-        <div class="s4-card-tag">Practice · Quiz · Progress</div>
+        <div class="s4-card-tag">Accessible · Private</div>
       </div>
     </div>
 
@@ -2903,8 +2940,8 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--c4d); fo
       </div>
       <div class="s4-statement-sep"></div>
       <div class="s4-statement-stats">
-        <div class="s4-stat-line"><strong>Learn:</strong> quizzes + guided practice levels</div>
-        <div class="s4-stat-line"><strong>Track:</strong> progress checks across sessions</div>
+        <div class="s4-stat-line"><strong>Next:</strong> multilingual support beyond English</div>
+        <div class="s4-stat-line"><strong>Next:</strong> side-by-side comparison of previous runs</div>
       </div>
     </div>
   </div>
@@ -2923,7 +2960,7 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--c4d); fo
   <div class="slide-content s5-layout">
     <div class="s5-slide-num">The Close</div>
     <div class="s5-top-rule"></div>
-    <div class="s5-for-line">For the 70 million people who stutter</div>
+    <div class="s5-for-line">For the 80 million people who have speech impediments</div>
 
     <div class="s5-main-quote">
       This is the first time they can
@@ -2936,7 +2973,6 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--c4d); fo
 
     <div class="s5-lockup">
       <div class="s5-product-name">Cadence</div>
-      <div class="s5-tagline">Browser-based · Free · No account required · Built in 22 hours</div>
     </div>
 
     <div class="s5-pillars">
@@ -2951,13 +2987,13 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--c4d); fo
       </div>
       <div class="s5-pillar-sep"></div>
       <div class="s5-pillar">
-        <div class="s5-pillar-val">70M</div>
-        <div class="s5-pillar-key">People Served</div>
+        <div class="s5-pillar-val">$0</div>
+        <div class="s5-pillar-key">Cost to User</div>
       </div>
       <div class="s5-pillar-sep"></div>
       <div class="s5-pillar">
-        <div class="s5-pillar-val">$0</div>
-        <div class="s5-pillar-key">Cost to User</div>
+        <div class="s5-pillar-val">22 hrs</div>
+        <div class="s5-pillar-key">Built In</div>
       </div>
     </div>
   </div>
@@ -2969,7 +3005,7 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--c4d); fo
 <div class="nav">
   <button class="nav-btn" id="pb" onclick="go(cur-1)" disabled>&#8592;</button>
   <div class="dots">
-    <div class="dot active" onclick="go(0)" title="The Human Hook"></div>
+    <div class="dot active" onclick="go(0)" title="The Problem"></div>
     <div class="dot" onclick="go(1)" title="Live Demo"></div>
     <div class="dot" onclick="go(2)" title="Technical Depth"></div>
     <div class="dot" onclick="go(3)" title="Innovation"></div>
@@ -2977,7 +3013,7 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--c4d); fo
   </div>
   <button class="nav-btn" id="nb" onclick="go(cur+1)">&#8594;</button>
   <div class="nav-sep"></div>
-  <div class="nav-label" id="nl">The Human Hook</div>
+  <div class="nav-label" id="nl">The Problem</div>
 </div>
 <div class="slide-timer">
   <div class="slide-timer-fill" id="stf"></div>
@@ -2985,7 +3021,7 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--c4d); fo
 
 <!-- ══════════ SCRIPTS ══════════ -->
 <script>
-const TITLES  = ['The Human Hook','Live Demo','Technical Depth','Innovation','The Close'];
+const TITLES  = ['The Problem','Live Demo','Technical Depth','Innovation','The Close'];
 const TIMINGS = ['0:00–0:30','0:30–1:30','1:30–3:00','3:00–4:30','4:30–5:00'];
 const SLIDE_SECONDS = TIMINGS.map(parseTimingWindowSec);
 let cur = 0;
