@@ -439,11 +439,31 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--c4d); fo
   opacity:0; animation:up .8s ease .3s forwards;
   position:relative; overflow:hidden;
 }
-
 .s2-demo-video {
-  padding:0; gap:0;
+  padding:0; gap:0; cursor:pointer;
 }
-
+.s2-demo-video:hover .s2-yt-play {
+  transform:translate(-50%,-50%) scale(1.12);
+  background:rgba(255,0,0,1);
+}
+.s2-yt-thumb {
+  width:100%; height:100%; object-fit:cover;
+  position:absolute; top:0; left:0; border-radius:14px;
+}
+.s2-yt-play {
+  position:absolute; top:50%; left:50%;
+  transform:translate(-50%,-50%);
+  width:72px; height:50px; border-radius:14px;
+  background:rgba(255,0,0,.85);
+  display:flex; align-items:center; justify-content:center;
+  transition:all .2s ease; z-index:2;
+}
+.s2-yt-play::after {
+  content:""; display:block;
+  border-style:solid; border-width:10px 0 10px 18px;
+  border-color:transparent transparent transparent #fff;
+  margin-left:3px;
+}
 .s2-demo-icon {
   width:80px; height:80px;
   border-radius:50%;
@@ -1468,18 +1488,16 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--c4d); fo
     <!-- Demo area -->
     <div class="s2-demo-area">
       <!-- Main demo panel -->
-      <div class="s2-demo-main s2-demo-video">
+      <a href="https://www.youtube.com/watch?v=XKAkRPKZyQE" target="_blank" rel="noopener"
+         class="s2-demo-main s2-demo-video" style="text-decoration:none; color:inherit;">
         <div class="s2-demo-badge">▶ LIVE</div>
-        <iframe
-          src="https://www.youtube.com/embed/XKAkRPKZyQE?rel=0&modestbranding=1&color=white"
-          title="Cadence Live Demo"
-          frameborder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowfullscreen
-          style="width:100%; height:100%; position:absolute; top:0; left:0; border-radius:14px;"
-        ></iframe>
-      </div>
-      <!-- Side cards: what to watch for -->
+        <img class="s2-yt-thumb"
+             src="https://img.youtube.com/vi/XKAkRPKZyQE/maxresdefault.jpg"
+             alt="Cadence Live Demo"
+             onerror="this.src='https://img.youtube.com/vi/XKAkRPKZyQE/hqdefault.jpg'"
+        />
+        <div class="s2-yt-play"></div>
+      </a>      <!-- Side cards: what to watch for -->
       <div class="s2-side">
         <div class="s2-side-title">What You'll See</div>
 
